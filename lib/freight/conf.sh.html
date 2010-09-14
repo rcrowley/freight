@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-eqiv='content-type' content='text/html;charset=utf-8'>
+    <title>conf.sh</title>
+    <link rel=stylesheet href="http://jashkenas.github.com/docco/resources/docco.css">
+</head>
+<body>
+<div id=container>
+    <div id=background></div>
+    <table cellspacing=0 cellpadding=0>
+    <thead>
+      <tr>
+        <th class=docs><h1>conf.sh</h1></th>
+        <th class=code></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr><td class='docs'><p>Freight configuration.
+Default directories for the Freight library and Freight cache.  Your
+web server's document root should be <code>$VARCACHE</code>.</p>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Default <code>Origin</code> and <code>Label</code> fields for <code>Release</code> files.</p>
+
+</td><td class=code><div class=highlight><pre>
+
+<span class="nv">VARLIB</span><span class="o">=</span><span class="s2">&quot;/var/lib/freight&quot;</span>
+<span class="nv">VARCACHE</span><span class="o">=</span><span class="s2">&quot;/var/cache/freight&quot;</span>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Parse the configuration file for overrides.  Typically, the config file
+would be found at <code>$prefix/etc/freight.conf</code> but a special exception is
+made when <code>$prefix</code> is <code>/usr</code>.  In that case, the config file is
+<code>/etc/freight.conf</code>.</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="nv">ORIGIN</span><span class="o">=</span><span class="s2">&quot;Freight&quot;</span>
+<span class="nv">LABEL</span><span class="o">=</span><span class="s2">&quot;Freight&quot;</span>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Normalize directory names.</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="o">[</span> -z <span class="s2">&quot;$CONF&quot;</span> <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="o">{</span>
+	<span class="nv">CONF</span><span class="o">=</span><span class="s2">&quot;$(dirname $(dirname $0))/etc/freight.conf&quot;</span>
+	<span class="o">[</span> <span class="s2">&quot;$CONF&quot;</span> <span class="o">=</span> <span class="s2">&quot;/usr/etc/freight.conf&quot;</span> <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="nv">CONF</span><span class="o">=</span><span class="s2">&quot;/etc/freight.conf&quot;</span>
+<span class="o">}</span>
+. <span class="s2">&quot;$CONF&quot;</span>
+
+</pre></div></td></tr><tr><td class=docs>
+
+</td><td class=code><div class=highlight><pre>
+<span class="nv">VARLIB</span><span class="o">=</span><span class="k">${</span><span class="nv">VARLIB</span><span class="p">%%/</span><span class="k">}</span>
+<span class="nv">VARCACHE</span><span class="o">=</span><span class="k">${</span><span class="nv">VARCACHE</span><span class="p">%%/</span><span class="k">}</span>
+
+
+</pre></div></td></tr><tr><td class=docs>
+</td><td class=code><div class=highlight><pre></td><td class='code'></td></tr>
+    </tbody>
+    </table>
+</div>
+</body>
+</html>

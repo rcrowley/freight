@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-eqiv='content-type' content='text/html;charset=utf-8'>
+    <title>freight-cache</title>
+    <link rel=stylesheet href="http://jashkenas.github.com/docco/resources/docco.css">
+</head>
+<body>
+<div id=container>
+    <div id=background></div>
+    <table cellspacing=0 cellpadding=0>
+    <thead>
+      <tr>
+        <th class=docs><h1>freight-cache</h1></th>
+        <th class=code></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr><td class='docs'><p>Rebuild the Freight cache from the Freight library.  The cache contains
+actual repositories that are suitable targets for <code>apt-get</code> (and maybe
+more in the future).</p>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Combined usage message and help screen.</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="c">#!/bin/sh</span>
+
+
+<span class="nb">set</span> -e
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p><code>getopts</code> doesn't support long options so this will have to do.</p>
+
+</td><td class=code><div class=highlight><pre>
+usage<span class="o">()</span> <span class="o">{</span>
+	<span class="nb">echo</span> <span class="s2">&quot;Usage: $(basename $0) [-g &lt;email&gt;] [-c &lt;conf&gt;] [-V] [-v] [-h] &lt;manager&gt;/&lt;distro&gt;...&quot;</span> &gt;&amp;2
+	<span class="o">[</span> -n <span class="s2">&quot;$1&quot;</span> <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="o">{</span>
+		<span class="nb">echo</span> <span class="s2">&quot;  -g &lt;email&gt;, --gpg=&lt;email&gt; GPG key to use&quot;</span> &gt;&amp;2
+		<span class="nb">echo</span> <span class="s2">&quot;  -c &lt;conf&gt;, --conf=&lt;conf&gt;  config file to parse&quot;</span> &gt;&amp;2
+		<span class="nb">echo</span> <span class="s2">&quot;  -V, --verbose             verbose mode&quot;</span> &gt;&amp;2
+		<span class="nb">echo</span> <span class="s2">&quot;  -v, --version             show the program version&quot;</span> &gt;&amp;2
+		<span class="nb">echo</span> <span class="s2">&quot;  -h, --help                show this help message&quot;</span> &gt;&amp;2
+	<span class="o">}</span> <span class="o">&amp;&amp;</span> <span class="nb">exit </span>0 <span class="o">||</span> <span class="nb">exit </span>1
+<span class="o">}</span>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Create a working directory on the same device as the Freight cache.</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="k">while</span> <span class="o">[</span> <span class="s2">&quot;$#&quot;</span> -gt 0 <span class="o">]</span>
+<span class="k">do</span>
+<span class="k">	case</span> <span class="s2">&quot;$1&quot;</span> in
+		-g|--gpg<span class="o">)</span>
+			<span class="nv">GPG</span><span class="o">=</span><span class="s2">&quot;$2&quot;</span>
+			<span class="nb">shift </span>2
+			;;
+		--gpg<span class="o">=</span>*<span class="o">)</span>
+			<span class="nv">GPG</span><span class="o">=</span><span class="s2">&quot;$(echo $1 | cut -d= -f2)&quot;</span>
+			<span class="nb">shift</span>
+			;;
+		-c|--conf<span class="o">)</span>
+			<span class="nv">CONF</span><span class="o">=</span><span class="s2">&quot;$2&quot;</span>
+			<span class="nb">shift </span>2
+			;;
+		--conf<span class="o">=</span>*<span class="o">)</span>
+			<span class="nv">CONF</span><span class="o">=</span><span class="s2">&quot;$(echo $1 | cut -d= -f2)&quot;</span>
+			<span class="nb">shift</span>
+			;;
+		-V|--verbose<span class="o">)</span>
+			<span class="nv">VERBOSE</span><span class="o">=</span>1
+			<span class="nb">shift</span>
+			;;
+		-h|--help<span class="o">)</span>
+			usage <span class="nb">help</span>
+			;;
+		-v|--version<span class="o">)</span>
+			. version.sh
+			<span class="nb">echo</span> <span class="s2">&quot;$VERSION&quot;</span>
+			<span class="nb">exit </span>0
+			;;
+		-<span class="o">)</span>
+			<span class="nb">echo</span> <span class="s2">&quot;# [freight] unknown switch: $1&quot;</span> &gt;&amp;2
+			;;
+		*<span class="o">)</span>
+			<span class="nb">break</span>
+			;;
+	<span class="k">esac</span>
+<span class="k">done</span>
+. freight-setup
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Enter the Freight library directory so that items in <code>$@</code> may be given as
+absolute paths or as partial paths of the form <code>&lt;manager&gt;/&lt;distro&gt;</code> that
+are ultimately taken relative to the Freight library.</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="nv">TMP</span><span class="o">=</span><span class="s2">&quot;$(mktemp -d &quot;</span><span class="nv">$VARCACHE</span>/work.<span class="nv">$$</span>.XXXXXXXXXX<span class="s2">&quot;)&quot;</span>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Rebuild each distro serially.</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="nb">cd</span> <span class="s2">&quot;$VARLIB&quot;</span>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>This isn't strictly necessary but it's a nice habit to leave everything
+as it was found.</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="k">for </span>DIR in <span class="nv">$@</span>
+<span class="k">do</span>
+
+	<span class="c"># Parse the manager and distro out of the Freight library path.</span>
+	<span class="nv">DIR</span><span class="o">=</span><span class="s2">&quot;$(readlink -f &quot;</span><span class="nv">$DIR</span><span class="s2">&quot;)&quot;</span>
+	<span class="nv">DIR</span><span class="o">=</span><span class="s2">&quot;${DIR##$VARLIB/}&quot;</span>
+	<span class="nv">MANAGER</span><span class="o">=</span><span class="s2">&quot;$(dirname $DIR)&quot;</span>
+	<span class="nv">DIST</span><span class="o">=</span><span class="s2">&quot;$(basename $DIR)&quot;</span>
+
+	<span class="c"># From here the process is customized on a per-manager basis.  The</span>
+	<span class="c"># sorted list of package filenames comes on `stdin` and the name of</span>
+	<span class="c"># the distro is the only argument.  From there, each manager can do</span>
+	<span class="c"># whatever it wants.</span>
+	. <span class="s2">&quot;$MANAGER.sh&quot;</span>
+	ls <span class="s2">&quot;$DIR&quot;</span> 2&gt;/dev/null | sort -V | <span class="nb">eval</span> <span class="nv">$MANAGER</span> <span class="nv">$DIST</span>
+
+<span class="k">done</span>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Clean up the working directory.</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="nb">cd</span> - &gt;/dev/null
+
+</pre></div></td></tr><tr><td class=docs>
+
+</td><td class=code><div class=highlight><pre>
+rm -rf <span class="s2">&quot;$TMP&quot;</span>
+
+
+</pre></div></td></tr><tr><td class=docs>
+</td><td class=code><div class=highlight><pre></td><td class='code'></td></tr>
+    </tbody>
+    </table>
+</div>
+</body>
+</html>
