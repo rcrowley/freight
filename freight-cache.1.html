@@ -88,7 +88,7 @@
 
 <p><code>freight-cache</code> converts each <em>manager</em>/<em>distro</em> given into a package repository (only Debian archives are supported currently).  The <em>manager</em> indicates the type of repository (again, <code>apt</code> is the only supported value).  The <em>distro</em> is an arbitrary string that should match a release of the target operating system (for example, "lenny" or "lucid").</p>
 
-<p>Packages are read from the Freight library (<code>$VARLIB</code> in the configuration, see <code>freight.conf</code>(5)) and organized into a working repository in the Freight cache (<code>$VARCACHE</code> in the configuration).</p>
+<p>Packages are read from the Freight library (<code>$VARLIB</code> in the configuration, see <code>freight</code>(5)) and organized into a working repository in the Freight cache (<code>$VARCACHE</code> in the configuration).</p>
 
 <p>Serving the repositories is left as an exercise for the reader.  The Freight cache is the only directory that needs to be exposed, so create a virtual host with <code>$VARCACHE</code> as its document root and everything will be fine.</p>
 
@@ -106,7 +106,7 @@
 <h2 id="FILES">FILES</h2>
 
 <dl>
-<dt><em>/etc/freight.conf</em></dt><dd>The default configuration file.  See <code>freight.conf</code>(5).</dd>
+<dt><em>/etc/freight.conf</em></dt><dd>The default configuration file.  See <code>freight</code>(5).</dd>
 </dl>
 
 
@@ -116,7 +116,7 @@
 
 <h2 id="AUTHOR">AUTHOR</h2>
 
-<p>Richard Crowley <a href="&#x6d;&#x61;&#105;&#108;&#116;&#x6f;&#x3a;&#x72;&#x69;&#x63;&#x68;&#97;&#x72;&#x64;&#x40;&#x64;&#101;&#118;&#115;&#x74;&#114;&#117;&#x63;&#116;&#117;&#114;&#x65;&#x2e;&#x63;&#x6f;&#109;" data-bare-link="true">&#x72;&#x69;&#x63;&#x68;&#x61;&#114;&#100;&#64;&#100;&#x65;&#118;&#115;&#116;&#x72;&#117;&#99;&#x74;&#117;&#114;&#101;&#x2e;&#99;&#x6f;&#x6d;</a></p>
+<p>Richard Crowley <a href="&#109;&#x61;&#105;&#108;&#x74;&#111;&#58;&#114;&#105;&#x63;&#x68;&#97;&#114;&#x64;&#64;&#100;&#101;&#118;&#115;&#x74;&#x72;&#117;&#99;&#x74;&#x75;&#114;&#101;&#46;&#x63;&#x6f;&#109;" data-bare-link="true">&#x72;&#105;&#x63;&#x68;&#97;&#x72;&#100;&#64;&#x64;&#x65;&#x76;&#x73;&#x74;&#x72;&#x75;&#x63;&#x74;&#117;&#x72;&#101;&#x2e;&#99;&#x6f;&#109;</a></p>
 
 <h2 id="SEE-ALSO">SEE ALSO</h2>
 
