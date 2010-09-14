@@ -55,13 +55,11 @@ apt() {
 		touch "$VARCACHE/dists/$DIST-$DATE/main/binary-$ARCH/Packages"
 	done >"$TMP/packages"
 	ARCHS="$(echo "$VARCACHE/dists/$DIST-$DATE/main"/binary-* \
-		| xargs -n1 basename | cut -d- -f2 | grep -v all)" # FIXME
-echo "ARCHS: $ARCHS"
+		| xargs -n1 basename | cut -d- -f2 | grep -v all)" # FIXME Multiline.
 
 	# Work through every package that should be part of this distro.
 	while read PACKAGE
 	do
-echo "PACKAGE: $PACKAGE"
 
 		# Link or copy this package into the pool.
 		# TODO Packages that start with `lib` should be in a `libX`
@@ -79,7 +77,6 @@ echo "PACKAGE: $PACKAGE"
 		[ "$ARCH" = "all" ] \
 			&& FILES="$(find "$VARCACHE/dists/$DIST-$DATE/main" -type f)" \
 			|| FILES="$VARCACHE/dists/$DIST-$DATE/main/binary-$ARCH/Packages"
-echo "FILES: $FILES"
 
 		# Grab and augment the control file from this package.  Remove
 		# `Size`, `MD5Sum`, etc. lines and replace them with newly
