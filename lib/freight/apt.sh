@@ -55,7 +55,7 @@ apt() {
 		touch "$VARCACHE/dists/$DIST-$DATE/main/binary-$ARCH/Packages"
 	done >"$TMP/packages"
 	ARCHS="$(echo "$VARCACHE/dists/$DIST-$DATE/main"/binary-* \
-		| xargs -n1 basename | cut -d- -f2 | grep -v all)" # FIXME Multiline.
+		| xargs -n1 basename | cut -d- -f2 | grep -v all | tr "\n" " ")"
 
 	# Work through every package that should be part of this distro.
 	while read PACKAGE
