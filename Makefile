@@ -12,8 +12,8 @@ man:
 		--manual=Freight --style=toc
 
 docs:
-	for SH in $$(find bin lib -type f -printf %P\\n); do \
-		shocco $$SH; \
+	for SH in $$(find bin lib -type f); do \
+		shocco $$SH >$$SH.html; \
 	done
 
 gh-pages: man docs
