@@ -99,13 +99,16 @@ absolute paths or as partial paths of the form <code>&lt;manager&gt;/&lt;distro&
 are ultimately taken relative to the Freight library.</p>
 
 </td><td class=code><div class=highlight><pre>
+mkdir -p <span class="s2">&quot;$VARCACHE&quot;</span>
 <span class="nv">TMP</span><span class="o">=</span><span class="s2">&quot;$(mktemp -d &quot;</span><span class="nv">$VARCACHE</span>/work.<span class="nv">$$</span>.XXXXXXXXXX<span class="s2">&quot;)&quot;</span>
+<span class="nb">trap</span> <span class="s2">&quot;rm -rf \&quot;$TMP\&quot;&quot;</span> 0
 
 </pre></div></td></tr><tr><td class=docs>
 
 <p>Rebuild each distro serially.</p>
 
 </td><td class=code><div class=highlight><pre>
+mkdir -p <span class="s2">&quot;$VARLIB&quot;</span>
 <span class="nb">cd</span> <span class="s2">&quot;$VARLIB&quot;</span>
 
 </pre></div></td></tr><tr><td class=docs>

@@ -97,7 +97,9 @@ absolute paths or as partial paths of the form <code>&lt;manager&gt;/&lt;distro&
 are ultimately taken relative to the Freight library.</p>
 
 </td><td class=code><div class=highlight><pre>
+mkdir -p <span class="s2">&quot;$VARLIB&quot;</span>
 <span class="nv">TMP</span><span class="o">=</span><span class="s2">&quot;$(mktemp -d &quot;</span><span class="nv">$VARLIB</span>/work.<span class="nv">$$</span>.XXXXXXXXXX<span class="s2">&quot;)&quot;</span>
+<span class="nb">trap</span> <span class="s2">&quot;rm -rf \&quot;$TMP\&quot;&quot;</span> 0
 ln <span class="s2">&quot;$PACKAGE&quot;</span> <span class="s2">&quot;$TMP/$(basename $PACKAGE)&quot;</span> <span class="se">\</span>
 	<span class="o">||</span> cp <span class="s2">&quot;$PACKAGE&quot;</span> <span class="s2">&quot;$TMP/$(basename $PACKAGE)&quot;</span>
 
@@ -120,8 +122,8 @@ files in the Freight cache.</p>
 . apt.sh
 <span class="o">[</span> -z <span class="s2">&quot;$KEEP&quot;</span> <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="k">for </span>DIR in <span class="s2">&quot;$@&quot;</span>
 <span class="k">do</span>
-<span class="k">	</span>find <span class="s2">&quot;$DIR&quot;</span> -name <span class="s2">&quot;$(apt_name $PACKAGE)_*_$(apt_arch $PACKAGE).deb&quot;</span> <span class="se">\</span>
-		-delete 2&gt;/dev/null
+	<span class="o">[</span> -d <span class="s2">&quot;$DIR&quot;</span> <span class="o">]</span> <span class="o">&amp;&amp;</span> find <span class="s2">&quot;$DIR&quot;</span> -name <span class="se">\</span>
+		<span class="s2">&quot;$(apt_name $PACKAGE)_*_$(apt_arch $PACKAGE).deb&quot;</span> -delete
 <span class="k">done</span>
 
 </pre></div></td></tr><tr><td class=docs>
@@ -139,16 +141,8 @@ as it was found.</p>
 
 </pre></div></td></tr><tr><td class=docs>
 
-<p>Clean up the working directory.  Ultimately, this will just reduce the
-link count of this package by one as it's linked elsewhere.</p>
-
 </td><td class=code><div class=highlight><pre>
 <span class="nb">cd</span> - &gt;/dev/null
-
-</pre></div></td></tr><tr><td class=docs>
-
-</td><td class=code><div class=highlight><pre>
-rm -rf <span class="s2">&quot;$TMP&quot;</span>
 
 
 </pre></div></td></tr><tr><td class=docs>

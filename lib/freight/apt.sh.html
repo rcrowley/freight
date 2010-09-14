@@ -93,13 +93,11 @@ apt<span class="o">()</span> <span class="o">{</span>
 		touch <span class="s2">&quot;$VARCACHE/dists/$DIST-$DATE/main/binary-$ARCH/Packages&quot;</span>
 	<span class="k">done</span> &gt;<span class="s2">&quot;$TMP/packages&quot;</span>
 	<span class="nv">ARCHS</span><span class="o">=</span><span class="s2">&quot;$(echo &quot;</span><span class="nv">$VARCACHE</span>/dists/<span class="nv">$DIST</span>-<span class="nv">$DATE</span>/main<span class="s2">&quot;/binary-* \</span>
-<span class="s2">		| xargs -n1 basename | cut -d- -f2 | grep -v all)&quot;</span> <span class="c"># FIXME</span>
-<span class="nb">echo</span> <span class="s2">&quot;ARCHS: $ARCHS&quot;</span>
+<span class="s2">		| xargs -n1 basename | cut -d- -f2 | grep -v all | tr &quot;</span><span class="se">\n</span><span class="s2">&quot; &quot;</span> <span class="s2">&quot;)&quot;</span>
 
 	<span class="c"># Work through every package that should be part of this distro.</span>
 	<span class="k">while </span><span class="nb">read </span>PACKAGE
 	<span class="k">do</span>
-<span class="nb">echo</span> <span class="s2">&quot;PACKAGE: $PACKAGE&quot;</span>
 
 		<span class="c"># Link or copy this package into the pool.</span>
 		<span class="c"># TODO Packages that start with `lib` should be in a `libX`</span>
@@ -117,7 +115,6 @@ apt<span class="o">()</span> <span class="o">{</span>
 		<span class="o">[</span> <span class="s2">&quot;$ARCH&quot;</span> <span class="o">=</span> <span class="s2">&quot;all&quot;</span> <span class="o">]</span> <span class="se">\</span>
 			<span class="o">&amp;&amp;</span> <span class="nv">FILES</span><span class="o">=</span><span class="s2">&quot;$(find &quot;</span><span class="nv">$VARCACHE</span>/dists/<span class="nv">$DIST</span>-<span class="nv">$DATE</span>/main<span class="s2">&quot; -type f)&quot;</span> <span class="se">\</span>
 			<span class="o">||</span> <span class="nv">FILES</span><span class="o">=</span><span class="s2">&quot;$VARCACHE/dists/$DIST-$DATE/main/binary-$ARCH/Packages&quot;</span>
-<span class="nb">echo</span> <span class="s2">&quot;FILES: $FILES&quot;</span>
 
 		<span class="c"># Grab and augment the control file from this package.  Remove</span>
 		<span class="c"># `Size`, `MD5Sum`, etc. lines and replace them with newly</span>
