@@ -2,7 +2,7 @@ prefix=/usr/local
 sysconfdir=${prefix}/etc
 mandir=${prefix}/share/man
 
-VERSION=0.0.0
+VERSION=$(shell grep Version control | cut -d" " -f2)
 
 all:
 
@@ -39,6 +39,15 @@ uninstall:
 		$(DESTDIR)$(mandir)/man5
 
 deb:
+ifeq (root, $(shell whoami))
+	debra create debian control
+	make install DESTDIR=debian prefix=/usr sysconfdir=/etc
+	chown -R root:root debian
+	debra build debian freight_$(VERSION)_all.deb
+	debra destroy debian
+else
+	@echo "You must be root to build a Debian package."
+endif
 
 man:
 	find man -name \*.ronn | xargs -n1 ronn \
