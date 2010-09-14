@@ -62,10 +62,12 @@ done
 
 # Create a working directory on the same device as the Freight cache.
 TMP="$(mktemp -d "$VARCACHE/work.$$.XXXXXXXXXX")"
+trap "rm -rf \"$TMP\"" 0
 
 # Enter the Freight library directory so that items in `$@` may be given as
 # absolute paths or as partial paths of the form `<manager>/<distro>` that
 # are ultimately taken relative to the Freight library.
+mkdir -p "$VARLIB"
 cd "$VARLIB"
 
 # Rebuild each distro serially.
