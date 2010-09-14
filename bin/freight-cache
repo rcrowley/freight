@@ -93,6 +93,3 @@ done
 # This isn't strictly necessary but it's a nice habit to leave everything
 # as it was found.
 cd - >/dev/null
-
-# Clean up the working directory.
-rm -rf "$TMP"
