@@ -1,0 +1,25 @@
+Store repositories in a root as /var/lib/freight/<manager>/<distro>/<deb>.
+"Compile" to /var/cache/freight.
+
+freight-add <deb> <manager>/<distro>...
+	Copy and hard link <deb> into place in each <manager>/<distro>
+		If you do backups, make sure to use the -H option to rsync(1).
+		Don't have to copy if we're on the same device.
+	(Optionally) remove files from each distro that start with "<name>_".
+
+freight-cache <manager>/<distro>...
+	Sort the packages in each distro.
+	Build a Packages file for each architecture mentioned.
+		Grab the control file from each package.
+		Augment it with Size, MD5Sum, SHA1, SHA256, and Filename.
+		Make sure Package is first, Version is second, and Description is last.
+	gzip every Packages file.
+	Build the Release file for each architecture mentioned.
+	Build the Release file with the checksums for each contained Release and Packages file.
+	gpg sign the Release file.
+
+Default directories?
+	/var/lib/freight/<manager>/<distro>
+	/var/cache/freight/<manager>/<distro>/{dists,pool}
+
+For Debian-style, all that's important is the dists/ hierarchy?

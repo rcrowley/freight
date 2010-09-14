@@ -1,0 +1,93 @@
+#!/bin/sh
+
+# Add a package to the Freight library.
+
+set -e
+
+# Combined usage message and help screen.
+usage() {
+	echo "Usage: $(basename $0) [-k] [-c <conf>] [-V] [-v] [-h] <package> <manager>/<distro>..." >&2
+	[ -n "$1" ] && {
+		echo "  -k, --keep               keep old versions of packages" >&2
+		echo "  -c <conf>, --conf=<conf> config file to parse" >&2
+		echo "  -V, --verbose            verbose mode" >&2
+		echo "  -v, --version            show the program version" >&2
+		echo "  -h, --help               show this help message" >&2
+	} && exit 0 || exit 1
+}
+
+# `getopts` doesn't support long options so this will have to do.
+while [ "$#" -gt 0 ]
+do
+	case "$1" in
+		-k|--keep)
+			KEEP=1
+			shift
+			;;
+		-V|--verbose)
+			VERBOSE=1
+			shift
+			;;
+		-h|--help)
+			usage help
+			;;
+		-v|--version)
+			. version.sh
+			echo "$VERSION"
+			exit 0
+			;;
+		-)
+			echo "# [freight] unknown switch: $1" >&2
+			;;
+		*)
+			break
+			;;
+	esac
+done
+. freight-setup
+
+# The first non-option argument is the package file.  The others are each
+# `<manager>/<distro>` paths for this package, which are listed in `$@`.
+PACKAGE="$1"
+[ -z "$PACKAGE" ] && usage
+shift
+[ -z "$*" ] && usage
+
+# Create a working directory on the same device as the Freight library and
+# link or copy this package there.
+TMP="$(mktemp -d "$VARLIB/work.$$.XXXXXXXXXX")"
+ln "$PACKAGE" "$TMP/$(basename $PACKAGE)" \
+	|| cp "$PACKAGE" "$TMP/$(basename $PACKAGE)"
+
+# Enter the Freight library directory so that items in `$@` may be given as
+# absolute paths or as partial paths of the form `<manager>/<distro>` that
+# are ultimately taken relative to the Freight library.
+cd "$VARLIB"
+
+# Remove old versions of this package from every `<manager>/<distro>`
+# given in `$@` unless explicitly asked to keep them.
+# TODO Decouple this from `apt`-specific file naming conventions.
+. apt.sh
+[ -z "$KEEP" ] && for DIR in "$@"
+do
+	find "$DIR" -name "$(apt_name $PACKAGE)_*_$(apt_arch $PACKAGE).deb" \
+		-delete 2>/dev/null
+done
+
+# Hard link this package into every `<manager>/<distro>` given in `$@`.
+# These links will later be used to compile the `Release` and `Packages`
+# files in the Freight cache.
+for DIR in "$@"
+do
+	mkdir -p "$DIR"
+	ln "$TMP/$(basename $PACKAGE)" "$DIR/$(basename $PACKAGE)" 2>/dev/null \
+		|| echo "# [freight] $DIR already has $PACKAGE" >&2
+done
+
+# This isn't strictly necessary but it's a nice habit to leave everything
+# as it was found.
+cd - >/dev/null
+
+# Clean up the working directory.  Ultimately, this will just reduce the
+# link count of this package by one as it's linked elsewhere.
+rm -rf "$TMP"

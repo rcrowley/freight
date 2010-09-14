@@ -1,0 +1,95 @@
+#!/bin/sh
+
+# Rebuild the Freight cache from the Freight library.  The cache contains
+# actual repositories that are suitable targets for `apt-get` (and maybe
+# more in the future).
+
+set -e
+
+# Combined usage message and help screen.
+usage() {
+	echo "Usage: $(basename $0) [-g <email>] [-c <conf>] [-V] [-v] [-h] <manager>/<distro>..." >&2
+	[ -n "$1" ] && {
+		echo "  -g <email>, --gpg=<email> GPG key to use" >&2
+		echo "  -c <conf>, --conf=<conf>  config file to parse" >&2
+		echo "  -V, --verbose             verbose mode" >&2
+		echo "  -v, --version             show the program version" >&2
+		echo "  -h, --help                show this help message" >&2
+	} && exit 0 || exit 1
+}
+
+# `getopts` doesn't support long options so this will have to do.
+while [ "$#" -gt 0 ]
+do
+	case "$1" in
+		-g|--gpg)
+			GPG="$2"
+			shift 2
+			;;
+		--gpg=*)
+			GPG="$(echo $1 | cut -d= -f2)"
+			shift
+			;;
+		-c|--conf)
+			CONF="$2"
+			shift 2
+			;;
+		--conf=*)
+			CONF="$(echo $1 | cut -d= -f2)"
+			shift
+			;;
+		-V|--verbose)
+			VERBOSE=1
+			shift
+			;;
+		-h|--help)
+			usage help
+			;;
+		-v|--version)
+			. version.sh
+			echo "$VERSION"
+			exit 0
+			;;
+		-)
+			echo "# [freight] unknown switch: $1" >&2
+			;;
+		*)
+			break
+			;;
+	esac
+done
+. freight-setup
+
+# Create a working directory on the same device as the Freight cache.
+TMP="$(mktemp -d "$VARCACHE/work.$$.XXXXXXXXXX")"
+
+# Enter the Freight library directory so that items in `$@` may be given as
+# absolute paths or as partial paths of the form `<manager>/<distro>` that
+# are ultimately taken relative to the Freight library.
+cd "$VARLIB"
+
+# Rebuild each distro serially.
+for DIR in $@
+do
+
+	# Parse the manager and distro out of the Freight library path.
+	DIR="$(readlink -f "$DIR")"
+	DIR="${DIR##$VARLIB/}"
+	MANAGER="$(dirname $DIR)"
+	DIST="$(basename $DIR)"
+
+	# From here the process is customized on a per-manager basis.  The
+	# sorted list of package filenames comes on `stdin` and the name of
+	# the distro is the only argument.  From there, each manager can do
+	# whatever it wants.
+	. "$MANAGER.sh"
+	ls "$DIR" 2>/dev/null | sort -V | eval $MANAGER $DIST
+
+done
+
+# This isn't strictly necessary but it's a nice habit to leave everything
+# as it was found.
+cd - >/dev/null
+
+# Clean up the working directory.
+rm -rf "$TMP"
