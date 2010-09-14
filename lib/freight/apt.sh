@@ -113,7 +113,8 @@ Origin: $ORIGIN
 Label: $LABEL
 Architecture: $ARCH
 EOF
-		gzip "$VARCACHE/dists/$DIST-$DATE/main/binary-$ARCH/Packages"
+		gzip -c "$VARCACHE/dists/$DIST-$DATE/main/binary-$ARCH/Packages" \
+			>"$VARCACHE/dists/$DIST-$DATE/main/binary-$ARCH/Packages.gz"
 	done
 
 	# Begin the top-level `Release` file with the lists of components
