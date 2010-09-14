@@ -1,11 +1,44 @@
 prefix=/usr/local
-sysconfdir=/usr/local/etc
+sysconfdir=${prefix}/etc
+mandir=${prefix}/share/man
+
+VERSION=0.0.0
 
 all:
 
 install:
+	install -d $(DESTDIR)$(prefix)/bin
+	install bin/freight bin/freight-add bin/freight-cache bin/freight-setup \
+		$(DESTDIR)$(prefix)/bin/
+	install -d $(DESTDIR)$(prefix)/lib/freight
+	install -m644 lib/freight/*.sh $(DESTDIR)$(prefix)/lib/freight/
+	install -d $(DESTDIR)$(sysconfdir)
+	install -m644 etc/freight.conf.example $(DESTDIR)$(sysconfdir)/
+	install -d $(DESTDIR)$(mandir)/man1
+	install -m644 man/man1/freight-add.1 man/man1/freight-cache.1 \
+		$(DESTDIR)$(mandir)/man1/
+	install -d $(DESTDIR)$(mandir)/man5
+	install -m644 man/man5/freight.5 $(DESTDIR)$(mandir)/man5/
 
 uninstall:
+	rm -f \
+		$(DESTDIR)$(prefix)/bin/freight \
+		$(DESTDIR)$(prefix)/bin/freight-add \
+		$(DESTDIR)$(prefix)/bin/freight-cache \
+		$(DESTDIR)$(prefix)/bin/freight-setup \
+		$(DESTDIR)$(prefix)/lib/freight/*.sh \
+		$(DESTDIR)$(sysconfdir)/freight.conf.example \
+		$(DESTDIR)$(mandir)/man1/freight-add.1 \
+		$(DESTDIR)$(mandir)/man1/freight-cache.1 \
+		$(DESTDIR)$(mandir)/man5/freight.5
+	rmdir -p --ignore-fail-on-non-empty \
+		$(DESTDIR)$(prefix)/bin \
+		$(DESTDIR)$(prefix)/lib/freight \
+		$(DESTDIR)$(sysconfdir) \
+		$(DESTDIR)$(mandir)/man1 \
+		$(DESTDIR)$(mandir)/man5
+
+deb:
 
 man:
 	find man -name \*.ronn | xargs -n1 ronn \
