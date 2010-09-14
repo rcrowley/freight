@@ -1,0 +1,33 @@
+freight.conf(5) -- Freight configuration
+========================================
+
+## DESCRIPTION
+
+The Freight configuration is a `source`d shell script that defines a few important variables.
+
+## OPTIONS
+
+* `VARLIB`:
+  The Freight library directory.  Typically _/var/lib/freight_.
+* `VARCACHE`:
+  The Freight cache directory.  Typically _/var/cache/freight_.  This should be the document root of the web server.
+* `ORIGIN`:
+  The `Origin` field in the Debian archive.
+* `LABEL`:
+  The `Label` field in the Debian archive.
+* `GPG`:
+  The GPG key to use.  This value must be set either in a configuration file or by using the `-g` option to `freight-cache`(1).
+
+## THEME SONG
+
+"All the Old Showstoppers" - The New Pornographers
+
+## AUTHOR
+
+Richard Crowley <richard@devstructure.com>
+
+## SEE ALSO
+
+`freight-add`(1) adds packages to the intermediate "Freight library" that is used by `freight-cache`(1) to build the actual repositories.
+
+`reprepro`(1) manages Debian archives, too, if Freight isn't your thing.

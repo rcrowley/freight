@@ -1,0 +1,39 @@
+freight-add(1) -- add a package to Freight
+==========================================
+
+## SYNOPSIS
+
+`freight add` [`-k`] [`-c` _conf_] [`-V`] [`-v`] [`-h`] _package_ _manager_/_distro_...  
+
+## DESCRIPTION
+
+`freight-add` registers the given package with one or more _manager_/_distro_ pairs (which likely all share the same manager).  Currently, `apt` is the only supported _manager_.  _distro_ may be any arbitrary value but is best suited to naming a particular version of the target operating system (for example, "lenny" or "lucid").
+
+The package files are organized in the Freight library so `freight-cache`(1) has an easy time of creating package repositories for each _manager_/_distro_ later.
+
+## OPTIONS
+
+* `-k`, `--keep`:
+  Keep old package files.  (Experimental.)
+* `-c` _conf_, `--conf=`_conf_:
+  Use an alternate configuration file.
+* `-V`, `--verbose`:
+  Verbose mode.
+* `-v`, `--version`:
+  Show the program version.
+* `-h`, `--help`:
+  Show a help message.
+
+## THEME SONG
+
+"All the Old Showstoppers" - The New Pornographers
+
+## AUTHOR
+
+Richard Crowley <richard@devstructure.com>
+
+## SEE ALSO
+
+`freight-cache`(1) builds package repositories from the intermediate "Freight library" managed by `freight-add`.
+
+`reprepro`(1) manages Debian archives, too, if Freight isn't your thing.
