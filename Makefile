@@ -12,16 +12,16 @@ man:
 		--manual=Freight --style=toc
 
 docs:
-	for SH in $$(find bin lib -type f); do \
+	for SH in $$(find bin lib -type f -not -name \*.html); do \
 		shocco $$SH >$$SH.html; \
 	done
 
 gh-pages: man docs
 	mkdir -p gh-pages
 	find man -name \*.html | xargs -I__ mv __ gh-pages/
-	for HTML in $$(find lib -name \*.html -printf %P\\n); do \
+	for HTML in $$(find bin lib -name \*.html -printf %H/%P\\n); do \
 		mkdir -p gh-pages/$$(dirname $$HTML); \
-		mv lib/$$HTML gh-pages/$$HTML; \
+		mv $$HTML gh-pages/$$HTML; \
 	done
 	git checkout -q gh-pages
 	cp -R gh-pages/* ./
