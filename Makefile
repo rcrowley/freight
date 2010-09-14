@@ -12,11 +12,8 @@ man:
 		--manual=Freight --style=toc
 
 docs:
-	for SH in $$(find . -name \*.sh -printf %P\\n); do \
-		shocco lib/$$SH; \
-	done
-	for PY in $$(find . -name \*.py -printf %P\\n); do \
-		pocco lib/$$PY; \
+	for SH in $$(find bin lib -type f -printf %P\\n); do \
+		shocco $$SH; \
 	done
 
 gh-pages: man docs
