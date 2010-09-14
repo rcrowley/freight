@@ -61,6 +61,7 @@ done
 . freight-setup
 
 # Create a working directory on the same device as the Freight cache.
+mkdir -p "$VARCACHE"
 TMP="$(mktemp -d "$VARCACHE/work.$$.XXXXXXXXXX")"
 trap "rm -rf \"$TMP\"" 0
 

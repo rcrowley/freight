@@ -55,6 +55,7 @@ shift
 
 # Create a working directory on the same device as the Freight library and
 # link or copy this package there.
+mkdir -p "$VARLIB"
 TMP="$(mktemp -d "$VARLIB/work.$$.XXXXXXXXXX")"
 trap "rm -rf \"$TMP\"" 0
 ln "$PACKAGE" "$TMP/$(basename $PACKAGE)" \
@@ -63,7 +64,6 @@ ln "$PACKAGE" "$TMP/$(basename $PACKAGE)" \
 # Enter the Freight library directory so that items in `$@` may be given as
 # absolute paths or as partial paths of the form `<manager>/<distro>` that
 # are ultimately taken relative to the Freight library.
-mkdir -p "$VARLIB"
 cd "$VARLIB"
 
 # Remove old versions of this package from every `<manager>/<distro>`
