@@ -1,4 +1,4 @@
-freight.conf(5) -- Freight configuration
+freight(5) -- Freight configuration
 ========================================
 
 ## DESCRIPTION

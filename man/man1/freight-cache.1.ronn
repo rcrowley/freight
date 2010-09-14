@@ -9,7 +9,7 @@ freight-cache(1) -- (re)builds package repositories
 
 `freight-cache` converts each _manager_/_distro_ given into a package repository (only Debian archives are supported currently).  The _manager_ indicates the type of repository (again, `apt` is the only supported value).  The _distro_ is an arbitrary string that should match a release of the target operating system (for example, "lenny" or "lucid").
 
-Packages are read from the Freight library (`$VARLIB` in the configuration, see `freight.conf`(5)) and organized into a working repository in the Freight cache (`$VARCACHE` in the configuration).
+Packages are read from the Freight library (`$VARLIB` in the configuration, see `freight`(5)) and organized into a working repository in the Freight cache (`$VARCACHE` in the configuration).
 
 Serving the repositories is left as an exercise for the reader.  The Freight cache is the only directory that needs to be exposed, so create a virtual host with `$VARCACHE` as its document root and everything will be fine.
 
@@ -29,7 +29,7 @@ Serving the repositories is left as an exercise for the reader.  The Freight cac
 ## FILES
 
 * _/etc/freight.conf_:
-  The default configuration file.  See `freight.conf`(5).
+  The default configuration file.  See `freight`(5).
 
 ## THEME SONG
 

@@ -24,6 +24,11 @@ The package files are organized in the Freight library so `freight-cache`(1) has
 * `-h`, `--help`:
   Show a help message.
 
+## FILES
+
+* _/etc/freight.conf_:
+  The default configuration file.  See `freight`(5).
+
 ## THEME SONG
 
 "All the Old Showstoppers" - The New Pornographers

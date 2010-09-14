@@ -1,0 +1,44 @@
+.\" generated with Ronn/v0.7.3
+.\" http://github.com/rtomayko/ronn/tree/0.7.3
+.
+.TH "FREIGHT\.CONF" "5" "September 2010" "" "Freight"
+.
+.SH "NAME"
+\fBfreight\.conf\fR \- Freight configuration
+.
+.SH "DESCRIPTION"
+The Freight configuration is a \fBsource\fRd shell script that defines a few important variables\.
+.
+.SH "OPTIONS"
+.
+.TP
+\fBVARLIB\fR
+The Freight library directory\. Typically \fI/var/lib/freight\fR\.
+.
+.TP
+\fBVARCACHE\fR
+The Freight cache directory\. Typically \fI/var/cache/freight\fR\. This should be the document root of the web server\.
+.
+.TP
+\fBORIGIN\fR
+The \fBOrigin\fR field in the Debian archive\.
+.
+.TP
+\fBLABEL\fR
+The \fBLabel\fR field in the Debian archive\.
+.
+.TP
+\fBGPG\fR
+The GPG key to use\. This value must be set either in a configuration file or by using the \fB\-g\fR option to \fBfreight\-cache\fR(1)\.
+.
+.SH "THEME SONG"
+"All the Old Showstoppers" \- The New Pornographers
+.
+.SH "AUTHOR"
+Richard Crowley \fIrichard@devstructure\.com\fR
+.
+.SH "SEE ALSO"
+\fBfreight\-add\fR(1) adds packages to the intermediate "Freight library" that is used by \fBfreight\-cache\fR(1) to build the actual repositories\.
+.
+.P
+\fBreprepro\fR(1) manages Debian archives, too, if Freight isn\'t your thing\.
