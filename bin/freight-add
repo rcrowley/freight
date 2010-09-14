@@ -72,8 +72,8 @@ cd "$VARLIB"
 . apt.sh
 [ -z "$KEEP" ] && for DIR in "$@"
 do
-	find "$DIR" -name "$(apt_name $PACKAGE)_*_$(apt_arch $PACKAGE).deb" \
-		-delete 2>/dev/null
+	[ -d "$DIR" ] && find "$DIR" -name \
+		"$(apt_name $PACKAGE)_*_$(apt_arch $PACKAGE).deb" -delete
 done
 
 # Hard link this package into every `<manager>/<distro>` given in `$@`.
