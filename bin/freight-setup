@@ -6,7 +6,7 @@ set -e
 LIB="$(dirname $(dirname $0))/lib/freight"
 
 # Add the library and types paths to `PATH` to allow `source`ing library code.
-PATH="$LIB:$LIB/types:$PATH"
+PATH="$LIB:$PATH"
 
 # `source` the configuration.
 . conf.sh
