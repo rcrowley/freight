@@ -29,7 +29,9 @@ apt_filesize() {
 	stat -c %s "$1"
 }
 
-apt() {
+# Setup the repository for the distro named in the first argument,
+# including all packages read from `stdin`.
+apt_cache() {
 	DIST="$1"
 
 	# Generate a timestamp to use in this build's directory name.
@@ -37,10 +39,13 @@ apt() {
 
 	# For a Debian archive, each distribution needs at least this directory
 	# structure in place.  The directory for this build must not exist,
-	# otherwise this build would clobber a previous one.
+	# otherwise this build would clobber a previous one.  The `.refs`
+	# directory contains links to all the packages currently included in
+	# this distribution to enable cleaning by link count later.
 	mkdir -p "$VARCACHE/dists"
 	mkdir "$VARCACHE/dists/$DIST-$DATE"
 	mkdir -p "$VARCACHE/dists/$DIST-$DATE/main"
+	mkdir -p "$VARCACHE/dists/$DIST-$DATE/.refs"
 	mkdir -p "$VARCACHE/pool/main"
 
 	# Do a preliminary read of the input and create all architecture-
@@ -61,15 +66,18 @@ apt() {
 	while read PACKAGE
 	do
 
-		# Link or copy this package into the pool.
-		# TODO Packages that start with `lib` should be in a `libX`
-		# directory.
-		POOL="pool/main/$(echo "$PACKAGE" | cut -c1)/$(apt_name "$PACKAGE")"
+		# Link or copy this package into this distro's `.refs` directory.
+		REFS="$VARCACHE/dists/$DIST-$DATE/.refs"
+		ln "$VARLIB/apt/$DIST/$PACKAGE" "$REFS" \
+			|| cp "$VARLIB/apt/$DIST/$PACKAGE" "$REFS"
+
+		# Link this package into the pool.
+		[ "$(echo "$PACKAGE" | cut -c3)" = "lib" ] && C=4 || C=1
+		POOL="pool/main/$(echo "$PACKAGE" | cut -c$C)/$(apt_name "$PACKAGE")"
 		mkdir -p "$VARCACHE/$POOL"
 		[ -f "$VARCACHE/$POOL/$PACKAGE" ] \
 			&& echo "# [freight] pool already has $PACKAGE" >&2 \
-			|| ln "$VARLIB/apt/$DIST/$PACKAGE" "$VARCACHE/$POOL/$PACKAGE" \
-			|| cp "$VARLIB/apt/$DIST/$PACKAGE" "$VARCACHE/$POOL/$PACKAGE"
+			|| ln "$REFS/$PACKAGE" "$VARCACHE/$POOL/$PACKAGE"
 
 		# Build a list of the one-or-more `Packages` files to append with
 		# this package's info.
@@ -161,6 +169,9 @@ EOF
 	mv -T "$VARCACHE/dists/$DIST-$DATE-" "$VARCACHE/dists/$DIST"
 	[ -z "$OLD" ] || rm -rf "$VARCACHE/dists/$OLD"
 
-	# TODO Remove links from the pool that are no longer needed.
+}
 
+# Clean up old packages in the pool.
+apt_clean() {
+	find "$VARCACHE/pool" -links 1 -delete
 }

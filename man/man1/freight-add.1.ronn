@@ -3,7 +3,7 @@ freight-add(1) -- add a package to Freight
 
 ## SYNOPSIS
 
-`freight add` [`-k`] [`-c` _conf_] [`-V`] [`-v`] [`-h`] _package_ _manager_/_distro_...  
+`freight add` [`-c` _conf_] [`-V`] [`-v`] [`-h`] _package_ _manager_/_distro_...  
 
 ## DESCRIPTION
 
@@ -13,8 +13,6 @@ The package files are organized in the Freight library so `freight-cache`(1) has
 
 ## OPTIONS
 
-* `-k`, `--keep`:
-  Keep old package files.  (Experimental.)
 * `-c` _conf_, `--conf=`_conf_:
   Use an alternate configuration file.
 * `-V`, `--verbose`:
