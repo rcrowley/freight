@@ -72,8 +72,8 @@ apt_cache() {
 			|| cp "$VARLIB/apt/$DIST/$PACKAGE" "$REFS"
 
 		# Link this package into the pool.
-		[ "$(echo "$PACKAGE" | cut -c3)" = "lib" ] && C=4 || C=1
-		POOL="pool/main/$(echo "$PACKAGE" | cut -c$C)/$(apt_name "$PACKAGE")"
+		[ "$(echo "$PACKAGE" | cut -c1-3)" = "lib" ] && C=4 || C=1
+		POOL="pool/main/$(echo "$PACKAGE" | cut -c$C-)/$(apt_name "$PACKAGE")"
 		mkdir -p "$VARCACHE/$POOL"
 		[ -f "$VARCACHE/$POOL/$PACKAGE" ] \
 			&& echo "# [freight] pool already has $PACKAGE" >&2 \
