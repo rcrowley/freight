@@ -25,42 +25,35 @@ do
 	case "$1" in
 		-k|--keep)
 			KEEP=1
-			shift
-			;;
+			shift;;
 		-g|--gpg)
 			GPG="$2"
-			shift 2
-			;;
+			shift 2;;
+		-g*)
+			GPG="$(echo $1 | cut -c3-)"
+			shift;;
 		--gpg=*)
-			GPG="$(echo $1 | cut -d= -f2)"
-			shift
-			;;
+			GPG="$(echo $1 | cut -c7-)"
+			shift;;
 		-c|--conf)
 			CONF="$2"
-			shift 2
-			;;
+			shift 2;;
+		-c*)
+			CONF="$(echo $1 | cut -c3-)"
+			shift;;
 		--conf=*)
-			CONF="$(echo $1 | cut -d= -f2)"
-			shift
-			;;
+			CONF="$(echo $1 | cut -c8-)"
+			shift;;
 		-V|--verbose)
 			VERBOSE=1
-			shift
-			;;
-		-h|--help)
-			usage help
-			;;
+			shift;;
+		-h|--help) usage help;;
 		-v|--version)
 			. version.sh
 			echo "$VERSION"
-			exit 0
-			;;
-		-)
-			echo "# [freight] unknown switch: $1" >&2
-			;;
-		*)
-			break
-			;;
+			exit 0;;
+		-) echo "# [freight] unknown switch: $1" >&2;;
+		*) break;;
 	esac
 done
 . freight-setup
