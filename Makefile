@@ -1,4 +1,4 @@
-VERSION=0.0.4-1
+VERSION=0.0.5-1
 
 prefix=/usr/local
 bindir=${prefix}/bin
