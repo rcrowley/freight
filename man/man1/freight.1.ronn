@@ -21,7 +21,7 @@ freight(1) -- a modern take on the Debian archive
 
 ## THEME SONG
 
-"All the Old Showstoppers" - The New Pornographers
+The New Pornographers - "All the Old Showstoppers"
 
 ## AUTHOR
 

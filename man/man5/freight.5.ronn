@@ -20,7 +20,7 @@ The Freight configuration is a `source`d shell script that defines a few importa
 
 ## THEME SONG
 
-"All the Old Showstoppers" - The New Pornographers
+The New Pornographers - "All the Old Showstoppers"
 
 ## AUTHOR
 
