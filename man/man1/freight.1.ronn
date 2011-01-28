@@ -1,0 +1,32 @@
+freight(1) -- a modern take on the Debian archive
+=================================================
+
+## SYNOPSIS
+
+`freight` _command_ [_..._]  
+
+## DESCRIPTION
+
+`freight` programs create the files needed to serve a Debian archive.  The actual serving is done via your favorite HTTP server.
+
+* `freight-add`(1):
+  Add a package to Freight.
+* `freight-cache`(1):
+  (Re)builds package repositories.
+
+## FILES
+
+* _/etc/freight.conf_:
+  The default configuration file.  See `freight`(5).
+
+## THEME SONG
+
+"All the Old Showstoppers" - The New Pornographers
+
+## AUTHOR
+
+Richard Crowley <r@rcrowley.org>
+
+## SEE ALSO
+
+`reprepro`(1) manages Debian archives, too, if Freight isn't your thing.

@@ -39,10 +39,10 @@ Serving the repositories is left as an exercise for the reader.  The Freight cac
 
 ## AUTHOR
 
-Richard Crowley <richard@devstructure.com>
+Richard Crowley <r@rcrowley.org>
 
 ## SEE ALSO
 
-`freight-add`(1) adds packages to the intermediate "Freight library" that is used by `freight-cache` to build the actual repositories.
+Part of `freight`(1).
 
-`reprepro`(1) manages Debian archives, too, if Freight isn't your thing.
+`freight-add`(1) adds packages to the intermediate "Freight library" that is used by `freight-cache` to build the actual repositories.

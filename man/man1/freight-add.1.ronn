@@ -33,10 +33,10 @@ The package files are organized in the Freight library so `freight-cache`(1) has
 
 ## AUTHOR
 
-Richard Crowley <richard@devstructure.com>
+Richard Crowley <r@rcrowley.org>
 
 ## SEE ALSO
 
-`freight-cache`(1) builds package repositories from the intermediate "Freight library" managed by `freight-add`.
+Part of `freight`(1).
 
-`reprepro`(1) manages Debian archives, too, if Freight isn't your thing.
+`freight-cache`(1) builds package repositories from the intermediate "Freight library" managed by `freight-add`.

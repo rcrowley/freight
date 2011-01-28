@@ -1,5 +1,5 @@
 freight(5) -- Freight configuration
-========================================
+===================================
 
 ## DESCRIPTION
 
@@ -24,7 +24,7 @@ The Freight configuration is a `source`d shell script that defines a few importa
 
 ## AUTHOR
 
-Richard Crowley <richard@devstructure.com>
+Richard Crowley <r@rcrowley.org>
 
 ## SEE ALSO
 

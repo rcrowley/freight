@@ -1,10 +1,13 @@
+VERSION=0.0.4-1
+
 prefix=/usr/local
+bindir=${prefix}/bin
 sysconfdir=${prefix}/etc
 mandir=${prefix}/share/man
 
-VERSION=$(shell grep Version control | cut -d" " -f2)
-
 all:
+	m4 -D__VERSION__=$(VERSION) lib/freight/version.sh.m4 \
+		>lib/freight/version.sh
 
 install:
 	install -d $(DESTDIR)$(prefix)/bin
@@ -39,32 +42,29 @@ uninstall:
 		$(DESTDIR)$(mandir)/man5
 
 deb:
-ifeq (root, $(shell whoami))
+	[ "$$(whoami)" = "root" ] || false
+	m4 -D__VERSION__=$(VERSION) control.m4 >control
 	debra create debian control
 	make install DESTDIR=debian prefix=/usr sysconfdir=/etc
 	chown -R root:root debian
 	debra build debian freight_$(VERSION)_all.deb
 	debra destroy debian
-else
-	@echo "You must be root to build a Debian package."
-endif
+
+deploy:
+	scp -i ~/production.pem freight_$(VERSION)_all.deb ubuntu@packages.devstructure.com:
+	ssh -i ~/production.pem -t ubuntu@packages.devstructure.com "sudo freight add freight_$(VERSION)_all.deb apt/lucid apt/maverick && rm freight_$(VERSION)_all.deb && sudo freight cache apt/lucid apt/maverick"
 
 man:
-	find man -name \*.ronn | xargs -n1 ronn \
-		--manual=Freight --style=toc
+	find man -name \*.ronn | xargs -n1 ronn --manual=Freight --style=toc
 
 docs:
 	for SH in $$(find bin lib -type f -not -name \*.html); do \
 		shocco $$SH >$$SH.html; \
 	done
 
-gh-pages: man docs
+gh-pages: man
 	mkdir -p gh-pages
 	find man -name \*.html | xargs -I__ mv __ gh-pages/
-	for HTML in $$(find bin lib -name \*.html -printf %H/%P\\n); do \
-		mkdir -p gh-pages/$$(dirname $$HTML); \
-		mv $$HTML gh-pages/$$HTML; \
-	done
 	git checkout -q gh-pages
 	cp -R gh-pages/* ./
 	rm -rf gh-pages
@@ -73,4 +73,4 @@ gh-pages: man docs
 	git push origin gh-pages
 	git checkout -q master
 
-.PHONY: all install uninstall man docs gh-pages
+.PHONY: all install uninstall deb deploy man gh-pages
