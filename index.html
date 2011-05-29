@@ -45,17 +45,27 @@ footer {
 	<h1>Freight</h1>
 	<p>A modern take on the Debian archive</p>
 </header>
-<section>
+<section id="installation">
 	<h1>Installation</h1>
-	<p>Clone and <code>make install</code> or install from DevStructure&#8217;s Debian archive:</p>
-	<pre>sudo tee /etc/apt/sources.list.d/devstructure.list &lt;&lt;EOF
-deb http://packages.devstructure.com/ maverick main
-EOF
+	<h2>From source</h2>
+	<pre>git clone git://github.com/rcrowley/freight.git
+cd freight
+make &amp;&amp; sudo make install</pre>
+	<h2>From DevStructure&#8217;s Debian archive</h2>
+	<pre>echo "deb http://packages.devstructure.com/<em>distro</em> <em>release</em> main" \
+	| sudo tee /etc/apt/sources.list.d/devstructure.list
 wget -O - http://packages.devstructure.com/keyring.gpg | sudo apt-key add -
 sudo apt-get update
 sudo apt-get -y install freight</pre>
+	<p>Replace <code><em>distro</em></code> with &#8220;<code>debian</code>&#8221; or &#8220;<code>ubuntu</code>&#8221; and <code><em>release</em></code> with &#8220;<code>lenny</code>&#8221;, &#8220;<code>squeeze</code>&#8221;, &#8220;<code>lucid</code>&#8221;, &#8220;<code>maverick</code>&#8221;, or &#8220;<code>natty</code>&#8221; as your situation requires.</p>
 </section>
-<section>
+<section id="docs">
+	<h1>Documentation</h1>
+	<ul>
+		<li><a href="http://rcrowley.org/articles/packaging.html">Debian packaging for busy people</a></li>
+	</ul>
+</section>
+<section id="manuals">
 	<h1>Manuals</h1>
 	<ul>
 		<li><a href="freight.1.html"><code>freight</code>(1)</a></li>
@@ -64,7 +74,7 @@ sudo apt-get -y install freight</pre>
 		<li><a href="freight.5.html"><code>freight</code>(5)</a></li>
 	</ul>
 </section>
-<section>
+<section id="hacking">
 	<h1>Hacking</h1>
 	<ul>
 		<li><a href="https://github.com/rcrowley/freight">Source code on GitHub</a></li>
