@@ -2,6 +2,5 @@
 *.html
 *.deb
 control
-lib/freight/version.sh
 etc/freight.conf
 var
