@@ -153,10 +153,10 @@ EOF
 	} >"$VARCACHE/dists/$DIST-$DATE/Release"
 
 	# Sign the top-level `Release` file with `gpg`.
-	gpg -sbao "$VARCACHE/dists/$DIST-$DATE/Release.gpg" \
+	gpg -sba -u"$GPG" -o"$VARCACHE/dists/$DIST-$DATE/Release.gpg" \
 		"$VARCACHE/dists/$DIST-$DATE/Release"
-	[ -f "$VARCACHE/keyring.gpg" ] \
-		|| gpg --export -a "$GPG" >"$VARCACHE/keyring.gpg"
+	[ -f "$VARCACHE/pubkey.gpg" ] \
+		|| gpg --export -a "$GPG" >"$VARCACHE/pubkey.gpg"
 
 	# Move the symbolic link for this distro to this build.
 	ln -s "$DIST-$DATE" "$VARCACHE/dists/$DIST-$DATE-"
