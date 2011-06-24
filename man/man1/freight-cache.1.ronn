@@ -16,7 +16,7 @@ Serving the repositories is left as an exercise for the reader.  The Freight cac
 ## OPTIONS
 
 * `-k`, `--keep`:
-  Keep old package files.  (Experimental.)
+  Keep unreferenced versions of packages.  This is different than keeping multiple versions of a package in the repository, which is supported without any special options.
 * `-g` _email_, `--gpg=`_email_:
   Use an alternate GPG key.
 * `-c` _conf_, `--conf=`_conf_:
