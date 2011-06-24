@@ -6,8 +6,6 @@ sysconfdir=${prefix}/etc
 mandir=${prefix}/share/man
 
 all:
-	m4 -D__VERSION__=$(VERSION) lib/freight/version.sh.m4 \
-		>lib/freight/version.sh
 
 install:
 	install -d $(DESTDIR)$(prefix)/bin

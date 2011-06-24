@@ -8,13 +8,12 @@ set -e
 
 # Combined usage message and help screen.
 usage() {
-	echo "Usage: $(basename $0) [-k] [-g <email>] [-c <conf>] [-V] [-v] [-h] <manager>/<distro>..." >&2
+	echo "Usage: $(basename $0) [-k] [-g <email>] [-c <conf>] [-v] [-h] <manager>/<distro>..." >&2
 	[ -n "$1" ] && {
 		echo "  -k, --keep                keep old versions of packages" >&2
 		echo "  -g <email>, --gpg=<email> GPG key to use" >&2
 		echo "  -c <conf>, --conf=<conf>  config file to parse" >&2
-		echo "  -V, --verbose             verbose mode" >&2
-		echo "  -v, --version             show the program version" >&2
+		echo "  -v, --verbose             verbose mode" >&2
 		echo "  -h, --help                show this help message" >&2
 	} && exit 0 || exit 1
 }
@@ -44,15 +43,11 @@ do
 		--conf=*)
 			CONF="$(echo $1 | cut -c8-)"
 			shift;;
-		-V|--verbose)
+		-v|--verbose)
 			VERBOSE=1
 			shift;;
 		-h|--help) usage help;;
-		-v|--version)
-			. version.sh
-			echo "$VERSION"
-			exit 0;;
-		-) echo "# [freight] unknown switch: $1" >&2;;
+		-*) echo "# [freight] unknown switch: $1" >&2;;
 		*) break;;
 	esac
 done
