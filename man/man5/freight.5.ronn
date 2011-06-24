@@ -18,6 +18,11 @@ The Freight configuration is a `source`d shell script that defines a few importa
 * `GPG`:
   The GPG key to use.  This value must be set either in a configuration file or by using the `-g` option to `freight-cache`(1).
 
+## FILES
+
+* _/etc/freight.conf_:
+  The default configuration file.
+
 ## THEME SONG
 
 The New Pornographers - "All the Old Showstoppers"
