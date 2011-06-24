@@ -7,7 +7,7 @@
 \fBfreight\-cache\fR \- (re)builds package repositories
 .
 .SH "SYNOPSIS"
-\fBfreight cache\fR [\fB\-k\fR] [\fB\-g\fR \fIemail\fR] [\fB\-c\fR \fIconf\fR] [\fB\-V\fR] [\fB\-v\fR] [\fB\-h\fR] \fImanager\fR/\fIdistro\fR\.\.\.
+\fBfreight cache\fR [\fB\-k\fR] [\fB\-g\fR \fIemail\fR] [\fB\-c\fR \fIconf\fR] [\fB\-v\fR] [\fB\-h\fR] \fImanager\fR/\fIdistro\fR\.\.\.
 .
 .SH "DESCRIPTION"
 \fBfreight\-cache\fR converts each \fImanager\fR/\fIdistro\fR given into a package repository (only Debian archives are supported currently)\. The \fImanager\fR indicates the type of repository (again, \fBapt\fR is the only supported value)\. The \fIdistro\fR is an arbitrary string that should match a release of the target operating system (for example, "lenny" or "lucid")\.
@@ -33,12 +33,8 @@ Use an alternate GPG key\.
 Use an alternate configuration file\.
 .
 .TP
-\fB\-V\fR, \fB\-\-verbose\fR
+\fB\-v\fR, \fB\-\-verbose\fR
 Verbose mode\.
-.
-.TP
-\fB\-v\fR, \fB\-\-version\fR
-Show the program version\.
 .
 .TP
 \fB\-h\fR, \fB\-\-help\fR

@@ -7,7 +7,7 @@
 \fBfreight\-add\fR \- add a package to Freight
 .
 .SH "SYNOPSIS"
-\fBfreight add\fR [\fB\-c\fR \fIconf\fR] [\fB\-V\fR] [\fB\-v\fR] [\fB\-h\fR] \fIpackage\fR \fImanager\fR/\fIdistro\fR\.\.\.
+\fBfreight add\fR [\fB\-c\fR \fIconf\fR] [\fB\-v\fR] [\fB\-h\fR] \fIpackage\fR \fImanager\fR/\fIdistro\fR\.\.\.
 .
 .SH "DESCRIPTION"
 \fBfreight\-add\fR registers the given package with one or more \fImanager\fR/\fIdistro\fR pairs (which likely all share the same manager)\. Currently, \fBapt\fR is the only supported \fImanager\fR\. \fIdistro\fR may be any arbitrary value but is best suited to naming a particular version of the target operating system (for example, "lenny" or "lucid")\.
@@ -22,12 +22,8 @@ The package files are organized in the Freight library so \fBfreight\-cache\fR(1
 Use an alternate configuration file\.
 .
 .TP
-\fB\-V\fR, \fB\-\-verbose\fR
+\fB\-v\fR, \fB\-\-verbose\fR
 Verbose mode\.
-.
-.TP
-\fB\-v\fR, \fB\-\-version\fR
-Show the program version\.
 .
 .TP
 \fB\-h\fR, \fB\-\-help\fR

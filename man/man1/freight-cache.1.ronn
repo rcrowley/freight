@@ -3,7 +3,7 @@ freight-cache(1) -- (re)builds package repositories
 
 ## SYNOPSIS
 
-`freight cache` [`-k`] [`-g` _email_] [`-c` _conf_] [`-V`] [`-v`] [`-h`] _manager_/_distro_...  
+`freight cache` [`-k`] [`-g` _email_] [`-c` _conf_] [`-v`] [`-h`] _manager_/_distro_...  
 
 ## DESCRIPTION
 
@@ -21,10 +21,8 @@ Serving the repositories is left as an exercise for the reader.  The Freight cac
   Use an alternate GPG key.
 * `-c` _conf_, `--conf=`_conf_:
   Use an alternate configuration file.
-* `-V`, `--verbose`:
+* `-v`, `--verbose`:
   Verbose mode.
-* `-v`, `--version`:
-  Show the program version.
 * `-h`, `--help`:
   Show a help message.
 

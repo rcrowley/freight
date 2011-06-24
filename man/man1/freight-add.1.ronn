@@ -3,7 +3,7 @@ freight-add(1) -- add a package to Freight
 
 ## SYNOPSIS
 
-`freight add` [`-c` _conf_] [`-V`] [`-v`] [`-h`] _package_ _manager_/_distro_...  
+`freight add` [`-c` _conf_] [`-v`] [`-h`] _package_ _manager_/_distro_...  
 
 ## DESCRIPTION
 
@@ -15,10 +15,8 @@ The package files are organized in the Freight library so `freight-cache`(1) has
 
 * `-c` _conf_, `--conf=`_conf_:
   Use an alternate configuration file.
-* `-V`, `--verbose`:
+* `-v`, `--verbose`:
   Verbose mode.
-* `-v`, `--version`:
-  Show the program version.
 * `-h`, `--help`:
   Show a help message.
 
