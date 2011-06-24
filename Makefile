@@ -16,7 +16,10 @@ install:
 	install -d $(DESTDIR)$(sysconfdir)
 	install -m644 etc/freight.conf.example $(DESTDIR)$(sysconfdir)/
 	install -d $(DESTDIR)$(mandir)/man1
-	install -m644 man/man1/freight-add.1 man/man1/freight-cache.1 \
+	install -m644 \
+		man/man1/freight.1 \
+		man/man1/freight-add.1 \
+		man/man1/freight-cache.1 \
 		$(DESTDIR)$(mandir)/man1/
 	install -d $(DESTDIR)$(mandir)/man5
 	install -m644 man/man5/freight.5 $(DESTDIR)$(mandir)/man5/
@@ -29,6 +32,7 @@ uninstall:
 		$(DESTDIR)$(prefix)/bin/freight-setup \
 		$(DESTDIR)$(prefix)/lib/freight/*.sh \
 		$(DESTDIR)$(sysconfdir)/freight.conf.example \
+		$(DESTDIR)$(mandir)/man1/freight.1 \
 		$(DESTDIR)$(mandir)/man1/freight-add.1 \
 		$(DESTDIR)$(mandir)/man1/freight-cache.1 \
 		$(DESTDIR)$(mandir)/man5/freight.5
