@@ -11,6 +11,8 @@ The Freight configuration is a `source`d shell script that defines a few importa
   The Freight library directory.  Typically _/var/lib/freight_.
 * `VARCACHE`:
   The Freight cache directory.  Typically _/var/cache/freight_.  This should be the document root of the web server.
+* `ARCHS`:
+  The architectures to support.  Typically _i386 amd64_.
 * `ORIGIN`:
   The `Origin` field in the Debian archive.
 * `LABEL`:

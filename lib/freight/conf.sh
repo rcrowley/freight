@@ -5,6 +5,9 @@
 VARLIB="/var/lib/freight"
 VARCACHE="/var/cache/freight"
 
+# Default architectures.
+ARCHS="i386 amd64"
+
 # Default `Origin` and `Label` fields for `Release` files.
 ORIGIN="Freight"
 LABEL="Freight"

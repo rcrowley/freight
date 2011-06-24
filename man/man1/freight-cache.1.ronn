@@ -32,6 +32,8 @@ Serving the repositories is left as an exercise for the reader.  The Freight cac
 
 * _/etc/freight.conf_:
   The default configuration file.  See `freight`(5).
+* _$VARCACHE_`/pubkey.gpg`:
+  The exported public key used for signing each release.
 
 ## THEME SONG
 

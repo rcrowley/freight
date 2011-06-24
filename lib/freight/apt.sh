@@ -26,7 +26,7 @@ apt_sha256() {
 
 # Print the size of the given file.
 apt_filesize() {
-	stat -c %s "$1"
+	stat -c%s "$1"
 }
 
 # Setup the repository for the distro named in the first argument,
@@ -51,16 +51,11 @@ apt_cache() {
 	# Do a preliminary read of the input and create all architecture-
 	# specific directories.  This will allow packages marked `all` to
 	# actually be placed in all architectures.
-	while read PACKAGE
+	for ARCH in $ARCHS
 	do
-		echo "$PACKAGE"
-		ARCH="$(apt_arch "$PACKAGE")"
-		[ "$ARCH" = "all" ] && continue
 		mkdir -p "$VARCACHE/dists/$DIST-$DATE/main/binary-$ARCH"
 		touch "$VARCACHE/dists/$DIST-$DATE/main/binary-$ARCH/Packages"
-	done >"$TMP/packages"
-	ARCHS="$(echo "$VARCACHE/dists/$DIST-$DATE/main"/binary-* \
-		| xargs -n1 basename | cut -d- -f2 | grep -v all | tr "\n" " ")"
+	done
 
 	# Work through every package that should be part of this distro.
 	while read PACKAGE
@@ -105,7 +100,7 @@ EOF
 		} | tee -a $FILES >/dev/null
 		rm -rf "$TMP/DEBIAN"
 
-	done <"$TMP/packages"
+	done
 
 	# Build a `Release` file for each architecture.  `gzip` the `Packages`
 	# file, too.
