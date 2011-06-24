@@ -68,7 +68,7 @@ apt_cache() {
 
 		# Link this package into the pool.
 		[ "$(echo "$PACKAGE" | cut -c1-3)" = "lib" ] && C=4 || C=1
-		POOL="pool/main/$(echo "$PACKAGE" | cut -c$C-)/$(apt_name "$PACKAGE")"
+		POOL="pool/main/$(echo "$PACKAGE" | cut -c-$C)/$(apt_name "$PACKAGE")"
 		mkdir -p "$VARCACHE/$POOL"
 		[ -f "$VARCACHE/$POOL/$PACKAGE" ] \
 			&& echo "# [freight] pool already has $PACKAGE" >&2 \
