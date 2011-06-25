@@ -58,7 +58,7 @@ deb:
 
 deploy:
 	scp -i ~/production.pem freight_$(VERSION)-$(BUILD)_all.deb ubuntu@packages.devstructure.com:
-	#ssh -i ~/production.pem -t ubuntu@packages.devstructure.com "sudo freight add freight_$(VERSION)-$(BUILD)_all.deb apt/lucid apt/maverick apt/natty && rm freight_$(VERSION)-$(BUILD)_all.deb && sudo freight cache apt/lucid apt/maverick apt/natty"
+	ssh -i ~/production.pem -t ubuntu@packages.devstructure.com "sudo freight add freight_$(VERSION)-$(BUILD)_all.deb apt/lenny apt/squeeze apt/lucid apt/maverick apt/natty && rm freight_$(VERSION)-$(BUILD)_all.deb && sudo freight cache apt/lenny apt/squeeze apt/lucid apt/maverick apt/natty"
 
 man:
 	find man -name \*.ronn | xargs -n1 ronn --manual=Freight --style=toc
