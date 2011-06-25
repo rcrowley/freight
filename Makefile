@@ -1,4 +1,5 @@
-VERSION=0.0.5-1
+VERSION=0.0.6
+BUILD=1
 
 prefix=/usr/local
 bindir=${prefix}/bin
@@ -43,18 +44,21 @@ uninstall:
 		$(DESTDIR)$(mandir)/man1 \
 		$(DESTDIR)$(mandir)/man5
 
+build:
+	sudo make deb
+
 deb:
 	[ "$$(whoami)" = "root" ] || false
-	m4 -D__VERSION__=$(VERSION) control.m4 >control
+	m4 -D__VERSION__=$(VERSION)-$(BUILD) control.m4 >control
 	debra create debian control
-	make install DESTDIR=debian prefix=/usr sysconfdir=/etc
+	make install prefix=/usr sysconfdir=/etc DESTDIR=debian
 	chown -R root:root debian
-	debra build debian freight_$(VERSION)_all.deb
+	debra build debian freight_$(VERSION)-$(BUILD)_all.deb
 	debra destroy debian
 
 deploy:
-	scp -i ~/production.pem freight_$(VERSION)_all.deb ubuntu@packages.devstructure.com:
-	ssh -i ~/production.pem -t ubuntu@packages.devstructure.com "sudo freight add freight_$(VERSION)_all.deb apt/lucid apt/maverick && rm freight_$(VERSION)_all.deb && sudo freight cache apt/lucid apt/maverick"
+	scp -i ~/production.pem freight_$(VERSION)-$(BUILD)_all.deb ubuntu@packages.devstructure.com:
+	#ssh -i ~/production.pem -t ubuntu@packages.devstructure.com "sudo freight add freight_$(VERSION)-$(BUILD)_all.deb apt/lucid apt/maverick apt/natty && rm freight_$(VERSION)-$(BUILD)_all.deb && sudo freight cache apt/lucid apt/maverick apt/natty"
 
 man:
 	find man -name \*.ronn | xargs -n1 ronn --manual=Freight --style=toc
