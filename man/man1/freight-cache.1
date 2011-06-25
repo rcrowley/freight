@@ -7,10 +7,10 @@
 \fBfreight\-cache\fR \- (re)builds package repositories
 .
 .SH "SYNOPSIS"
-\fBfreight cache\fR [\fB\-k\fR] [\fB\-g\fR \fIemail\fR] [\fB\-c\fR \fIconf\fR] [\fB\-v\fR] [\fB\-h\fR] \fImanager\fR/\fIdistro\fR\.\.\.
+\fBfreight cache\fR [\fB\-k\fR] [\fB\-g\fR \fIemail\fR] [\fB\-c\fR \fIconf\fR] [\fB\-v\fR] [\fB\-h\fR] [\fImanager\fR/\fIdistro\fR][\.\.\.]
 .
 .SH "DESCRIPTION"
-\fBfreight\-cache\fR converts each \fImanager\fR/\fIdistro\fR given into a package repository (only Debian archives are supported currently)\. The \fImanager\fR indicates the type of repository (again, \fBapt\fR is the only supported value)\. The \fIdistro\fR is an arbitrary string that should match a release of the target operating system (for example, "lenny" or "lucid")\.
+\fBfreight\-cache\fR converts each \fImanager\fR/\fIdistro\fR given into a package repository (only Debian archives are supported currently)\. The \fImanager\fR indicates the type of repository (again, \fBapt\fR is the only supported value)\. The \fIdistro\fR is an arbitrary string that should match a release of the target operating system (for example, "lenny" or "lucid")\. If none are given, \fBfreight\-cache\fR converts all \fImanager\fR/\fIdistro\fR pairs found in \fB$VARLIB\fR\.
 .
 .P
 Packages are read from the Freight library (\fB$VARLIB\fR in the configuration, see \fBfreight\fR(5)) and organized into a working repository in the Freight cache (\fB$VARCACHE\fR in the configuration)\.

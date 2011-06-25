@@ -8,7 +8,7 @@ set -e
 
 # Combined usage message and help screen.
 usage() {
-	echo "Usage: $(basename $0) [-k] [-g <email>] [-c <conf>] [-v] [-h] <manager>/<distro>..." >&2
+	echo "Usage: $(basename $0) [-k] [-g <email>] [-c <conf>] [-v] [-h] [<manager>/<distro>][...]" >&2
 	[ -n "$1" ] && {
 		echo "  -k, --keep                keep unreferenced versions of packages" >&2
 		echo "  -g <email>, --gpg=<email> GPG key to use" >&2
@@ -65,7 +65,10 @@ mkdir -p "$VARLIB"
 cd "$VARLIB"
 
 # Rebuild each distro serially.
-for DIR in $@
+[ -z "$@" ] \
+	&& DIRS="$(find "$VARLIB" -mindepth 2 -maxdepth 2 -type d -printf "%P ")" \
+	|| DIRS="$@"
+for DIR in $DIRS
 do
 
 	# Parse the manager and distro out of the Freight library path.
@@ -79,9 +82,9 @@ do
 	# the distro is the only argument.  From there, each manager can do
 	# whatever it wants.
 	. "$MANAGER.sh"
-	ls "$DIR" 2>/dev/null | sort -V | eval ${MANAGER}_cache $DIST
+	ls "$DIR" 2>/dev/null | sort -V | eval "${MANAGER}_cache" "$DIST"
 
 	# Clean up old packages as dictated by the manager.
-	[ -z "$KEEP" ] && eval ${MANAGER}_clean
+	[ -z "$KEEP" ] && eval "${MANAGER}_clean"
 
 done

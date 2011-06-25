@@ -3,11 +3,11 @@ freight-cache(1) -- (re)builds package repositories
 
 ## SYNOPSIS
 
-`freight cache` [`-k`] [`-g` _email_] [`-c` _conf_] [`-v`] [`-h`] _manager_/_distro_...  
+`freight cache` [`-k`] [`-g` _email_] [`-c` _conf_] [`-v`] [`-h`] [_manager_/_distro_][...]  
 
 ## DESCRIPTION
 
-`freight-cache` converts each _manager_/_distro_ given into a package repository (only Debian archives are supported currently).  The _manager_ indicates the type of repository (again, `apt` is the only supported value).  The _distro_ is an arbitrary string that should match a release of the target operating system (for example, "lenny" or "lucid").
+`freight-cache` converts each _manager_/_distro_ given into a package repository (only Debian archives are supported currently).  The _manager_ indicates the type of repository (again, `apt` is the only supported value).  The _distro_ is an arbitrary string that should match a release of the target operating system (for example, "lenny" or "lucid").  If none are given, `freight-cache` converts all _manager_/_distro_ pairs found in `$VARLIB`.
 
 Packages are read from the Freight library (`$VARLIB` in the configuration, see `freight`(5)) and organized into a working repository in the Freight cache (`$VARCACHE` in the configuration).
 
