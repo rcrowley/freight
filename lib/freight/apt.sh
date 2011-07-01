@@ -87,7 +87,7 @@ apt_cache() {
 		# path to the package, starting with `pool/`.
 		dpkg-deb -e "$VARLIB/apt/$DIST/$PACKAGE" "$TMP/DEBIAN"
 		{
-			cat "$TMP/DEBIAN/control" \
+			grep . "$TMP/DEBIAN/control" \
 				| grep -v "^(Essential|Filename|MD5Sum|SHA1|SHA256|Size)"
 			cat <<EOF
 Filename: $POOL/$PACKAGE
