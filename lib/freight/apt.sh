@@ -46,7 +46,7 @@ apt_cache() {
 	mkdir "$VARCACHE/dists/$DIST-$DATE"
 	mkdir -p "$VARCACHE/dists/$DIST-$DATE/main"
 	mkdir -p "$VARCACHE/dists/$DIST-$DATE/.refs"
-	mkdir -p "$VARCACHE/pool/main"
+	mkdir -p "$VARCACHE/pool/$DIST/main"
 
 	# Do a preliminary read of the input and create all architecture-
 	# specific directories.  This will allow packages marked `all` to
@@ -68,7 +68,8 @@ apt_cache() {
 
 		# Link this package into the pool.
 		[ "$(echo "$PACKAGE" | cut -c1-3)" = "lib" ] && C=4 || C=1
-		POOL="pool/main/$(echo "$PACKAGE" | cut -c-$C)/$(apt_name "$PACKAGE")"
+		POOL="pool/$DIST/main/$(echo "$PACKAGE" \
+			| cut -c-$C)/$(apt_name "$PACKAGE")"
 		mkdir -p "$VARCACHE/$POOL"
 		[ -f "$VARCACHE/$POOL/$PACKAGE" ] \
 			&& echo "# [freight] pool already has $PACKAGE" >&2 \
