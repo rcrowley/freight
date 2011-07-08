@@ -154,7 +154,15 @@ EOF
 
 	# Sign the top-level `Release` file with `gpg`.
 	gpg -sba -u"$GPG" -o"$VARCACHE/dists/$DIST-$DATE/Release.gpg" \
-		"$VARCACHE/dists/$DIST-$DATE/Release"
+		"$VARCACHE/dists/$DIST-$DATE/Release" || {
+		cat <<EOF
+# [freight] couldn't sign the repository, perhaps you need to run
+# [freight] gpg --gen-key and update the GPG setting in /etc/freight.conf
+# [freight] (see freight(5) for more information)
+EOF
+		rm -rf "$VARCACHE/dists/$DIST-$DATE"
+		exit 1
+	}
 	[ -f "$VARCACHE/pubkey.gpg" ] \
 		|| gpg --export -a "$GPG" >"$VARCACHE/pubkey.gpg"
 
