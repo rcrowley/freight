@@ -1,0 +1,57 @@
+# Freight
+
+A modern take on the Debian archive.
+
+## Usage
+
+Install Freight and create a minimal configuration in `/usr/local/etc/freight.conf` or `/etc/freight.conf` as appropriate containing the name of your GPG key:
+
+	GPG="example@example.com"
+
+Add packages to particular distros:
+
+	freight add foobar_1.2.3-1_all.deb apt/squeeze apt/lucid apt/natty
+
+Build the cache of all the files needed to be accepted as a Debian archive:
+
+	freight cache
+
+Serve `/var/cache/freight` via your favorite web server and install it as an APT source:
+
+	echo "deb http://example.com $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/example.list
+	wget -O - http://example.com/pubkey.gpg | sudo apt-key add -
+	sudo apt-get update
+	sudo apt-get -y install foobar
+
+## Installation
+
+### From source
+
+	git clone git://github.com/rcrowley/freight.git
+	cd freight && make && sudo make install
+
+### From DevStructure's Debian archive
+
+	echo "deb http://packages.devstructure.com $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/devstructure.list
+	sudo wget -O /etc/apt/trusted.gpg.d/devstructure.gpg http://packages.devstructure.com/keyring.gpg
+	sudo apt-get update
+	sudo apt-get -y install freight
+
+## Documentation
+
+* [Debian packaging for busy people](http://rcrowley.org/articles/packaging.html)
+
+## Manuals
+
+* [`freight`(1)](http://rcrowley.github.com/freight/freight.1.html)
+* [`freight-add`(1)](http://rcrowley.github.com/freight/freight-add.1.html)
+* [`freight-cache`(1)](http://rcrowley.github.com/freight/freight-cache.1.html)
+* [`freight`(5)](http://rcrowley.github.com/freight/freight.5.html)
+
+## Contribute
+
+Freight is [BSD-licensed](https://github.com/rcrowley/freight/blob/master/LICENSE)
+
+* Source code: <https://github.com/rcrowley/freight>
+* Issue tracker: <https://github.com/rcrowley/freight/issues>
+* Wiki: <https://github.com/rcrowley/freight/wiki>
