@@ -1,7 +1,7 @@
 .\" generated with Ronn/v0.7.3
 .\" http://github.com/rtomayko/ronn/tree/0.7.3
 .
-.TH "FREIGHT\-CACHE" "1" "June 2011" "" "Freight"
+.TH "FREIGHT\-CACHE" "1" "July 2011" "" "Freight"
 .
 .SH "NAME"
 \fBfreight\-cache\fR \- (re)builds package repositories
@@ -17,6 +17,9 @@ Packages are read from the Freight library (\fB$VARLIB\fR in the configuration, 
 .
 .P
 Serving the repositories is left as an exercise for the reader\. The Freight cache is the only directory that needs to be exposed, so create a virtual host with \fB$VARCACHE\fR as its document root and everything will be fine\.
+.
+.P
+From version 0\.0\.8 onwards, distros in an APT repository no longer share the contents of the \fBpool/\fR\. After upgrading to this version and running \fBfreight\-cache\fR for all your distros, it is safe and recommended to \fBrm \-rf $VARCACHE/pool/main\fR to reset link counts to the proper value\.
 .
 .SH "OPTIONS"
 .
