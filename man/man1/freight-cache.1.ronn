@@ -13,6 +13,8 @@ Packages are read from the Freight library (`$VARLIB` in the configuration, see 
 
 Serving the repositories is left as an exercise for the reader.  The Freight cache is the only directory that needs to be exposed, so create a virtual host with `$VARCACHE` as its document root and everything will be fine.
 
+From version 0.0.8 onwards, distros in an APT repository no longer share the contents of the `pool/`.  After upgrading to this version and running `freight-cache` for all your distros, it is safe and recommended to `rm -rf $VARCACHE/pool/main` to reset link counts to the proper value.
+
 ## OPTIONS
 
 * `-k`, `--keep`:
