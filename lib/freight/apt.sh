@@ -164,8 +164,10 @@ EOF
 		rm -rf "$VARCACHE/dists/$DIST-$DATE"
 		exit 1
 	}
-	[ -f "$VARCACHE/pubkey.gpg" ] \
-		|| gpg --export -a "$GPG" >"$VARCACHE/pubkey.gpg"
+	mkdir -m700 -p "$TMP/gpg"
+	gpg --export -a "$GPG" | tee "$VARCACHE/pubkey.gpg" |
+	gpg --homedir "$TMP/gpg" --import
+	mv "$TMP/gpg/pubring.gpg" "$VARCACHE/keyring.gpg"
 
 	# Move the symbolic link for this distro to this build.
 	ln -s "$DIST-$DATE" "$VARCACHE/dists/$DIST-$DATE-"

@@ -19,7 +19,7 @@ Build the cache of all the files needed to be accepted as a Debian archive:
 Serve `/var/cache/freight` via your favorite web server and install it as an APT source:
 
 	echo "deb http://example.com $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/example.list
-	wget -O - http://example.com/pubkey.gpg | sudo apt-key add -
+	sudo wget -O /etc/apt/trusted.gpg.d/example.gpg http://example.com/keyring.gpg
 	sudo apt-get update
 	sudo apt-get -y install foobar
 
