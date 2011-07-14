@@ -82,15 +82,17 @@
 
 <h2 id="SYNOPSIS">SYNOPSIS</h2>
 
-<p><code>freight cache</code> [<code>-k</code>] [<code>-g</code> <em>email</em>] [<code>-c</code> <em>conf</em>] [<code>-v</code>] [<code>-h</code>] <em>manager</em>/<em>distro</em>...</p>
+<p><code>freight cache</code> [<code>-k</code>] [<code>-g</code> <em>email</em>] [<code>-c</code> <em>conf</em>] [<code>-v</code>] [<code>-h</code>] [<em>manager</em>/<em>distro</em>][...]</p>
 
 <h2 id="DESCRIPTION">DESCRIPTION</h2>
 
-<p><code>freight-cache</code> converts each <em>manager</em>/<em>distro</em> given into a package repository (only Debian archives are supported currently).  The <em>manager</em> indicates the type of repository (again, <code>apt</code> is the only supported value).  The <em>distro</em> is an arbitrary string that should match a release of the target operating system (for example, "lenny" or "lucid").</p>
+<p><code>freight-cache</code> converts each <em>manager</em>/<em>distro</em> given into a package repository (only Debian archives are supported currently).  The <em>manager</em> indicates the type of repository (again, <code>apt</code> is the only supported value).  The <em>distro</em> is an arbitrary string that should match a release of the target operating system (for example, "lenny" or "lucid").  If none are given, <code>freight-cache</code> converts all <em>manager</em>/<em>distro</em> pairs found in <code>$VARLIB</code>.</p>
 
 <p>Packages are read from the Freight library (<code>$VARLIB</code> in the configuration, see <code>freight</code>(5)) and organized into a working repository in the Freight cache (<code>$VARCACHE</code> in the configuration).</p>
 
 <p>Serving the repositories is left as an exercise for the reader.  The Freight cache is the only directory that needs to be exposed, so create a virtual host with <code>$VARCACHE</code> as its document root and everything will be fine.</p>
+
+<p>From version 0.0.8 onwards, distros in an APT repository no longer share the contents of the <code>pool/</code>.  After upgrading to this version and running <code>freight-cache</code> for all your distros, it is safe and recommended to <code>rm -rf $VARCACHE/pool/main</code> to reset link counts to the proper value.</p>
 
 <h2 id="OPTIONS">OPTIONS</h2>
 
@@ -117,7 +119,7 @@
 
 <h2 id="AUTHOR">AUTHOR</h2>
 
-<p>Richard Crowley <a href="&#x6d;&#97;&#x69;&#x6c;&#116;&#x6f;&#58;&#114;&#x40;&#x72;&#99;&#114;&#x6f;&#x77;&#108;&#101;&#121;&#x2e;&#x6f;&#114;&#x67;" data-bare-link="true">&#114;&#64;&#114;&#x63;&#x72;&#x6f;&#x77;&#x6c;&#x65;&#121;&#x2e;&#x6f;&#114;&#103;</a></p>
+<p>Richard Crowley <a href="&#109;&#x61;&#105;&#x6c;&#x74;&#x6f;&#58;&#x72;&#x40;&#114;&#99;&#114;&#x6f;&#x77;&#x6c;&#101;&#x79;&#46;&#x6f;&#114;&#103;" data-bare-link="true">&#114;&#64;&#x72;&#x63;&#x72;&#111;&#x77;&#x6c;&#101;&#121;&#x2e;&#x6f;&#114;&#103;</a></p>
 
 <h2 id="SEE-ALSO">SEE ALSO</h2>
 
@@ -128,7 +130,7 @@
 
   <ol class='man-decor man-foot man foot'>
     <li class='tl'></li>
-    <li class='tc'>June 2011</li>
+    <li class='tc'>July 2011</li>
     <li class='tr'>freight-cache(1)</li>
   </ol>
 
