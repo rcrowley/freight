@@ -3,13 +3,13 @@ freight-add(1) -- add a package to Freight
 
 ## SYNOPSIS
 
-`freight add` [`-c` _conf_] [`-v`] [`-h`] _package_ _manager_/_distro_...  
+`freight add` [`-c` _conf_] [`-v`] [`-h`] _package_ _manager_/_distro_[/_component_][...]  
 
 ## DESCRIPTION
 
-`freight-add` registers the given package with one or more _manager_/_distro_ pairs (which likely all share the same manager).  Currently, `apt` is the only supported _manager_.  _distro_ may be any arbitrary value but is best suited to naming a particular version of the target operating system (for example, "lenny" or "lucid").
+`freight-add` registers the given package with one or more _manager_/_distro_[/_component_] pairs (triples).  Currently, `apt` is the only supported _manager_.  _distro_ may be any arbitrary value but is best suited to naming a particular version of the target operating system (for example, "lenny" or "lucid").  _component_ is optional and for `apt` defaults to `main`.
 
-The package files are organized in the Freight library so `freight-cache`(1) has an easy time of creating package repositories for each _manager_/_distro_ later.
+The package files are organized in the Freight library so `freight-cache`(1) has an easy time of creating package repositories for each _manager_/_distro_[/_component_] later.
 
 ## OPTIONS
 
