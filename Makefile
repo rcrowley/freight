@@ -8,6 +8,9 @@ mandir=${prefix}/share/man
 
 all:
 
+clean:
+	rm -f *.deb
+
 install:
 	install -d $(DESTDIR)$(prefix)/bin
 	install bin/freight bin/freight-add bin/freight-cache bin/freight-setup \
@@ -45,16 +48,14 @@ uninstall:
 		$(DESTDIR)$(mandir)/man5
 
 build:
-	sudo make deb
-
-deb:
-	[ "$$(whoami)" = "root" ] || false
-	m4 -D__VERSION__=$(VERSION)-$(BUILD) control.m4 >control
-	debra create debian control
-	make install prefix=/usr sysconfdir=/etc DESTDIR=debian
-	chown -R root:root debian
-	debra build debian freight_$(VERSION)-$(BUILD)_all.deb
-	debra destroy debian
+	make install prefix=/usr DESTDIR=debian
+	fpm -s dir -t deb -C debian \
+		-n freight -v $(VERSION)-$(BUILD) -a all \
+		-d coreutils -d dash -d dpkg -d gnupg -d grep \
+		-m "Richard Crowley <r@rcrowley.org>" \
+		--url "https://github.com/rcrowley/freight" \
+		--description "A modern take on the Debian archive."
+	make uninstall prefix=/usr DESTDIR=debian
 
 deploy:
 	scp -i ~/production.pem freight_$(VERSION)-$(BUILD)_all.deb ubuntu@packages.devstructure.com:
