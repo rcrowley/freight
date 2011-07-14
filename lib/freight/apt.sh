@@ -13,6 +13,12 @@ apt_arch() {
 	basename "$1" .deb | cut -d_ -f3
 }
 
+# Print the prefix the given package filename should use in the pool.
+apt_prefix() {
+	[ "$(echo "$1" | cut -c1-3)" = "lib" ] && C=4 || C=1
+	echo "$1" | cut -c-$C
+}
+
 # Print the checksum portion of the normal checksumming programs' output.
 apt_md5() {
 	md5sum "$1" | cut -d" " -f1
@@ -36,13 +42,14 @@ apt_cache() {
 
 	# Generate a timestamp to use in this build's directory name.
 	DATE="$(date +%Y%m%d%H%M%S%N)"
+	DISTCACHE="$VARCACHE/dists/$DIST-$DATE"
 
 	# For a Debian archive, each distribution needs at least this directory
 	# structure in place.  The directory for this build must not exist,
 	# otherwise this build would clobber a previous one.  The `.refs`
 	# directory contains links to all the packages currently included in
 	# this distribution to enable cleaning by link count later.
-	mkdir -p "$VARCACHE/dists/$DIST-$DATE/.refs"
+	mkdir -p "$DISTCACHE/.refs"
 	mkdir -p "$VARCACHE/pool/$DIST"
 
 	# Work through every package that should be part of this distro.
@@ -57,20 +64,18 @@ apt_cache() {
 		# packages marked `all` to actually be placed in all architectures.
 		for ARCH in $ARCHS
 		do
-			mkdir -p "$VARCACHE/dists/$DIST-$DATE/$COMP/binary-$ARCH"
-			touch "$VARCACHE/dists/$DIST-$DATE/$COMP/binary-$ARCH/Packages"
+			mkdir -p "$DISTCACHE/$COMP/binary-$ARCH"
+			touch "$DISTCACHE/$COMP/binary-$ARCH/Packages"
 		done
 
 		# Link or copy this package into this distro's `.refs` directory.
-		REFS="$VARCACHE/dists/$DIST-$DATE/.refs/$COMP"
+		REFS="$DISTCACHE/.refs/$COMP"
 		mkdir -p "$REFS"
 		ln "$VARLIB/apt/$DIST/$PATHNAME" "$REFS" ||
 		cp "$VARLIB/apt/$DIST/$PATHNAME" "$REFS"
 
 		# Link this package into the pool.
-		[ "$(echo "$PACKAGE" | cut -c1-3)" = "lib" ] && C=4 || C=1
-		POOL="pool/$DIST/$COMP/$(echo "$PACKAGE" |
-			cut -c-$C)/$(apt_name "$PACKAGE")"
+		POOL="pool/$DIST/$COMP/$(apt_prefix "$PACKAGE")/$(apt_name "$PACKAGE")"
 		mkdir -p "$VARCACHE/$POOL"
 		if [ -f "$VARCACHE/$POOL/$PACKAGE" ]
 		then
@@ -84,9 +89,9 @@ apt_cache() {
 		ARCH="$(apt_arch "$PACKAGE")"
 		if [ "$ARCH" = "all" ]
 		then
-			FILES="$(find "$VARCACHE/dists/$DIST-$DATE/$COMP" -type f)"
+			FILES="$(find "$DISTCACHE/$COMP" -type f)"
 		else
-			FILES="$VARCACHE/dists/$DIST-$DATE/$COMP/binary-$ARCH/Packages"
+			FILES="$DISTCACHE/$COMP/binary-$ARCH/Packages"
 		fi
 
 		# Grab and augment the control file from this package.  Remove
@@ -109,8 +114,7 @@ EOF
 		rm -rf "$TMP/DEBIAN"
 
 	done
-	COMPS="$(find "$VARCACHE/dists/$DIST-$DATE" -mindepth 1 -maxdepth 1 \
-		-type d ! -name .refs -printf "%P ")"
+	COMPS="$(ls "$DISTCACHE")"
 
 	# Build a `Release` file for each component and architecture.  `gzip`
 	# the `Packages` file, too.
@@ -118,15 +122,15 @@ EOF
 	do
 		for ARCH in $ARCHS
 		do
-			cat >"$VARCACHE/dists/$DIST-$DATE/$COMP/binary-$ARCH/Release" <<EOF
+			cat >"$DISTCACHE/$COMP/binary-$ARCH/Release" <<EOF
 Archive: $DIST
 Component: $COMP
 Origin: $ORIGIN
 Label: $LABEL
 Architecture: $ARCH
 EOF
-			gzip -c "$VARCACHE/dists/$DIST-$DATE/$COMP/binary-$ARCH/Packages" \
-				>"$VARCACHE/dists/$DIST-$DATE/$COMP/binary-$ARCH/Packages.gz"
+			gzip -c "$DISTCACHE/$COMP/binary-$ARCH/Packages" \
+				>"$DISTCACHE/$COMP/binary-$ARCH/Packages.gz"
 		done
 	done
 
@@ -138,24 +142,21 @@ EOF
 Origin: $ORIGIN
 Label: $LABEL
 Codename: $DIST
-Components: ${COMPS% }
+Components: $(echo "$COMPS" | tr \\n " ")
 Architectures: $ARCHS
 EOF
 
 		# Finish the top-level `Release` file with references and
 		# checksums for each sub-`Release` file and `Packages.gz` file.
 		# In the future, `Sources` may find a place here, too.
-		find "$VARCACHE/dists/$DIST-$DATE" -mindepth 2 -type f -printf %P\\n |
+		find "$DISTCACHE" -mindepth 2 -type f -printf %P\\n |
 		grep -v ^\\. |
 		while read FILE
 		do
-			SIZE="$(apt_filesize "$VARCACHE/dists/$DIST-$DATE/$FILE")"
-			echo " $(apt_md5 "$VARCACHE/dists/$DIST-$DATE/$FILE" \
-				) $SIZE $FILE" >&3
-			echo " $(apt_sha1 "$VARCACHE/dists/$DIST-$DATE/$FILE" \
-				) $SIZE $FILE" >&4
-			echo " $(apt_sha256 "$VARCACHE/dists/$DIST-$DATE/$FILE" \
-				) $SIZE $FILE" >&5
+			SIZE="$(apt_filesize "$DISTCACHE/$FILE")"
+			echo " $(apt_md5 "$DISTCACHE/$FILE" ) $SIZE $FILE" >&3
+			echo " $(apt_sha1 "$DISTCACHE/$FILE" ) $SIZE $FILE" >&4
+			echo " $(apt_sha256 "$DISTCACHE/$FILE" ) $SIZE $FILE" >&5
 		done 3>"$TMP/md5sums" 4>"$TMP/sha1sums" 5>"$TMP/sha256sums"
 		echo "MD5Sum:"
 		cat "$TMP/md5sums"
@@ -164,28 +165,28 @@ EOF
 		echo "SHA256Sum:"
 		cat "$TMP/sha256sums"
 
-	} >"$VARCACHE/dists/$DIST-$DATE/Release"
+	} >"$DISTCACHE/Release"
 
 	# Sign the top-level `Release` file with `gpg`.
-	gpg -sba -u"$GPG" -o"$VARCACHE/dists/$DIST-$DATE/Release.gpg" \
-		"$VARCACHE/dists/$DIST-$DATE/Release" || {
+	gpg -sba -u"$GPG" -o"$DISTCACHE/Release.gpg" "$DISTCACHE/Release" || {
 		cat <<EOF
 # [freight] couldn't sign the repository, perhaps you need to run
 # [freight] gpg --gen-key and update the GPG setting in /etc/freight.conf
 # [freight] (see freight(5) for more information)
 EOF
-		rm -rf "$VARCACHE/dists/$DIST-$DATE"
+		rm -rf "$DISTCACHE"
 		exit 1
 	}
 	mkdir -m700 -p "$TMP/gpg"
-	gpg --export -a "$GPG" | tee "$VARCACHE/pubkey.gpg" |
+	gpg --export -a "$GPG" |
+	tee "$VARCACHE/pubkey.gpg" |
 	gpg --homedir "$TMP/gpg" --import
 	mv "$TMP/gpg/pubring.gpg" "$VARCACHE/keyring.gpg"
 
 	# Move the symbolic link for this distro to this build.
-	ln -s "$DIST-$DATE" "$VARCACHE/dists/$DIST-$DATE-"
+	ln -s "$DIST-$DATE" "$DISTCACHE-"
 	OLD="$(readlink "$VARCACHE/dists/$DIST" || true)"
-	mv -T "$VARCACHE/dists/$DIST-$DATE-" "$VARCACHE/dists/$DIST"
+	mv -T "$DISTCACHE-" "$VARCACHE/dists/$DIST"
 	[ -z "$OLD" ] || rm -rf "$VARCACHE/dists/$OLD"
 
 }
