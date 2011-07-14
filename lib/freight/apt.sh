@@ -42,80 +42,92 @@ apt_cache() {
 	# otherwise this build would clobber a previous one.  The `.refs`
 	# directory contains links to all the packages currently included in
 	# this distribution to enable cleaning by link count later.
-	mkdir -p "$VARCACHE/dists"
-	mkdir "$VARCACHE/dists/$DIST-$DATE"
-	mkdir -p "$VARCACHE/dists/$DIST-$DATE/main"
 	mkdir -p "$VARCACHE/dists/$DIST-$DATE/.refs"
-	mkdir -p "$VARCACHE/pool/$DIST/main"
-
-	# Do a preliminary read of the input and create all architecture-
-	# specific directories.  This will allow packages marked `all` to
-	# actually be placed in all architectures.
-	for ARCH in $ARCHS
-	do
-		mkdir -p "$VARCACHE/dists/$DIST-$DATE/main/binary-$ARCH"
-		touch "$VARCACHE/dists/$DIST-$DATE/main/binary-$ARCH/Packages"
-	done
+	mkdir -p "$VARCACHE/pool/$DIST"
 
 	# Work through every package that should be part of this distro.
-	while read PACKAGE
+	while read PATHNAME
 	do
+		case "$PATHNAME" in
+			*/*) COMP="${PATHNAME%%/*}" PACKAGE="${PATHNAME##*/}";;
+			*) COMP="main" PACKAGE="$PATHNAME";;
+		esac
+
+		# Create all architecture-specific directories.  This will allow
+		# packages marked `all` to actually be placed in all architectures.
+		for ARCH in $ARCHS
+		do
+			mkdir -p "$VARCACHE/dists/$DIST-$DATE/$COMP/binary-$ARCH"
+			touch "$VARCACHE/dists/$DIST-$DATE/$COMP/binary-$ARCH/Packages"
+		done
 
 		# Link or copy this package into this distro's `.refs` directory.
-		REFS="$VARCACHE/dists/$DIST-$DATE/.refs"
-		ln "$VARLIB/apt/$DIST/$PACKAGE" "$REFS" \
-			|| cp "$VARLIB/apt/$DIST/$PACKAGE" "$REFS"
+		REFS="$VARCACHE/dists/$DIST-$DATE/.refs/$COMP"
+		mkdir -p "$REFS"
+		ln "$VARLIB/apt/$DIST/$PATHNAME" "$REFS" ||
+		cp "$VARLIB/apt/$DIST/$PATHNAME" "$REFS"
 
 		# Link this package into the pool.
 		[ "$(echo "$PACKAGE" | cut -c1-3)" = "lib" ] && C=4 || C=1
-		POOL="pool/$DIST/main/$(echo "$PACKAGE" \
-			| cut -c-$C)/$(apt_name "$PACKAGE")"
+		POOL="pool/$DIST/$COMP/$(echo "$PACKAGE" |
+			cut -c-$C)/$(apt_name "$PACKAGE")"
 		mkdir -p "$VARCACHE/$POOL"
-		[ -f "$VARCACHE/$POOL/$PACKAGE" ] \
-			&& echo "# [freight] pool already has $PACKAGE" >&2 \
-			|| ln "$REFS/$PACKAGE" "$VARCACHE/$POOL/$PACKAGE"
+		if [ -f "$VARCACHE/$POOL/$PACKAGE" ]
+		then
+			echo "# [freight] pool already has $PACKAGE" >&2
+		else
+			ln "$REFS/$PACKAGE" "$VARCACHE/$POOL/$PACKAGE"
+		fi
 
 		# Build a list of the one-or-more `Packages` files to append with
 		# this package's info.
 		ARCH="$(apt_arch "$PACKAGE")"
-		[ "$ARCH" = "all" ] \
-			&& FILES="$(find "$VARCACHE/dists/$DIST-$DATE/main" -type f)" \
-			|| FILES="$VARCACHE/dists/$DIST-$DATE/main/binary-$ARCH/Packages"
+		if [ "$ARCH" = "all" ]
+		then
+			FILES="$(find "$VARCACHE/dists/$DIST-$DATE/$COMP" -type f)"
+		else
+			FILES="$VARCACHE/dists/$DIST-$DATE/$COMP/binary-$ARCH/Packages"
+		fi
 
 		# Grab and augment the control file from this package.  Remove
 		# `Size`, `MD5Sum`, etc. lines and replace them with newly
 		# generated values.  Add the `Filename` field containing the
 		# path to the package, starting with `pool/`.
-		dpkg-deb -e "$VARLIB/apt/$DIST/$PACKAGE" "$TMP/DEBIAN"
+		dpkg-deb -e "$VARLIB/apt/$DIST/$PATHNAME" "$TMP/DEBIAN"
 		{
 			grep . "$TMP/DEBIAN/control" \
 				| grep -v "^(Essential|Filename|MD5Sum|SHA1|SHA256|Size)"
 			cat <<EOF
 Filename: $POOL/$PACKAGE
-MD5Sum: $(apt_md5 "$VARLIB/apt/$DIST/$PACKAGE")
-SHA1: $(apt_sha1 "$VARLIB/apt/$DIST/$PACKAGE")
-SHA256: $(apt_sha256 "$VARLIB/apt/$DIST/$PACKAGE")
-Size: $(apt_filesize "$VARLIB/apt/$DIST/$PACKAGE")
+MD5Sum: $(apt_md5 "$VARLIB/apt/$DIST/$PATHNAME")
+SHA1: $(apt_sha1 "$VARLIB/apt/$DIST/$PATHNAME")
+SHA256: $(apt_sha256 "$VARLIB/apt/$DIST/$PATHNAME")
+Size: $(apt_filesize "$VARLIB/apt/$DIST/$PATHNAME")
 EOF
 			echo
 		} | tee -a $FILES >/dev/null
 		rm -rf "$TMP/DEBIAN"
 
 	done
+	COMPS="$(find "$VARCACHE/dists/$DIST-$DATE" -mindepth 1 -maxdepth 1 \
+		-type d ! -name .refs -printf "%P ")"
 
-	# Build a `Release` file for each architecture.  `gzip` the `Packages`
-	# file, too.
-	for ARCH in $ARCHS
+	# Build a `Release` file for each component and architecture.  `gzip`
+	# the `Packages` file, too.
+	for COMP in $COMPS
 	do
-		cat >"$VARCACHE/dists/$DIST-$DATE/main/binary-$ARCH/Release" <<EOF
+		for ARCH in $ARCHS
+		do
+			cat >"$VARCACHE/dists/$DIST-$DATE/$COMP/binary-$ARCH/Release" <<EOF
 Archive: $DIST
-Component: main
+Component: $COMP
 Origin: $ORIGIN
 Label: $LABEL
 Architecture: $ARCH
 EOF
-		gzip -c "$VARCACHE/dists/$DIST-$DATE/main/binary-$ARCH/Packages" \
-			>"$VARCACHE/dists/$DIST-$DATE/main/binary-$ARCH/Packages.gz"
+			gzip -c "$VARCACHE/dists/$DIST-$DATE/$COMP/binary-$ARCH/Packages" \
+				>"$VARCACHE/dists/$DIST-$DATE/$COMP/binary-$ARCH/Packages.gz"
+		done
 	done
 
 	# Begin the top-level `Release` file with the lists of components
@@ -126,15 +138,16 @@ EOF
 Origin: $ORIGIN
 Label: $LABEL
 Codename: $DIST
-Components: main
+Components: ${COMPS% }
 Architectures: $ARCHS
 EOF
 
 		# Finish the top-level `Release` file with references and
 		# checksums for each sub-`Release` file and `Packages.gz` file.
 		# In the future, `Sources` may find a place here, too.
-		find "$VARCACHE/dists/$DIST-$DATE/main" -type f -printf main/%P\\n \
-			| while read FILE
+		find "$VARCACHE/dists/$DIST-$DATE" -mindepth 2 -type f -printf %P\\n |
+		grep -v ^\\. |
+		while read FILE
 		do
 			SIZE="$(apt_filesize "$VARCACHE/dists/$DIST-$DATE/$FILE")"
 			echo " $(apt_md5 "$VARCACHE/dists/$DIST-$DATE/$FILE" \
@@ -179,5 +192,5 @@ EOF
 
 # Clean up old packages in the pool.
 apt_clean() {
-	find "$VARCACHE/pool" -links 1 -delete
+	find "$VARCACHE/pool" -links 1 -delete || true
 }

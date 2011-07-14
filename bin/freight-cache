@@ -83,7 +83,9 @@ do
 	# whatever it wants.
 	. "$MANAGER.sh"
 	SORT="$(sort -V </dev/null 2>/dev/null && echo "sort -V" || echo "sort")"
-	ls "$DIR" 2>/dev/null | eval "$SORT" | eval "${MANAGER}_cache" "$DIST"
+	find "$DIR" -type f -printf %P\\n 2>/dev/null |
+	eval "$SORT" |
+	eval "${MANAGER}_cache" "$DIST"
 
 	# Clean up old packages as dictated by the manager.
 	[ -z "$KEEP" ] && eval "${MANAGER}_clean"
