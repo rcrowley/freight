@@ -1,22 +1,41 @@
+# Fetch the control file from the given debian package file.
+apt_control_file() {
+	filename=$(ar p "$1" control.tar.gz | tar zt | grep control)
+	ar p "$1" control.tar.gz | tar zxO $filename
+}
+
+# Fetch the given field from the package's control file.
+apt_info() {
+	apt_control_file "$1" | egrep -i "^$2:" | cut -d: -f2 | cut -c2-
+}
+
 # Print the package name from the given package filename.
 apt_name() {
-	basename "$1" .deb | cut -d_ -f1
+	apt_info "$1" Package
 }
 
 # Print the version from the given package filename.
 apt_version() {
-	basename "$1" .deb | cut -d_ -f2
+	apt_info "$1" Version | cut -d: -f2
 }
 
 # Print the architecture from the given package filename.
 apt_arch() {
-	basename "$1" .deb | cut -d_ -f3
+	apt_info "$1" Architecture
+}
+
+# Print the source name of the package file.
+apt_sourcename() {
+	source=$(apt_info "$1" Source)
+	[ -z "$source" ] && source=$(apt_name "$1")
+	echo "$source"
 }
 
 # Print the prefix the given package filename should use in the pool.
 apt_prefix() {
-	[ "$(echo "$1" | cut -c1-3)" = "lib" ] && C=4 || C=1
-	echo "$1" | cut -c-$C
+	source=$(apt_sourcename "$1")
+	[ "$(echo "$source" | cut -c1-3)" = "lib" ] && C=4 || C=1
+	echo "$source" | cut -c-$C
 }
 
 # Print the checksum portion of the normal checksumming programs' output.
@@ -75,7 +94,7 @@ apt_cache() {
 		cp "$VARLIB/apt/$DIST/$PATHNAME" "$REFS"
 
 		# Link this package into the pool.
-		POOL="pool/$DIST/$COMP/$(apt_prefix "$PACKAGE")/$(apt_name "$PACKAGE")"
+		POOL="pool/$DIST/$COMP/$(apt_prefix "$PACKAGE")/$(apt_sourcename "$PACKAGE")"
 		mkdir -p "$VARCACHE/$POOL"
 		if [ -f "$VARCACHE/$POOL/$PACKAGE" ]
 		then
