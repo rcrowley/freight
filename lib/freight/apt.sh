@@ -55,6 +55,15 @@ apt_cache() {
 	# Work through every package that should be part of this distro.
 	while read PATHNAME
 	do
+
+		# Verify this package by way of extracting its control information
+		# to be used throughout this iteration of the loop.
+		dpkg-deb -e "$VARLIB/apt/$DIST/$PATHNAME" "$TMP/DEBIAN" || {
+			echo "# [freight] skipping invalid Debian package $PATHNAME" >&2
+			continue
+		}
+
+		# Extract the component, if present, from the package's pathname.
 		case "$PATHNAME" in
 			*/*) COMP="${PATHNAME%%/*}" PACKAGE="${PATHNAME##*/}";;
 			*) COMP="main" PACKAGE="$PATHNAME";;
@@ -97,7 +106,6 @@ apt_cache() {
 		# `Size`, `MD5Sum`, etc. lines and replace them with newly
 		# generated values.  Add the `Filename` field containing the
 		# path to the package, starting with `pool/`.
-		dpkg-deb -e "$VARLIB/apt/$DIST/$PATHNAME" "$TMP/DEBIAN"
 		{
 			grep . "$TMP/DEBIAN/control" \
 				| grep -v "^(Essential|Filename|MD5Sum|SHA1|SHA256|Size)"
