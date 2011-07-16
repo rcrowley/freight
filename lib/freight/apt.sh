@@ -1,31 +1,31 @@
 # Fetch the given field from the package's control file.
 apt_info() {
-	dpkg-deb -I "$1" control | egrep -i "^$2:" | cut -d: -f2 | cut -c2-
+	egrep -i "^$2:" "$1" | cut -d: -f2 | cut -c2-
 }
 
-# Print the package name from the given package filename.
+# Print the package name from the given control file.
 apt_name() {
 	apt_info "$1" Package
 }
 
-# Print the version from the given package filename.
+# Print the version from the given control file.
 apt_version() {
 	apt_info "$1" Version
 }
 
-# Print the architecture from the given package filename.
+# Print the architecture from the given control file.
 apt_arch() {
 	apt_info "$1" Architecture
 }
 
-# Print the source name of the package file.
+# Print the source name from the given control file.
 apt_sourcename() {
 	source=$(apt_info "$1" Source)
 	[ -z "$source" ] && source=$(apt_name "$1")
 	echo "$source"
 }
 
-# Print the prefix the given package filename should use in the pool.
+# Print the prefix the given control file should use in the pool.
 apt_prefix() {
 	source=$(apt_sourcename "$1")
 	[ "$(echo "$source" | cut -c1-3)" = "lib" ] && C=4 || C=1
@@ -97,12 +97,12 @@ apt_cache() {
 		cp "$VARLIB/apt/$DIST/$PATHNAME" "$REFS"
 
 		# Package properties
-		SOURCEPATH="$REFS/$PACKAGE"
-		ARCH=$(apt_arch "$SOURCEPATH")
-		NAME=$(apt_name "$SOURCEPATH")
-		VERSION=$(apt_version "$SOURCEPATH" | cut -d: -f2)
-		PREFIX=$(apt_prefix "$SOURCEPATH")
-		SOURCE=$(apt_sourcename "$SOURCEPATH")
+		CONTROL="$TMP/DEBIAN/control"
+		ARCH=$(apt_arch "$CONTROL")
+		NAME=$(apt_name "$CONTROL")
+		VERSION=$(apt_version "$CONTROL" | cut -d: -f2) # remove epoch
+		PREFIX=$(apt_prefix "$CONTROL")
+		SOURCE=$(apt_sourcename "$CONTROL")
 		FILENAME="$NAME""_""$VERSION""_""$ARCH.deb"
 
 		# Link this package into the pool.
