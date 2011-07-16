@@ -79,7 +79,7 @@ apt_cache() {
 		mkdir -p "$VARCACHE/$POOL"
 		if [ ! -f "$VARCACHE/$POOL/$PACKAGE" ]
 		then
-			echo "# [freight] adding package to pool: $PACKAGE" >&2
+			echo "# [freight] adding $PACKAGE to pool" >&2
 			ln "$REFS/$PACKAGE" "$VARCACHE/$POOL/$PACKAGE"
 		fi
 
@@ -177,7 +177,10 @@ EOF
 		exit 1
 	}
 
-	# Generate keyring
+	# Generate `pubkey.gpg` containing the plaintext public key and
+	# `keyring.gpg` containing a complete GPG keyring containing only
+	# the appropriate public key.  `keyring.gpg` is appropriate for
+	# copying directly to `/etc/apt/trusted.gpg.d`.
 	mkdir -m700 -p "$TMP/gpg"
 	gpg -q --export -a "$GPG" |
 	tee "$VARCACHE/pubkey.gpg" |
