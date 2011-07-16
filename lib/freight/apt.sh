@@ -110,7 +110,12 @@ apt_cache() {
 		mkdir -p "$VARCACHE/$POOL"
 		if [ ! -f "$VARCACHE/$POOL/$FILENAME" ]
 		then
-			echo "# [freight] adding $PACKAGE to pool" >&2
+			if [ "$PACKAGE" != "$FILENAME" ]
+			then
+				echo "# [freight] adding $PACKAGE to pool (as $FILENAME)" >&2
+			else
+				echo "# [freight] adding $PACKAGE to pool" >&2
+			fi
 			ln "$REFS/$PACKAGE" "$VARCACHE/$POOL/$FILENAME"
 		fi
 
