@@ -1,12 +1,6 @@
-# Fetch the control file from the given debian package file.
-apt_control_file() {
-	filename=$(ar p "$1" control.tar.gz | tar zt | grep control)
-	ar p "$1" control.tar.gz | tar zxO $filename
-}
-
 # Fetch the given field from the package's control file.
 apt_info() {
-	apt_control_file "$1" | egrep -i "^$2:" | cut -d: -f2 | cut -c2-
+	dpkg-deb -I "$1" control | egrep -i "^$2:" | cut -d: -f2 | cut -c2-
 }
 
 # Print the package name from the given package filename.
