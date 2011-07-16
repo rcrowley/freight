@@ -77,10 +77,9 @@ apt_cache() {
 		# Link this package into the pool.
 		POOL="pool/$DIST/$COMP/$(apt_prefix "$PACKAGE")/$(apt_name "$PACKAGE")"
 		mkdir -p "$VARCACHE/$POOL"
-		if [ -f "$VARCACHE/$POOL/$PACKAGE" ]
+		if [ ! -f "$VARCACHE/$POOL/$PACKAGE" ]
 		then
-			echo "# [freight] pool already has $PACKAGE" >&2
-		else
+			echo "# [freight] adding package to pool: $PACKAGE" >&2
 			ln "$REFS/$PACKAGE" "$VARCACHE/$POOL/$PACKAGE"
 		fi
 
