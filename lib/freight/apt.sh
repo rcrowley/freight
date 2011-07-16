@@ -177,10 +177,12 @@ EOF
 		rm -rf "$DISTCACHE"
 		exit 1
 	}
+
+	# Generate keyring
 	mkdir -m700 -p "$TMP/gpg"
-	gpg --export -a "$GPG" |
+	gpg -q --export -a "$GPG" |
 	tee "$VARCACHE/pubkey.gpg" |
-	gpg --homedir "$TMP/gpg" --import
+	gpg -q --homedir "$TMP/gpg" --import
 	mv "$TMP/gpg/pubring.gpg" "$VARCACHE/keyring.gpg"
 
 	# Move the symbolic link for this distro to this build.
