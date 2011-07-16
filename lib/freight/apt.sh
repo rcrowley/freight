@@ -10,7 +10,7 @@ apt_name() {
 
 # Print the version from the given package filename.
 apt_version() {
-	apt_info "$1" Version | cut -d: -f2
+	apt_info "$1" Version
 }
 
 # Print the architecture from the given package filename.
@@ -87,19 +87,24 @@ apt_cache() {
 		ln "$VARLIB/apt/$DIST/$PATHNAME" "$REFS" ||
 		cp "$VARLIB/apt/$DIST/$PATHNAME" "$REFS"
 
+		# Package properties
+		ARCH=$(apt_arch "$PACKAGE")
+		NAME=$(apt_name "$PACKAGE")
+		VERSION=$(apt_version "$PACKAGE" | cut -d: -f2)
+		FILENAME="$NAME""_""$VERSION""_""$ARCH.deb"
+
 		# Link this package into the pool.
 		POOL="pool/$DIST/$COMP/$(apt_prefix "$PACKAGE")/$(apt_sourcename "$PACKAGE")"
 		mkdir -p "$VARCACHE/$POOL"
-		if [ -f "$VARCACHE/$POOL/$PACKAGE" ]
+		if [ -f "$VARCACHE/$POOL/$FILENAME" ]
 		then
 			echo "# [freight] pool already has $PACKAGE" >&2
 		else
-			ln "$REFS/$PACKAGE" "$VARCACHE/$POOL/$PACKAGE"
+			ln "$REFS/$PACKAGE" "$VARCACHE/$POOL/$FILENAME"
 		fi
 
 		# Build a list of the one-or-more `Packages` files to append with
 		# this package's info.
-		ARCH="$(apt_arch "$PACKAGE")"
 		if [ "$ARCH" = "all" ]
 		then
 			FILES="$(find "$DISTCACHE/$COMP" -type f)"
@@ -116,7 +121,7 @@ apt_cache() {
 			grep . "$TMP/DEBIAN/control" \
 				| grep -v "^(Essential|Filename|MD5Sum|SHA1|SHA256|Size)"
 			cat <<EOF
-Filename: $POOL/$PACKAGE
+Filename: $POOL/$FILENAME
 MD5Sum: $(apt_md5 "$VARLIB/apt/$DIST/$PATHNAME")
 SHA1: $(apt_sha1 "$VARLIB/apt/$DIST/$PATHNAME")
 SHA256: $(apt_sha256 "$VARLIB/apt/$DIST/$PATHNAME")
