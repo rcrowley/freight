@@ -3,6 +3,7 @@ BUILD=1
 
 prefix=/usr/local
 bindir=${prefix}/bin
+libdir=${prefix}/lib
 sysconfdir=${prefix}/etc
 mandir=${prefix}/share/man
 
@@ -11,51 +12,54 @@ all:
 clean:
 	rm -f *.deb
 
-install:
-	install -d $(DESTDIR)$(prefix)/bin
-	install bin/freight bin/freight-add bin/freight-cache bin/freight-setup \
-		$(DESTDIR)$(prefix)/bin/
-	install -d $(DESTDIR)$(prefix)/lib/freight
-	install -m644 lib/freight/*.sh $(DESTDIR)$(prefix)/lib/freight/
-	install -d $(DESTDIR)$(sysconfdir)
-	install -m644 etc/freight.conf.example $(DESTDIR)$(sysconfdir)/
-	install -d $(DESTDIR)$(mandir)/man1
-	install -m644 \
-		man/man1/freight.1 \
-		man/man1/freight-add.1 \
-		man/man1/freight-cache.1 \
-		$(DESTDIR)$(mandir)/man1/
-	install -d $(DESTDIR)$(mandir)/man5
-	install -m644 man/man5/freight.5 $(DESTDIR)$(mandir)/man5/
+install: install-bin install-lib install-man install-sysconf
 
-uninstall:
-	rm -f \
-		$(DESTDIR)$(prefix)/bin/freight \
-		$(DESTDIR)$(prefix)/bin/freight-add \
-		$(DESTDIR)$(prefix)/bin/freight-cache \
-		$(DESTDIR)$(prefix)/bin/freight-setup \
-		$(DESTDIR)$(prefix)/lib/freight/*.sh \
-		$(DESTDIR)$(sysconfdir)/freight.conf.example \
-		$(DESTDIR)$(mandir)/man1/freight.1 \
-		$(DESTDIR)$(mandir)/man1/freight-add.1 \
-		$(DESTDIR)$(mandir)/man1/freight-cache.1 \
-		$(DESTDIR)$(mandir)/man5/freight.5
-	rmdir -p --ignore-fail-on-non-empty \
-		$(DESTDIR)$(prefix)/bin \
-		$(DESTDIR)$(prefix)/lib/freight \
-		$(DESTDIR)$(sysconfdir) \
-		$(DESTDIR)$(mandir)/man1 \
-		$(DESTDIR)$(mandir)/man5
+install-bin:
+	install -d $(DESTDIR)$(bindir)
+	find bin -type f -printf %P\\0 | xargs -0r -I__ install bin/__ $(DESTDIR)$(bindir)/__
+
+install-lib:
+	find lib -type d -printf %P\\0 | xargs -0r -I__ install -d $(DESTDIR)$(libdir)/__
+	find lib -type f -printf %P\\0 | xargs -0r -I__ install -m644 lib/__ $(DESTDIR)$(libdir)/__
+
+install-man:
+	find man -type d -printf %P\\0 | xargs -0r -I__ install -d $(DESTDIR)$(mandir)/__
+	find man -type f -name \*.[12345678].gz -printf %P\\0 | xargs -0r -I__ install -m644 man/__ $(DESTDIR)$(mandir)/__
+
+install-sysconf:
+	find etc -type d -printf %P\\0 | xargs -0r -I__ install -d $(DESTDIR)$(sysconfdir)/__
+	find etc -type f -printf %P\\0 | xargs -0r -I__ install -m644 etc/__ $(DESTDIR)$(sysconfdir)/__
+
+uninstall: uninstall-bin uninstall-lib uninstall-man uninstall-sysconf
+
+uninstall-bin:
+	find bin -type f -printf %P\\0 | xargs -0r -I__ rm -f $(DESTDIR)$(bindir)/__
+	rmdir -p --ignore-fail-on-non-empty $(DESTDIR)$(bindir) || true
+
+uninstall-lib:
+	find lib -type f -printf %P\\0 | xargs -0r -I__ rm -f $(DESTDIR)$(libdir)/__
+	find lib -depth -mindepth 1 -type d -printf %P\\0 | xargs -0r -I__ rmdir $(DESTDIR)$(libdir)/__ || true
+	rmdir -p --ignore-fail-on-non-empty $(DESTDIR)$(libdir) || true
+
+uninstall-man:
+	find man -type f -name \*.[12345678].gz -printf %P\\0 | xargs -0r -I__ rm -f $(DESTDIR)$(mandir)/__
+	find man -depth -mindepth 1 -type d -printf %P\\0 | xargs -0r -I__ rmdir $(DESTDIR)$(mandir)/__ || true
+	rmdir -p --ignore-fail-on-non-empty $(DESTDIR)$(mandir) || true
+
+uninstall-sysconf:
+	find etc -type f -printf %P\\0 | xargs -0r -I__ rm -f $(DESTDIR)$(sysconfdir)/__
+	find etc -depth -mindepth 1 -type d -printf %P\\0 | xargs -0r -I__ rmdir $(DESTDIR)$(sysconfdir)/__ || true
+	rmdir -p --ignore-fail-on-non-empty $(DESTDIR)$(sysconfdir) || true
 
 build:
-	make install prefix=/usr DESTDIR=debian
+	make install prefix=/usr sysconfdir=/etc DESTDIR=debian
 	fpm -s dir -t deb -C debian \
 		-n freight -v $(VERSION)-$(BUILD) -a all \
 		-d coreutils -d dash -d dpkg -d gnupg -d grep \
 		-m "Richard Crowley <r@rcrowley.org>" \
 		--url "https://github.com/rcrowley/freight" \
 		--description "A modern take on the Debian archive."
-	make uninstall prefix=/usr DESTDIR=debian
+	make uninstall prefix=/usr sysconfdir=/etc DESTDIR=debian
 
 deploy:
 	scp -i ~/production.pem freight_$(VERSION)-$(BUILD)_all.deb ubuntu@packages.devstructure.com:
@@ -63,6 +67,7 @@ deploy:
 
 man:
 	find man -name \*.ronn | xargs -n1 ronn --manual=Freight --style=toc
+	find man -name \*.[12345678] | xargs gzip
 
 docs:
 	for SH in $$(find bin lib -type f -not -name \*.html); do \
