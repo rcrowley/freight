@@ -68,6 +68,15 @@ apt_cache() {
 	# Work through every package that should be part of this distro.
 	while read PATHNAME
 	do
+
+		# Verify this package by way of extracting its control information
+		# to be used throughout this iteration of the loop.
+		dpkg-deb -e "$VARLIB/apt/$DIST/$PATHNAME" "$TMP/DEBIAN" || {
+			echo "# [freight] skipping invalid Debian package $PATHNAME" >&2
+			continue
+		}
+
+		# Extract the component, if present, from the package's pathname.
 		case "$PATHNAME" in
 			*/*) COMP="${PATHNAME%%/*}" PACKAGE="${PATHNAME##*/}";;
 			*) COMP="main" PACKAGE="$PATHNAME";;
@@ -99,10 +108,9 @@ apt_cache() {
 		# Link this package into the pool.
 		POOL="pool/$DIST/$COMP/$PREFIX/$SOURCE"
 		mkdir -p "$VARCACHE/$POOL"
-		if [ -f "$VARCACHE/$POOL/$FILENAME" ]
+		if [ ! -f "$VARCACHE/$POOL/$FILENAME" ]
 		then
-			echo "# [freight] pool already has $PACKAGE" >&2
-		else
+			echo "# [freight] adding $PACKAGE to pool" >&2
 			ln "$REFS/$PACKAGE" "$VARCACHE/$POOL/$FILENAME"
 		fi
 
@@ -119,7 +127,6 @@ apt_cache() {
 		# `Size`, `MD5Sum`, etc. lines and replace them with newly
 		# generated values.  Add the `Filename` field containing the
 		# path to the package, starting with `pool/`.
-		dpkg-deb -e "$VARLIB/apt/$DIST/$PATHNAME" "$TMP/DEBIAN"
 		{
 			grep . "$TMP/DEBIAN/control" \
 				| grep -v "^(Essential|Filename|MD5Sum|SHA1|SHA256|Size)"
@@ -198,10 +205,15 @@ EOF
 		rm -rf "$DISTCACHE"
 		exit 1
 	}
+
+	# Generate `pubkey.gpg` containing the plaintext public key and
+	# `keyring.gpg` containing a complete GPG keyring containing only
+	# the appropriate public key.  `keyring.gpg` is appropriate for
+	# copying directly to `/etc/apt/trusted.gpg.d`.
 	mkdir -m700 -p "$TMP/gpg"
-	gpg --export -a "$GPG" |
+	gpg -q --export -a "$GPG" |
 	tee "$VARCACHE/pubkey.gpg" |
-	gpg --homedir "$TMP/gpg" --import
+	gpg -q --homedir "$TMP/gpg" --import
 	mv "$TMP/gpg/pubring.gpg" "$VARCACHE/keyring.gpg"
 
 	# Move the symbolic link for this distro to this build.

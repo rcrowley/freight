@@ -57,16 +57,6 @@ cp "$PACKAGE" "$TMP/$(basename $PACKAGE)"
 # are ultimately taken relative to the Freight library.
 cd "$VARLIB"
 
-# Remove old versions of this package from every `<manager>/<distro>`
-# given in `$@` unless explicitly asked to keep them.
-# TODO Decouple this from `apt`-specific file naming conventions.
-#. apt.sh
-#for DIR in "$@"
-#do
-#	[ -d "$DIR" ] && find "$DIR" -name \
-#		"$(apt_name $PACKAGE)_*_$(apt_arch $PACKAGE).deb" -delete
-#done
-
 # Hard link this package into every `<manager>/<distro>` given in `$@`.
 # These links will later be used to compile the `Release` and `Packages`
 # files in the Freight cache.
