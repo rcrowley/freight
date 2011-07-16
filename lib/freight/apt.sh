@@ -88,13 +88,16 @@ apt_cache() {
 		cp "$VARLIB/apt/$DIST/$PATHNAME" "$REFS"
 
 		# Package properties
-		ARCH=$(apt_arch "$PACKAGE")
-		NAME=$(apt_name "$PACKAGE")
-		VERSION=$(apt_version "$PACKAGE" | cut -d: -f2)
+		SOURCEPATH="$REFS/$PACKAGE"
+		ARCH=$(apt_arch "$SOURCEPATH")
+		NAME=$(apt_name "$SOURCEPATH")
+		VERSION=$(apt_version "$SOURCEPATH" | cut -d: -f2)
+		PREFIX=$(apt_prefix "$SOURCEPATH")
+		SOURCE=$(apt_sourcename "$SOURCEPATH")
 		FILENAME="$NAME""_""$VERSION""_""$ARCH.deb"
 
 		# Link this package into the pool.
-		POOL="pool/$DIST/$COMP/$(apt_prefix "$PACKAGE")/$(apt_sourcename "$PACKAGE")"
+		POOL="pool/$DIST/$COMP/$PREFIX/$SOURCE"
 		mkdir -p "$VARCACHE/$POOL"
 		if [ -f "$VARCACHE/$POOL/$FILENAME" ]
 		then
