@@ -96,14 +96,15 @@ apt_cache() {
 		ln "$VARLIB/apt/$DIST/$PATHNAME" "$REFS" ||
 		cp "$VARLIB/apt/$DIST/$PATHNAME" "$REFS"
 
-		# Package properties.
+		# Package properties.  Remove the epoch from the version number
+		# in the package filename, as is customary.
 		CONTROL="$TMP/DEBIAN/control"
 		ARCH="$(apt_arch "$CONTROL")"
 		NAME="$(apt_name "$CONTROL")"
-		VERSION="$(apt_version "$CONTROL" | cut -d: -f2)" # Remove epoch.
+		VERSION="$(apt_version "$CONTROL")"
 		PREFIX="$(apt_prefix "$CONTROL")"
 		SOURCE="$(apt_sourcename "$CONTROL")"
-		FILENAME="${NAME}_${VERSION}_${ARCH}.deb"
+		FILENAME="${NAME}_${VERSION%*:}_${ARCH}.deb"
 
 		# Link this package into the pool.
 		POOL="pool/$DIST/$COMP/$PREFIX/$SOURCE"
