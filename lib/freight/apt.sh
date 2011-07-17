@@ -1,22 +1,35 @@
-# Print the package name from the given package filename.
+# Fetch the given field from the package's control file.
+apt_info() {
+	egrep -i "^$2:" "$1" | cut -d: -f2 | cut -c2-
+}
+
+# Print the package name from the given control file.
 apt_name() {
-	basename "$1" .deb | cut -d_ -f1
+	apt_info "$1" Package
 }
 
-# Print the version from the given package filename.
+# Print the version from the given control file.
 apt_version() {
-	basename "$1" .deb | cut -d_ -f2
+	apt_info "$1" Version
 }
 
-# Print the architecture from the given package filename.
+# Print the architecture from the given control file.
 apt_arch() {
-	basename "$1" .deb | cut -d_ -f3
+	apt_info "$1" Architecture
 }
 
-# Print the prefix the given package filename should use in the pool.
+# Print the source name from the given control file.
+apt_sourcename() {
+	source=$(apt_info "$1" Source)
+	[ -z "$source" ] && source=$(apt_name "$1")
+	echo "$source"
+}
+
+# Print the prefix the given control file should use in the pool.
 apt_prefix() {
-	[ "$(echo "$1" | cut -c1-3)" = "lib" ] && C=4 || C=1
-	echo "$1" | cut -c-$C
+	source=$(apt_sourcename "$1")
+	[ "$(echo "$source" | cut -c1-3)" = "lib" ] && C=4 || C=1
+	echo "$source" | cut -c-$C
 }
 
 # Print the checksum portion of the normal checksumming programs' output.
@@ -83,18 +96,31 @@ apt_cache() {
 		ln "$VARLIB/apt/$DIST/$PATHNAME" "$REFS" ||
 		cp "$VARLIB/apt/$DIST/$PATHNAME" "$REFS"
 
+		# Package properties
+		CONTROL="$TMP/DEBIAN/control"
+		ARCH=$(apt_arch "$CONTROL")
+		NAME=$(apt_name "$CONTROL")
+		VERSION=$(apt_version "$CONTROL" | cut -d: -f2) # remove epoch
+		PREFIX=$(apt_prefix "$CONTROL")
+		SOURCE=$(apt_sourcename "$CONTROL")
+		FILENAME="$NAME""_""$VERSION""_""$ARCH.deb"
+
 		# Link this package into the pool.
-		POOL="pool/$DIST/$COMP/$(apt_prefix "$PACKAGE")/$(apt_name "$PACKAGE")"
+		POOL="pool/$DIST/$COMP/$PREFIX/$SOURCE"
 		mkdir -p "$VARCACHE/$POOL"
-		if [ ! -f "$VARCACHE/$POOL/$PACKAGE" ]
+		if [ ! -f "$VARCACHE/$POOL/$FILENAME" ]
 		then
-			echo "# [freight] adding $PACKAGE to pool" >&2
-			ln "$REFS/$PACKAGE" "$VARCACHE/$POOL/$PACKAGE"
+			if [ "$PACKAGE" != "$FILENAME" ]
+			then
+				echo "# [freight] adding $PACKAGE to pool (as $FILENAME)" >&2
+			else
+				echo "# [freight] adding $PACKAGE to pool" >&2
+			fi
+			ln "$REFS/$PACKAGE" "$VARCACHE/$POOL/$FILENAME"
 		fi
 
 		# Build a list of the one-or-more `Packages` files to append with
 		# this package's info.
-		ARCH="$(apt_arch "$PACKAGE")"
 		if [ "$ARCH" = "all" ]
 		then
 			FILES="$(find "$DISTCACHE/$COMP" -type f)"
@@ -110,7 +136,7 @@ apt_cache() {
 			grep . "$TMP/DEBIAN/control" \
 				| grep -v "^(Essential|Filename|MD5Sum|SHA1|SHA256|Size)"
 			cat <<EOF
-Filename: $POOL/$PACKAGE
+Filename: $POOL/$FILENAME
 MD5Sum: $(apt_md5 "$VARLIB/apt/$DIST/$PATHNAME")
 SHA1: $(apt_sha1 "$VARLIB/apt/$DIST/$PATHNAME")
 SHA256: $(apt_sha256 "$VARLIB/apt/$DIST/$PATHNAME")
