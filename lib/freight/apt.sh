@@ -1,6 +1,6 @@
 # Fetch the given field from the package's control file.
 apt_info() {
-	egrep -i "^$2:" "$1" | cut -d: -f2 | cut -c2-
+	egrep -i "^$2:" "$1" | cut -d: -f2- | cut -c2-
 }
 
 # Print the package name from the given control file.
