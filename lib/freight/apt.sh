@@ -20,16 +20,16 @@ apt_arch() {
 
 # Print the source name from the given control file.
 apt_sourcename() {
-	source=$(apt_info "$1" Source)
-	[ -z "$source" ] && source=$(apt_name "$1")
-	echo "$source"
+	SOURCE="$(apt_info "$1" Source)"
+	[ -z "$SOURCE" ] && SOURCE="$(apt_name "$1")"
+	echo "$SOURCE"
 }
 
 # Print the prefix the given control file should use in the pool.
 apt_prefix() {
-	source=$(apt_sourcename "$1")
-	[ "$(echo "$source" | cut -c1-3)" = "lib" ] && C=4 || C=1
-	echo "$source" | cut -c-$C
+	SOURCE="$(apt_sourcename "$1")"
+	[ "$(echo "$SOURCE" | cut -c1-3)" = "lib" ] && C=4 || C=1
+	echo "$SOURCE" | cut -c-$C
 }
 
 # Print the checksum portion of the normal checksumming programs' output.
@@ -96,14 +96,14 @@ apt_cache() {
 		ln "$VARLIB/apt/$DIST/$PATHNAME" "$REFS" ||
 		cp "$VARLIB/apt/$DIST/$PATHNAME" "$REFS"
 
-		# Package properties
+		# Package properties.
 		CONTROL="$TMP/DEBIAN/control"
-		ARCH=$(apt_arch "$CONTROL")
-		NAME=$(apt_name "$CONTROL")
-		VERSION=$(apt_version "$CONTROL" | cut -d: -f2) # remove epoch
-		PREFIX=$(apt_prefix "$CONTROL")
-		SOURCE=$(apt_sourcename "$CONTROL")
-		FILENAME="$NAME""_""$VERSION""_""$ARCH.deb"
+		ARCH="$(apt_arch "$CONTROL")"
+		NAME="$(apt_name "$CONTROL")"
+		VERSION="$(apt_version "$CONTROL" | cut -d: -f2)" # Remove epoch.
+		PREFIX="$(apt_prefix "$CONTROL")"
+		SOURCE="$(apt_sourcename "$CONTROL")"
+		FILENAME="${NAME}_${VERSION}_${ARCH}.deb"
 
 		# Link this package into the pool.
 		POOL="pool/$DIST/$COMP/$PREFIX/$SOURCE"
