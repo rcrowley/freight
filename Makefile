@@ -24,7 +24,8 @@ install-lib:
 
 install-man:
 	find man -type d -printf %P\\0 | xargs -0r -I__ install -d $(DESTDIR)$(mandir)/__
-	find man -type f -name \*.[12345678].gz -printf %P\\0 | xargs -0r -I__ install -m644 man/__ $(DESTDIR)$(mandir)/__
+	find man -type f -name \*.[12345678] -printf %P\\0 | xargs -0r -I__ install -m644 man/__ $(DESTDIR)$(mandir)/__
+	find man -type f -name \*.[12345678] -printf %P\\0 | xargs -0r -I__ gzip $(DESTDIR)$(mandir)/__
 
 install-sysconf:
 	find etc -type d -printf %P\\0 | xargs -0r -I__ install -d $(DESTDIR)$(sysconfdir)/__
@@ -42,7 +43,7 @@ uninstall-lib:
 	rmdir -p --ignore-fail-on-non-empty $(DESTDIR)$(libdir) || true
 
 uninstall-man:
-	find man -type f -name \*.[12345678].gz -printf %P\\0 | xargs -0r -I__ rm -f $(DESTDIR)$(mandir)/__
+	find man -type f -name \*.[12345678] -printf %P\\0 | xargs -0r -I__ rm -f $(DESTDIR)$(mandir)/__.gz
 	find man -depth -mindepth 1 -type d -printf %P\\0 | xargs -0r -I__ rmdir $(DESTDIR)$(mandir)/__ || true
 	rmdir -p --ignore-fail-on-non-empty $(DESTDIR)$(mandir) || true
 
@@ -67,7 +68,6 @@ deploy:
 
 man:
 	find man -name \*.ronn | xargs -n1 ronn --manual=Freight --style=toc
-	find man -name \*.[12345678] | xargs gzip
 
 docs:
 	for SH in $$(find bin lib -type f -not -name \*.html); do \
