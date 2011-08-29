@@ -220,8 +220,8 @@ EOF
 	gpg -q --export -a "$GPG" |
 	tee "$VARCACHE/pubkey.gpg" |
 	gpg -q --homedir "$TMP/gpg" --import
+	chmod 644 "$TMP/gpg/keyring.gpg"
 	mv "$TMP/gpg/pubring.gpg" "$VARCACHE/keyring.gpg"
-	chmod 644 "$VARCACHE/keyring.gpg"
 
 	# Move the symbolic link for this distro to this build.
 	ln -s "$DIST-$DATE" "$DISTCACHE-"
