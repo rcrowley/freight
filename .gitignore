@@ -1,6 +1,8 @@
 *.swp
 *.html
 *.deb
-control
+*.dsc
+*.orig.tar.gz
+*.diff.gz
 etc/freight.conf
 var
