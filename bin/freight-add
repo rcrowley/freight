@@ -37,11 +37,20 @@ do
 done
 . freight-setup
 
-# The first non-option argument is the package file.  The others are each
-# `<manager>/<distro>` paths for this package, which are listed in `$@`.
-PACKAGE="$1"
-[ -z "$PACKAGE" ] && usage
-shift
+# The non-option argument(s) following the last option are package files.
+# Binary packages have only one but source packages require three.  When the
+# last of these is found, the remaining arguments are each assumed to be
+# `<manager>/<distro>` pairs for this (source) package.
+while [ "$#" -gt 0 ]
+do
+	case "$1" in
+		*.deb|*.dsc|*.orig.tar.gz|*.diff.gz)
+			PATHNAMES="$PATHNAMES $1"
+			shift;;
+		*) break;;
+	esac
+done
+[ -z "$PATHNAMES" ] && usage
 [ -z "$*" ] && usage
 
 # Create a working directory on the same device as the Freight library and
@@ -50,7 +59,10 @@ shift
 mkdir -p "$VARLIB"
 TMP="$(mktemp -d "$VARLIB/work.$$.XXXXXXXXXX")"
 trap "rm -rf \"$TMP\"" 0
-cp "$PACKAGE" "$TMP/$(basename $PACKAGE)"
+for PATHNAME in $PATHNAMES
+do
+	cp "$PATHNAME" "$TMP/"
+done
 
 # Enter the Freight library directory so that items in `$@` may be given as
 # absolute paths or as partial paths of the form `<manager>/<distro>` that
@@ -60,9 +72,14 @@ cd "$VARLIB"
 # Hard link this package into every `<manager>/<distro>` given in `$@`.
 # These links will later be used to compile the `Release` and `Packages`
 # files in the Freight cache.
-for DIR in "$@"
+for PATHNAME in $PATHNAMES
 do
-	mkdir -p "$DIR"
-	ln "$TMP/$(basename $PACKAGE)" "$DIR/$(basename $PACKAGE)" 2>/dev/null \
-		|| echo "# [freight] $DIR already has $PACKAGE" >&2
+	FILENAME="$(basename "$PATHNAME")"
+	for DIRNAME in "$@"
+	do
+		mkdir -p "$DIRNAME"
+		ln "$TMP/$FILENAME" "$DIRNAME/$FILENAME" 2>/dev/null &&
+		echo "# [freight] added $PATHNAME to $DIRNAME" >&2 ||
+		echo "# [freight] $DIRNAME already has $PATHNAME" >&2
+	done
 done
