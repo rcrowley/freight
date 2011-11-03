@@ -1,4 +1,4 @@
-VERSION=0.1.0
+VERSION=0.1.1
 BUILD=1
 
 prefix=/usr/local

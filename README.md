@@ -30,10 +30,10 @@ Serve `/var/cache/freight` via your favorite web server and install it as an APT
 	git clone git://github.com/rcrowley/freight.git
 	cd freight && make && sudo make install
 
-### From DevStructure's Debian archive
+### From a Debian archive
 
-	echo "deb http://packages.devstructure.com $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/devstructure.list
-	sudo wget -O /etc/apt/trusted.gpg.d/devstructure.gpg http://packages.devstructure.com/keyring.gpg
+	echo "deb http://packages.rcrowley.org $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/rcrowley.list
+	sudo wget -O /etc/apt/trusted.gpg.d/rcrowley.gpg http://packages.rcrowley.org/keyring.gpg
 	sudo apt-get update
 	sudo apt-get -y install freight
 
