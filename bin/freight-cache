@@ -65,9 +65,16 @@ mkdir -p "$VARLIB"
 cd "$VARLIB"
 
 # Rebuild each distro serially.
-[ -z "$*" ] \
-	&& DIRS="$(find "$VARLIB" -mindepth 2 -maxdepth 2 -type d -printf "%P ")" \
-	|| DIRS="$@"
+if [ -z "$*" ]
+then
+	DIRS="$(
+		find "$VARLIB" -mindepth 2 -maxdepth 2 \
+			-type d ! -name ".*" \
+			-printf "%P "
+	)"
+else
+	DIRS="$@"
+fi
 for DIR in $DIRS
 do
 
