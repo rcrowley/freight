@@ -10,7 +10,7 @@ mandir=${prefix}/share/man
 all:
 
 clean:
-	rm -f *.deb man/man*/*.html
+	rm -rf *.deb debian man/man*/*.html
 
 install: install-bin install-lib install-man install-sysconf
 
