@@ -174,7 +174,8 @@ EOF
 	} >"$DISTCACHE/Release"
 
 	# Sign the top-level `Release` file with `gpg`.
-	gpg -sba -u"$GPG" -o"$DISTCACHE/Release.gpg" "$DISTCACHE/Release" || {
+	gpg -abs -o"$DISTCACHE/Release.gpg" --use-agent -u"$GPG" \
+		"$DISTCACHE/Release" || {
 		cat <<EOF
 # [freight] couldn't sign the repository, perhaps you need to run
 # [freight] gpg --gen-key and update the GPG setting in $CONF
