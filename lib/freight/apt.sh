@@ -369,7 +369,7 @@ apt_cache_source() {
 			echo " $SHA256 $SIZE $FILENAME"
 		done
 		echo
-	} >"$DISTCACHE/$COMP/source/Sources"
+	} >>"$DISTCACHE/$COMP/source/Sources"
 
 }
 
