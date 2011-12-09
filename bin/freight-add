@@ -47,6 +47,8 @@ do
 		*.deb|*.dsc|*.orig.tar.gz|*.diff.gz|*.debian.tar.gz)
 			PATHNAMES="$PATHNAMES $1"
 			shift;;
+		*.build|*.changes)
+			shift;;
 		*) break;;
 	esac
 done
