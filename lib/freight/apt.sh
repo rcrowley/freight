@@ -103,7 +103,7 @@ apt_cache() {
 			# and will find the associated *.orig.tar.gz and *.diff.gz as
 			# they are needed.
 			*.dsc) apt_cache_source "$DIST" "$DISTCACHE" "$PATHNAME" "$COMP" "$PACKAGE";;
-			*.diff.gz|*.orig.tar.gz) ;;
+			*.diff.gz|*.orig.tar.gz|*.debian.tar.gz) ;;
 
 			*) echo "# [freight] skipping extraneous file $PATHNAME" >&2;;
 		esac
@@ -303,7 +303,14 @@ apt_cache_source() {
 	DIRNAME="$(dirname "$PATHNAME")"
 	DSC_FILENAME="${NAME}_${VERSION%*:}.dsc"
 	ORIG_FILENAME="${NAME}_${ORIG_VERSION}.orig.tar.gz"
-	DIFF_FILENAME="${NAME}_${VERSION%*:}.diff.gz"
+	DIFFGZ_FILENAME="${NAME}_${VERSION%*:}.diff.gz"
+	DEBTAR_FILENAME="${NAME}_${VERSION%*:}.debian.tar.gz"
+
+	if [ -f "$VARLIB/apt/$DIST/$DIRNAME/$DEBTAR_FILENAME" ]; then
+		DIFF_FILENAME=${DEBTAR_FILENAME}
+	else
+		DIFF_FILENAME=${DIFFGZ_FILENAME}
+	fi
 
 	# Verify this package by ensuring the other necessary files are present.
 	[ -f "$VARLIB/apt/$DIST/$DIRNAME/$ORIG_FILENAME" \
