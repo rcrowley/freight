@@ -44,8 +44,10 @@ done
 while [ "$#" -gt 0 ]
 do
 	case "$1" in
-		*.deb|*.dsc|*.orig.tar.gz|*.diff.gz)
+		*.deb|*.dsc|*.orig.tar.gz|*.diff.gz|*.debian.tar.gz)
 			PATHNAMES="$PATHNAMES $1"
+			shift;;
+		*.build|*.changes)
 			shift;;
 		*) break;;
 	esac
