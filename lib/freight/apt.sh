@@ -103,7 +103,7 @@ apt_cache() {
 			# and will find the associated *.orig.tar.gz and *.diff.gz as
 			# they are needed.
 			*.dsc) apt_cache_source "$DIST" "$DISTCACHE" "$PATHNAME" "$COMP" "$PACKAGE";;
-			*.diff.gz|*.orig.tar.gz|*.debian.tar.gz) ;;
+			*.debian.tar.gz|*.diff.gz|*.orig.tar.gz) ;;
 
 			*) echo "# [freight] skipping extraneous file $PATHNAME" >&2;;
 		esac
@@ -248,10 +248,8 @@ apt_cache_binary() {
 	if [ ! -f "$VARCACHE/$POOL/$FILENAME" ]
 	then
 		if [ "$PACKAGE" != "$FILENAME" ]
-		then
-			echo "# [freight] adding $PACKAGE to pool (as $FILENAME)" >&2
-		else
-			echo "# [freight] adding $PACKAGE to pool" >&2
+		then echo "# [freight] adding $PACKAGE to pool (as $FILENAME)" >&2
+		else echo "# [freight] adding $PACKAGE to pool" >&2
 		fi
 		ln "$DISTCACHE/.refs/$COMP/$PACKAGE" "$VARCACHE/$POOL/$FILENAME"
 	fi
@@ -259,10 +257,8 @@ apt_cache_binary() {
 	# Build a list of the one-or-more `Packages` files to append with
 	# this package's info.
 	if [ "$ARCH" = "all" ]
-	then
-		FILES="$(find "$DISTCACHE/$COMP" -type f -name "Packages")"
-	else
-		FILES="$DISTCACHE/$COMP/binary-$ARCH/Packages"
+	then FILES="$(find "$DISTCACHE/$COMP" -type f -name "Packages")"
+	else FILES="$DISTCACHE/$COMP/binary-$ARCH/Packages"
 	fi
 
 	# Grab and augment the control file from this package.  Remove
@@ -302,14 +298,13 @@ apt_cache_source() {
 	ORIG_VERSION="$(apt_source_origversion "$PATHNAME")"
 	DIRNAME="$(dirname "$PATHNAME")"
 	DSC_FILENAME="${NAME}_${VERSION%*:}.dsc"
-	ORIG_FILENAME="${NAME}_${ORIG_VERSION}.orig.tar.gz"
-	DIFFGZ_FILENAME="${NAME}_${VERSION%*:}.diff.gz"
 	DEBTAR_FILENAME="${NAME}_${VERSION%*:}.debian.tar.gz"
+	DIFFGZ_FILENAME="${NAME}_${VERSION%*:}.diff.gz"
+	ORIG_FILENAME="${NAME}_${ORIG_VERSION}.orig.tar.gz"
 
-	if [ -f "$VARLIB/apt/$DIST/$DIRNAME/$DEBTAR_FILENAME" ]; then
-		DIFF_FILENAME=${DEBTAR_FILENAME}
-	else
-		DIFF_FILENAME=${DIFFGZ_FILENAME}
+	if [ -f "$VARLIB/apt/$DIST/$DIRNAME/$DEBTAR_FILENAME" ]
+	then DIFF_FILENAME=${DEBTAR_FILENAME}
+	else DIFF_FILENAME=${DIFFGZ_FILENAME}
 	fi
 
 	# Verify this package by ensuring the other necessary files are present.
