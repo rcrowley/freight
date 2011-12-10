@@ -56,7 +56,7 @@ done
 # Create a working directory on the same device as the Freight cache.
 mkdir -p "$VARCACHE"
 TMP="$(mktemp -d "$VARCACHE/work.$$.XXXXXXXXXX")"
-trap "rm -rf \"$TMP\"" 0
+trap "rm -rf \"$TMP\"" EXIT INT TERM
 
 # Enter the Freight library directory so that items in `$@` may be given as
 # absolute paths or as partial paths of the form `<manager>/<distro>` that

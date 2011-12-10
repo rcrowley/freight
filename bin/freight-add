@@ -60,7 +60,7 @@ done
 # later Freight commands will rely on the link count being reduced to one.
 mkdir -p "$VARLIB"
 TMP="$(mktemp -d "$VARLIB/work.$$.XXXXXXXXXX")"
-trap "rm -rf \"$TMP\"" 0
+trap "rm -rf \"$TMP\"" EXIT INT TERM
 for PATHNAME in $PATHNAMES
 do
 	cp "$PATHNAME" "$TMP/"
