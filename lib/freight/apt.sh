@@ -322,6 +322,8 @@ apt_cache_source() {
 	mkdir -p "$DISTCACHE/.refs/$COMP"
 	for FILENAME in "$DSC_FILENAME" "$ORIG_FILENAME" "$DIFF_FILENAME"
 	do
+		[ -e "$DISTCACHE/.refs/$COMP/$FILENAME" -a "$FILENAME" = "$ORIG_FILENAME" ] \
+		&& continue
 		ln "$VARLIB/apt/$DIST/$DIRNAME/$FILENAME" "$DISTCACHE/.refs/$COMP" ||
 		cp "$VARLIB/apt/$DIST/$DIRNAME/$FILENAME" "$DISTCACHE/.refs/$COMP"
 	done
