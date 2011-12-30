@@ -318,10 +318,13 @@ apt_cache_source() {
 	mkdir -p "$DISTCACHE/$COMP/source"
 	touch "$DISTCACHE/$COMP/source/Sources"
 
-	# Link or copy this source package into this distro's `.refs` directory.
+	# Link or copy this source package into this distro's `.refs` directory
+	# if it isn't already there (which can happen when two packages derive
+	# from the same original tarball).
 	mkdir -p "$DISTCACHE/.refs/$COMP"
 	for FILENAME in "$DSC_FILENAME" "$ORIG_FILENAME" "$DIFF_FILENAME"
 	do
+		[ -f "$DISTCACHE/.refs/$COMP/$FILENAME" ] ||
 		ln "$VARLIB/apt/$DIST/$DIRNAME/$FILENAME" "$DISTCACHE/.refs/$COMP" ||
 		cp "$VARLIB/apt/$DIST/$DIRNAME/$FILENAME" "$DISTCACHE/.refs/$COMP"
 	done
