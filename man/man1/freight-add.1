@@ -1,13 +1,13 @@
 .\" generated with Ronn/v0.7.3
 .\" http://github.com/rtomayko/ronn/tree/0.7.3
 .
-.TH "FREIGHT\-ADD" "1" "July 2011" "" "Freight"
+.TH "FREIGHT\-ADD" "1" "January 2012" "" "Freight"
 .
 .SH "NAME"
 \fBfreight\-add\fR \- add a package to Freight
 .
 .SH "SYNOPSIS"
-\fBfreight add\fR [\fB\-c\fR \fIconf\fR] [\fB\-v\fR] [\fB\-h\fR] \fIpackage\fR \fImanager\fR/\fIdistro\fR[/\fIcomponent\fR][\.\.\.]
+\fBfreight add\fR [\fB\-c\fR \fIconf\fR] [\fB\-v\fR] [\fB\-h\fR] \fIpackage\fR \fImanager\fR/\fIdistro\fR[/\fIcomponent\fR][\|\.\|\.\|\.]
 .
 .SH "DESCRIPTION"
 \fBfreight\-add\fR registers the given package with one or more \fImanager\fR/\fIdistro\fR[/\fIcomponent\fR] pairs (triples)\. Currently, \fBapt\fR is the only supported \fImanager\fR\. \fIdistro\fR may be any arbitrary value but is best suited to naming a particular version of the target operating system (for example, "lenny" or "lucid")\. \fIcomponent\fR is optional and for \fBapt\fR defaults to \fBmain\fR\.
@@ -34,6 +34,12 @@ Show a help message\.
 .TP
 \fI/etc/freight\.conf\fR
 The default configuration file\. See \fBfreight\fR(5)\.
+.
+.SH "ENVIRONMENT VARIABLES"
+.
+.TP
+\fBFREIGHT_CONF\fR
+The pathname of an alternate configuration file\. See \fBfreight\fR(5)\.
 .
 .SH "THEME SONG"
 The New Pornographers \- "All the Old Showstoppers"

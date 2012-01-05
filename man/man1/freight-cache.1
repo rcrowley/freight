@@ -1,13 +1,13 @@
 .\" generated with Ronn/v0.7.3
 .\" http://github.com/rtomayko/ronn/tree/0.7.3
 .
-.TH "FREIGHT\-CACHE" "1" "July 2011" "" "Freight"
+.TH "FREIGHT\-CACHE" "1" "January 2012" "" "Freight"
 .
 .SH "NAME"
 \fBfreight\-cache\fR \- (re)builds package repositories
 .
 .SH "SYNOPSIS"
-\fBfreight cache\fR [\fB\-k\fR] [\fB\-g\fR \fIemail\fR] [\fB\-c\fR \fIconf\fR] [\fB\-v\fR] [\fB\-h\fR] [\fImanager\fR/\fIdistro\fR][\.\.\.]
+\fBfreight cache\fR [\fB\-k\fR] [\fB\-g\fR \fIemail\fR] [\fB\-c\fR \fIconf\fR] [\fB\-v\fR] [\fB\-h\fR] [\fImanager\fR/\fIdistro\fR][\|\.\|\.\|\.]
 .
 .SH "DESCRIPTION"
 \fBfreight\-cache\fR converts each \fImanager\fR/\fIdistro\fR given into a package repository (only Debian archives are supported currently)\. The \fImanager\fR indicates the type of repository (again, \fBapt\fR is the only supported value)\. The \fIdistro\fR is an arbitrary string that should match a release of the target operating system (for example, "lenny" or "lucid")\. If none are given, \fBfreight\-cache\fR converts all \fImanager\fR/\fIdistro\fR pairs found in \fB$VARLIB\fR\.
@@ -52,6 +52,12 @@ The default configuration file\. See \fBfreight\fR(5)\.
 .TP
 \fI$VARCACHE\fR\fB/pubkey\.gpg\fR
 The exported public key used for signing each release\.
+.
+.SH "ENVIRONMENT VARIABLES"
+.
+.TP
+\fBFREIGHT_CONF\fR
+The pathname of an alternate configuration file\. See \fBfreight\fR(5)\.
 .
 .SH "THEME SONG"
 The New Pornographers \- "All the Old Showstoppers"
