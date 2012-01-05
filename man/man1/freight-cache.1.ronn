@@ -35,6 +35,11 @@ From version 0.0.8 onwards, distros in an APT repository no longer share the con
 * _$VARCACHE_`/pubkey.gpg`:
   The exported public key used for signing each release.
 
+## ENVIRONMENT VARIABLES
+
+* `FREIGHT_CONF`:
+  The pathname of an alternate configuration file.  See `freight`(5).
+
 ## THEME SONG
 
 The New Pornographers - "All the Old Showstoppers"

@@ -25,6 +25,11 @@ The Freight configuration is a `source`d shell script that defines a few importa
 * _/etc/freight.conf_:
   The default configuration file.
 
+## ENVIRONMENT VARIABLES
+
+* `FREIGHT_CONF`:
+  The pathname of an alternate configuration file.
+
 ## THEME SONG
 
 The New Pornographers - "All the Old Showstoppers"

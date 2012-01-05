@@ -25,6 +25,11 @@ The package files are organized in the Freight library so `freight-cache`(1) has
 * _/etc/freight.conf_:
   The default configuration file.  See `freight`(5).
 
+## ENVIRONMENT VARIABLES
+
+* `FREIGHT_CONF`:
+  The pathname of an alternate configuration file.  See `freight`(5).
+
 ## THEME SONG
 
 The New Pornographers - "All the Old Showstoppers"
