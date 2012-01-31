@@ -11,6 +11,7 @@ all:
 
 clean:
 	rm -rf *.deb debian man/man*/*.html
+	find . -name '*~' -delete
 
 install: install-bin install-lib install-man install-sysconf
 
