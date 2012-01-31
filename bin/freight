@@ -14,6 +14,6 @@ COMMAND=$0-$1
 
 # Be helpful in this case since no subcommand was found.
 echo "Usage: $(basename $0) <command> [...]" >&2
-echo "Common commands: add cache" >&2
+echo "Common commands: add cache init" >&2
 echo "See all available commands by typing \"$(basename $0)-<TAB><TAB>\"" >&2
 exit 1
