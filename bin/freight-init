@@ -1,0 +1,81 @@
+#!/bin/sh
+
+# Initialize a "freight" directory (similar to git init)
+
+set -e
+
+# Combined usage message and help screen.
+usage() {
+	echo "Usage: $(basename $0) [-l <libdir>] [--cache <cachedir>] [-v] [-h] -g <gpg> dir" >&2
+	[ -n "$1" ] && {
+		echo "  -g <gpg>, --gpg=<gpg>          GPG key to use" >&2
+		echo "  -l <libdir>, --libdir=<libdir> VARLIB dir to set" >&2
+		echo "  --cache=<cachedir>             VARCACHE dir to set" >&2
+		echo "  -v, --verbose                  verbose mode" >&2
+		echo "  -h, --help                     show this help message" >&2
+	} && exit 0 || exit 1
+}
+
+# `getopts` doesn't support long options so this will have to do.
+while [ "$#" -gt 0 ]
+do
+	case "$1" in
+		-g|--gpg)
+			GPG="$2"
+			shift 2;;
+		--gpg=*)
+			GPG="$(echo $1 | cut -c7-)"
+			shift;;
+		-l|--libdir)
+			VARLIB="$2"
+			shift 2;;
+		--libdir=*)
+			VARLIB="$(echo $1 | cut -c10-)"
+			shift;;
+		--cachedir)
+			VARCACHE="$2"
+			shift 2;;
+		--cachedir=*)
+			VARCACHE="$(echo $1 | cut -c12-)"
+			shift;;
+		-v|--verbose)
+			VERBOSE=1
+			shift;;
+		-h|--help) usage help;;
+		-*) echo "# [freight] unknown switch: $1" >&2;;
+		*) break;;
+	esac
+done
+
+DIR="$1"
+if [ -z "$DIR" ]; then
+    usage
+fi
+if [ -z "$GPG" ]; then
+    usage
+fi
+
+# Set VARLIB and VARCACHE to DIR/lib and DIR/cache
+# unless otherwise configured.
+VARLIB="${VARLIB:-$DIR/lib}"
+VARCACHE="${VARCACHE:-$DIR/cache}"
+
+# Initialize directory
+mkdir -p "$DIR" "$VARLIB" "$VARCACHE"
+
+# Generate a .freight.conf
+cat >"$DIR/.freight.conf" <<-EOF
+	VARLIB="$VARLIB"
+	VARCACHE="$VARCACHE"
+	GPG="$GPG"
+	EOF
+
+#  And small wrappers for (freight-add|freight-cache)
+BINARIES="freight-add freight-cache"
+for binary in $BINARIES; do
+    cat >"$DIR/$binary" <<-EOF
+	#! /bin/sh
+	$binary -c "\$(dirname "\$0")/.freight.conf" "\$@"
+	EOF
+    chmod a+x "$DIR/$binary"
+done
