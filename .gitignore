@@ -6,3 +6,4 @@
 *.diff.gz
 etc/freight.conf
 var
+*~
