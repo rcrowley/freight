@@ -12,16 +12,23 @@ ARCHS="i386 amd64"
 ORIGIN="Freight"
 LABEL="Freight"
 
-# Parse the configuration file for overrides.  Typically, the config file
-# would be found at `$prefix/etc/freight.conf` but a special exception is
-# made when `$prefix` is `/usr`.  In that case, the config file is
-# `/etc/freight.conf`.
-if [ -z "$CONF" ]
-then
-	CONF="$(dirname $(dirname $0))/etc/freight.conf"
-	[ "$CONF" = "/usr/etc/freight.conf" ] && CONF="/etc/freight.conf"
+# Source all existing configuration files from lowest- to highest-priority.
+PREFIX="$(dirname $(dirname $0))"
+if [ "$PREFIX" = "/usr" ]
+then [ -f "/etc/freight.conf" ] && . "/etc/freight.conf"
+else [ -f "$PREFIX/etc/freight.conf" ] && . "$PREFIX/etc/freight.conf"
 fi
-. "$CONF"
+[ -f "$HOME/.freight.conf" ] && . "$HOME/.freight.conf"
+DIRNAME="$PWD"
+while true
+do
+	[ -f "$DIRNAME/etc/freight.conf" ] && . "$DIRNAME/etc/freight.conf" && break
+	[ -f "$DIRNAME/.freight.conf" ] && . "$DIRNAME/.freight.conf" && break
+	[ "$DIRNAME" = "/" ] && break
+	DIRNAME="$(dirname "$DIRNAME")"
+done
+[ "$FREIGHT_CONF" -a -f "$FREIGHT_CONF" ] && . "$FREIGHT_CONF"
+[ "$CONF" -a -f "$CONF" ] && . "$CONF"
 
 # Normalize directory names.
 VARLIB=${VARLIB%%/}

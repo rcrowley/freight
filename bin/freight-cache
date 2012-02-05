@@ -13,11 +13,6 @@
 
 set -e
 
-. "$(dirname $(dirname $0))/lib/freight/conf.sh"
-
-# Allow the config file to be specified in the environment.
-CONF="$FREIGHT_CONF"
-
 usage() {
     grep "^#/" "$0" | cut -c"4-" >&2
     exit "$1"
@@ -38,6 +33,8 @@ do
 		*) break;;
 	esac
 done
+
+. "$(dirname $(dirname $0))/lib/freight/conf.sh"
 
 # Create a working directory on the same device as the Freight cache.
 mkdir -p "$VARCACHE"

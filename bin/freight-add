@@ -9,11 +9,6 @@
 
 set -e
 
-. "$(dirname $(dirname $0))/lib/freight/conf.sh"
-
-# Allow the config file to be specified in the environment.
-CONF="$FREIGHT_CONF"
-
 usage() {
     grep "^#/" "$0" | cut -c"4-" >&2
     exit "$1"
@@ -30,6 +25,8 @@ do
 		*) break;;
 	esac
 done
+
+. "$(dirname $(dirname $0))/lib/freight/conf.sh"
 
 # The non-option argument(s) following the last option are package files.
 # Binary packages have only one but source packages require three.  When the
