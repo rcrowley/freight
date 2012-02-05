@@ -5,11 +5,11 @@
 # more in the future).
 
 #/ Usage: freight cache [-k] [-g <email>] [-c <conf>] [-v] [-h] [<manager>/<distro>][...]
-#/  -k, --keep                keep unreferenced versions of packages
-#/  -g <email>, --gpg=<email> GPG key to use
-#/  -c <conf>, --conf=<conf>  config file to parse
-#/  -v, --verbose             verbose mode
-#/  -h, --help                show this help message
+#/   -k, --keep                keep unreferenced versions of packages
+#/   -g <email>, --gpg=<email> GPG key to use
+#/   -c <conf>, --conf=<conf>  config file to parse
+#/   -v, --verbose             verbose mode
+#/   -h, --help                show this help message
 
 set -e
 

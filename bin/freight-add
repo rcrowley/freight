@@ -3,9 +3,9 @@
 # Add a package to the Freight library.
 
 #/ Usage: freight add [-c <conf>] [-v] [-h] <package> <manager>/<distro>...
-#/  -c <conf>, --conf=<conf> config file to parse
-#/  -v, --verbose            verbose mode
-#/  -h, --help               show this help message
+#/   -c <conf>, --conf=<conf> config file to parse
+#/   -v, --verbose            verbose mode
+#/   -h, --help               show this help message
 
 set -e
 
