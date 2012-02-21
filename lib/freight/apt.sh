@@ -270,7 +270,7 @@ apt_cache_binary() {
 		grep -v "^(Essential|Filename|MD5Sum|SHA1|SHA256|Size)"
 		cat <<EOF
 Filename: $POOL/$FILENAME
-MD5Sum: $(apt_md5 "$VARLIB/apt/$DIST/$PATHNAME")
+MD5sum: $(apt_md5 "$VARLIB/apt/$DIST/$PATHNAME")
 SHA1: $(apt_sha1 "$VARLIB/apt/$DIST/$PATHNAME")
 SHA256: $(apt_sha256 "$VARLIB/apt/$DIST/$PATHNAME")
 Size: $(apt_filesize "$VARLIB/apt/$DIST/$PATHNAME")
