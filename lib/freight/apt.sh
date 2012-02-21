@@ -291,8 +291,6 @@ apt_cache_source() {
 	COMP="$4"
 	PACKAGE="$5"
 
-	echo apt_cache_source "$DIST" "$DISTCACHE" "$PATHNAME" "$COMP" "$PACKAGE"
-
 	NAME="$(apt_source_name "$PATHNAME")"
 	VERSION="$(apt_source_version "$PATHNAME")"
 	ORIG_VERSION="$(apt_source_origversion "$PATHNAME")"

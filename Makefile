@@ -1,5 +1,5 @@
 VERSION=0.2.0
-BUILD=1
+BUILD=2
 
 prefix=/usr/local
 bindir=${prefix}/bin
