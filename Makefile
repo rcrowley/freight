@@ -1,5 +1,5 @@
 VERSION=0.3.0
-BUILD=1
+BUILD=2
 
 prefix=/usr/local
 bindir=${prefix}/bin
@@ -30,7 +30,7 @@ install-man:
 
 install-sysconf:
 	find etc -type d -printf %P\\0 | xargs -0r -I__ install -d $(DESTDIR)$(sysconfdir)/__
-	find etc -type f -printf %P\\0 | xargs -0r -I__ install -m644 etc/__ $(DESTDIR)$(sysconfdir)/__
+	find etc -type f -not -name freight.conf -printf %P\\0 | xargs -0r -I__ install -m644 etc/__ $(DESTDIR)$(sysconfdir)/__
 
 uninstall: uninstall-bin uninstall-lib uninstall-man uninstall-sysconf
 
