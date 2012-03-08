@@ -240,7 +240,7 @@ apt_cache_binary() {
 	VERSION="$(apt_binary_version "$CONTROL")"
 	PREFIX="$(apt_binary_prefix "$CONTROL")"
 	SOURCE="$(apt_binary_sourcename "$CONTROL")"
-	FILENAME="${NAME}_${VERSION%*:}_${ARCH}.deb"
+	FILENAME="${NAME}_${VERSION##*:}_${ARCH}.deb"
 
 	# Link this package into the pool.
 	POOL="pool/$DIST/$COMP/$PREFIX/$SOURCE"
