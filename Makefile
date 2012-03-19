@@ -55,12 +55,13 @@ uninstall-sysconf:
 
 build:
 	make install prefix=/usr sysconfdir=/etc DESTDIR=debian
-	fpm -s dir -t deb -C debian . \
+	fpm -s dir -t deb \
 		-n freight -v $(VERSION) --iteration $(BUILD) -a all \
 		-d coreutils -d dash -d dpkg -d gnupg -d grep \
 		-m "Richard Crowley <r@rcrowley.org>" \
 		--url "https://github.com/rcrowley/freight" \
-		--description "A modern take on the Debian archive."
+		--description "A modern take on the Debian archive." \
+		-C debian .
 	make uninstall prefix=/usr sysconfdir=/etc DESTDIR=debian
 
 deploy:
