@@ -66,7 +66,7 @@ build:
 
 deploy:
 	scp freight_$(VERSION)-$(BUILD)_all.deb freight@packages.rcrowley.org:
-	ssh -t freight@packages.rcrowley.org "freight add freight_$(VERSION)-$(BUILD)_all.deb apt/lenny apt/squeeze apt/lucid apt/maverick apt/natty apt/oneiric apt/precise && rm freight_$(VERSION)-$(BUILD)_all.deb && sudo freight cache apt/lenny apt/squeeze apt/lucid apt/maverick apt/natty apt/oneiric apt/precise"
+	ssh -t freight@packages.rcrowley.org "freight add freight_$(VERSION)-$(BUILD)_all.deb apt/lenny apt/squeeze apt/lucid apt/maverick apt/natty apt/oneiric apt/precise && rm freight_$(VERSION)-$(BUILD)_all.deb && freight cache apt/lenny apt/squeeze apt/lucid apt/maverick apt/natty apt/oneiric apt/precise"
 
 man:
 	find man -name \*.ronn | xargs -n1 ronn --manual=Freight --style=toc
