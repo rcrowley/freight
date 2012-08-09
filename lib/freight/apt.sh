@@ -147,6 +147,7 @@ EOF
 		cat <<EOF
 Origin: $ORIGIN
 Label: $LABEL
+Suite: $DIST
 Codename: $DIST
 Components: $(echo "$COMPS" | tr \\n " ")
 Architectures: $ARCHS
