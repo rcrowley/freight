@@ -34,7 +34,7 @@ do
 	esac
 done
 
-. "$(dirname $(dirname $0))/lib/freight/conf.sh"
+. "$(dirname "$(dirname "$0")")/lib/freight/conf.sh"
 
 # Create a working directory on the same device as the Freight cache.
 mkdir -p "$VARCACHE"
@@ -63,17 +63,17 @@ do
 
 	# Parse the manager and distro out of the Freight library path.
 	DIR="$(readlink -f "$DIR")"
-	DIR="${DIR##$VARLIB/}"
-	MANAGER="$(dirname $DIR)"
-	DIST="$(basename $DIR)"
+	DIR="${DIR##"$VARLIB/"}"
+	MANAGER="$(dirname "$DIR")"
+	DIST="$(basename "$DIR")"
 
 	# From here the process is customized on a per-manager basis.  The
 	# sorted list of package filenames comes on `stdin` and the name of
 	# the distro is the only argument.  From there, each manager can do
 	# whatever it wants.
-	. "$(dirname $(dirname $0))/lib/freight/$MANAGER.sh"
-	SORT="$(sort -V </dev/null 2>/dev/null && echo "sort -V" || echo "sort")"
-	find "$DIR" -type f -printf %P\\n 2>/dev/null |
+	. "$(dirname "$(dirname "$0")")/lib/freight/$MANAGER.sh"
+	SORT="$(sort -V <"/dev/null" 2>"/dev/null" && echo "sort -V" || echo "sort")"
+	find "$DIR" -type f -printf "%P\n" 2>"/dev/null" |
 	eval "$SORT" |
 	eval "${MANAGER}_cache" "$DIST"
 
