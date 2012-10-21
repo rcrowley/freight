@@ -51,9 +51,9 @@ cd "$VARLIB"
 if [ -z "$*" ]
 then
 	DIRS="$(
-		find "$VARLIB" -mindepth 2 -maxdepth 2 \
-			-type d ! -name ".*" \
-			-printf "%P "
+		find "$VARLIB" -mindepth 2 -maxdepth 2 -type d -printf "%P\n" |
+		grep -v "^\\." |
+		tr "\n" " "
 	)"
 else
 	DIRS="$@"
