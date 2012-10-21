@@ -14,8 +14,8 @@
 set -e
 
 usage() {
-    grep "^#/" "$0" | cut -c"4-" >&2
-    exit "$1"
+	grep "^#/" "$0" | cut -c"4-" >&2
+	exit "$1"
 }
 while [ "$#" -gt 0 ]
 do
