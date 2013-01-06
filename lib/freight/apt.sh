@@ -1,3 +1,5 @@
+TTY="$(tty -s && echo "1")"
+
 # Fetch the given field from the package's control file.
 apt_info() {
 	egrep -i "^$2:" "$1" | cut -d: -f2- | cut -c2-
@@ -175,7 +177,7 @@ EOF
 	} >"$DISTCACHE/Release"
 
 	# Sign the top-level `Release` file with `gpg`.
-	gpg -abs$(tty -s || echo " --no-tty") --use-agent -u"$GPG" \
+	gpg -abs$([ "$TTY" ] || echo " --no-tty") --use-agent -u"$GPG" \
 		-o"$DISTCACHE/Release.gpg" "$DISTCACHE/Release" || {
 		cat <<EOF
 # [freight] couldn't sign the repository, perhaps you need to run
