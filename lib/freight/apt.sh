@@ -1,4 +1,4 @@
-TTY="$(tty -s && echo "1")"
+TTY="$(tty -s && echo "1" || :)"
 
 # Fetch the given field from the package's control file.
 apt_info() {
