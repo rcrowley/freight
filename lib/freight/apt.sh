@@ -105,7 +105,7 @@ apt_cache() {
 			# and will find the associated *.orig.tar.gz and *.diff.gz as
 			# they are needed.
 			*.dsc) apt_cache_source "$DIST" "$DISTCACHE" "$PATHNAME" "$COMP" "$PACKAGE";;
-			*.debian.tar.gz|*.diff.gz|*.orig.tar.gz) ;;
+			*.debian.tar.gz|*.diff.gz|*.orig.tar.gz|*.deb-control) ;;
 
 			*) echo "# [freight] skipping extraneous file $PATHNAME" >&2;;
 		esac
@@ -217,10 +217,37 @@ apt_cache_binary() {
 
 	# Verify this package by way of extracting its control information
 	# to be used throughout this iteration of the loop.
-	dpkg-deb -e "$VARLIB/apt/$DIST/$PATHNAME" "$TMP/DEBIAN" || {
-		echo "# [freight] skipping invalid Debian package $PATHNAME" >&2
-		return
-	}
+	# Don't extract the deb archive each time. Stick the control file
+	# in the $VARLIB alongside the other package artifacts for easy
+	# use later.
+	CONTROL="$VARLIB/apt/$DIST/$PATHNAME-control"
+	if ! [ -e "$CONTROL" ]; then
+		dpkg-deb -e "$VARLIB/apt/$DIST/$PATHNAME" "$TMP/DEBIAN" || {
+			echo "# [freight] skipping invalid Debian package $PATHNAME" >&2
+			return
+		}
+		{
+			# Grab and augment the control file from this package.  Remove
+			# `Size`, `MD5Sum`, etc. lines and replace them with newly
+			# generated values. Update it once when generating the
+			# cached control file. Add a Filename line that can be updated
+			# easily later with the real path.
+			grep . "$TMP/DEBIAN/control" |
+			grep -v "^(Essential|Filename|MD5Sum|SHA1|SHA256|Size)"
+			cat <<EOF
+Filename: FILENAME
+MD5sum: $(apt_md5 "$VARLIB/apt/$DIST/$PATHNAME")
+SHA1: $(apt_sha1 "$VARLIB/apt/$DIST/$PATHNAME")
+SHA256: $(apt_sha256 "$VARLIB/apt/$DIST/$PATHNAME")
+Size: $(apt_filesize "$VARLIB/apt/$DIST/$PATHNAME")
+EOF
+		echo
+		} > "$CONTROL"
+		# Cleanup the extracted package
+		if [ -d "$TMP/DEBIAN" ]; then
+			rm -rf "$TMP/DEBIAN"
+		fi
+	fi
 
 	# Create all architecture-specific directories.  This will allow
 	# packages marked `all` to actually be placed in all architectures.
@@ -237,7 +264,6 @@ apt_cache_binary() {
 
 	# Package properties.  Remove the epoch from the version number
 	# in the package filename, as is customary.
-	CONTROL="$TMP/DEBIAN/control"
 	ARCH="$(apt_binary_arch "$CONTROL")"
 	NAME="$(apt_binary_name "$CONTROL")"
 	VERSION="$(apt_binary_version "$CONTROL")"
@@ -264,23 +290,10 @@ apt_cache_binary() {
 	else FILES="$DISTCACHE/$COMP/binary-$ARCH/Packages"
 	fi
 
-	# Grab and augment the control file from this package.  Remove
-	# `Size`, `MD5Sum`, etc. lines and replace them with newly
-	# generated values.  Add the `Filename` field containing the
-	# path to the package, starting with `pool/`.
-	{
-		grep . "$TMP/DEBIAN/control" |
-		grep -v "^(Essential|Filename|MD5Sum|SHA1|SHA256|Size)"
-		cat <<EOF
-Filename: $POOL/$FILENAME
-MD5sum: $(apt_md5 "$VARLIB/apt/$DIST/$PATHNAME")
-SHA1: $(apt_sha1 "$VARLIB/apt/$DIST/$PATHNAME")
-SHA256: $(apt_sha256 "$VARLIB/apt/$DIST/$PATHNAME")
-Size: $(apt_filesize "$VARLIB/apt/$DIST/$PATHNAME")
-EOF
-		echo
-	} | tee -a $FILES >/dev/null
-	rm -rf "$TMP/DEBIAN"
+	# Add the `Filename` field containing the path to the
+	# package, starting with `pool/`.
+	sed "s,^Filename: FILENAME$,Filename: $POOL/$FILENAME,g" "$CONTROL" |
+	tee -a $FILES >/dev/null
 
 }
 
@@ -348,6 +361,7 @@ apt_cache_source() {
 	# Grab and augment the control fields from this source package.  Remove
 	# and recalculate file checksums.  Change the `Source` field to `Package`.
 	# Add the `Directory` field.
+	echo "apt_cache_source with PATHNAME of $VARLIB/apt/$DIST/$PATHNAME"
 	{
 		egrep "^[A-Z][^:]+: ." "$VARLIB/apt/$DIST/$PATHNAME" |
 		egrep -v "^(Version: GnuPG|Hash: )" |
