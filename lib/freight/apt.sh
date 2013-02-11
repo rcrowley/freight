@@ -105,7 +105,7 @@ apt_cache() {
 			# and will find the associated *.orig.tar.gz and *.diff.gz as
 			# they are needed.
 			*.dsc) apt_cache_source "$DIST" "$DISTCACHE" "$PATHNAME" "$COMP" "$PACKAGE";;
-			*.debian.tar.gz|*.diff.gz|*.orig.tar.gz|*.deb-control) ;;
+			*.debian.tar.gz|*.diff.gz|*.orig.tar.gz|*.deb-control|*.dsc-cached) ;;
 
 			*) echo "# [freight] skipping extraneous file $PATHNAME" >&2;;
 		esac
@@ -360,13 +360,13 @@ apt_cache_source() {
 
 	# Grab and augment the control fields from this source package.  Remove
 	# and recalculate file checksums.  Change the `Source` field to `Package`.
-	# Add the `Directory` field.
-	echo "apt_cache_source with PATHNAME of $VARLIB/apt/$DIST/$PATHNAME"
+	# Add the `Directory` field. Only do this if a cached copy does not exist.
+	[ -f "$VARLIB/apt/$DIST/$PATHNAME-cached" ] ||
 	{
 		egrep "^[A-Z][^:]+: ." "$VARLIB/apt/$DIST/$PATHNAME" |
 		egrep -v "^(Version: GnuPG|Hash: )" |
 		sed "s/^Source:/Package:/"
-		echo "Directory: $POOL"
+		echo "Directory: DIRECTORY"
 		echo "Files:"
 		for FILENAME in "$DSC_FILENAME" "$ORIG_FILENAME" "$DIFF_FILENAME"
 		do
@@ -389,7 +389,10 @@ apt_cache_source() {
 			echo " $SHA256 $SIZE $FILENAME"
 		done
 		echo
-	} >>"$DISTCACHE/$COMP/source/Sources"
+	} > "$VARLIB/apt/$DIST/$PATHNAME-cached"
+
+	sed "s,^Directory: DIRECTORY$,Directory: $POOL,g" "$VARLIB/apt/$DIST/$PATHNAME-cached" |
+	tee -a "$DISTCACHE/$COMP/source/Sources" >/dev/null
 
 }
 
