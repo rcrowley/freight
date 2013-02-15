@@ -207,6 +207,14 @@ EOF
 
 }
 
+# Clear the cached control files from the dist
+apt_clear_cache() {
+	# First remove the binary control cache
+	find "$VARLIB/apt/$DIST" -name *-control | xargs --no-run-if-empty rm
+	# Next remove the source control cache
+	find "$VARLIB/apt/$DIST" -name *-cached | xargs --no-run-if-empty rm
+}
+
 # Add a binary package to the given dist and to the pool.
 apt_cache_binary() {
 	DIST="$1"
@@ -223,7 +231,7 @@ apt_cache_binary() {
 	if [ "$CACHE" = "on" ]; then
 		CONTROL="$VARLIB/apt/$DIST/$PATHNAME-control"
 	else
-		CONTROL="$TMP/DEBIAN/control"
+		CONTROL="$TMP/DEBIAN/binary-control"
 	fi
 	if ! [ -e "$CONTROL" ]; then
 		dpkg-deb -e "$VARLIB/apt/$DIST/$PATHNAME" "$TMP/DEBIAN" || {
@@ -369,7 +377,7 @@ apt_cache_source() {
 	if [ "$CACHE" = "on" ]; then
 		CONTROL="$VARLIB/apt/$DIST/$PATHNAME-cached"
 	else
-		CONTROL="$TMP/$PATHNAME"
+		CONTROL="$TMP/source-control"
 	fi
 	if ! [ -e "$CONTROL" ]; then
 		{
@@ -406,8 +414,8 @@ apt_cache_source() {
 	tee -a "$DISTCACHE/$COMP/source/Sources" >/dev/null
 
 # Clean up the tmp space
-	if [ -f "$TMP/$PATHNAME" ]; then
-		rm "$TMP/$PATHNAME"
+	if [ -f "$TMP/source-control" ]; then
+		rm "$TMP/source-control"
 	fi
 
 }
