@@ -220,7 +220,11 @@ apt_cache_binary() {
 	# Don't extract the deb archive each time. Stick the control file
 	# in the $VARLIB alongside the other package artifacts for easy
 	# use later.
-	CONTROL="$VARLIB/apt/$DIST/$PATHNAME-control"
+	if [ "$CACHE" = "on" ]; then
+		CONTROL="$VARLIB/apt/$DIST/$PATHNAME-control"
+	else
+		CONTROL="$TMP/DEBIAN/control"
+	fi
 	if ! [ -e "$CONTROL" ]; then
 		dpkg-deb -e "$VARLIB/apt/$DIST/$PATHNAME" "$TMP/DEBIAN" || {
 			echo "# [freight] skipping invalid Debian package $PATHNAME" >&2
@@ -243,10 +247,6 @@ Size: $(apt_filesize "$VARLIB/apt/$DIST/$PATHNAME")
 EOF
 		echo
 		} > "$CONTROL"
-		# Cleanup the extracted package
-		if [ -d "$TMP/DEBIAN" ]; then
-			rm -rf "$TMP/DEBIAN"
-		fi
 	fi
 
 	# Create all architecture-specific directories.  This will allow
@@ -294,6 +294,11 @@ EOF
 	# package, starting with `pool/`.
 	sed "s,^Filename: FILENAME$,Filename: $POOL/$FILENAME,g" "$CONTROL" |
 	tee -a $FILES >/dev/null
+
+	# Cleanup the extracted package
+	if [ -d "$TMP/DEBIAN" ]; then
+		rm -rf "$TMP/DEBIAN"
+	fi
 
 }
 
@@ -361,38 +366,49 @@ apt_cache_source() {
 	# Grab and augment the control fields from this source package.  Remove
 	# and recalculate file checksums.  Change the `Source` field to `Package`.
 	# Add the `Directory` field. Only do this if a cached copy does not exist.
-	[ -f "$VARLIB/apt/$DIST/$PATHNAME-cached" ] ||
-	{
-		egrep "^[A-Z][^:]+: ." "$VARLIB/apt/$DIST/$PATHNAME" |
-		egrep -v "^(Version: GnuPG|Hash: )" |
-		sed "s/^Source:/Package:/"
-		echo "Directory: DIRECTORY"
-		echo "Files:"
-		for FILENAME in "$DSC_FILENAME" "$ORIG_FILENAME" "$DIFF_FILENAME"
-		do
-			SIZE="$(apt_filesize "$VARCACHE/$POOL/$FILENAME")"
-			MD5="$(apt_md5 "$VARCACHE/$POOL/$FILENAME")"
-			echo " $MD5 $SIZE $FILENAME"
-		done
-		echo "Checksums-Sha1:"
-		for FILENAME in "$DSC_FILENAME" "$ORIG_FILENAME" "$DIFF_FILENAME"
-		do
-			SIZE="$(apt_filesize "$VARCACHE/$POOL/$FILENAME")"
-			SHA1="$(apt_sha1 "$VARCACHE/$POOL/$FILENAME")"
-			echo " $SHA1 $SIZE $FILENAME"
-		done
-		echo "Checksums-Sha256:"
-		for FILENAME in "$DSC_FILENAME" "$ORIG_FILENAME" "$DIFF_FILENAME"
-		do
-			SIZE="$(apt_filesize "$VARCACHE/$POOL/$FILENAME")"
-			SHA256="$(apt_sha256 "$VARCACHE/$POOL/$FILENAME")"
-			echo " $SHA256 $SIZE $FILENAME"
-		done
-		echo
-	} > "$VARLIB/apt/$DIST/$PATHNAME-cached"
+	if [ "$CACHE" = "on" ]; then
+		CONTROL="$VARLIB/apt/$DIST/$PATHNAME-cached"
+	else
+		CONTROL="$TMP/$PATHNAME"
+	fi
+	if ! [ -e "$CONTROL" ]; then
+		{
+			egrep "^[A-Z][^:]+: ." "$VARLIB/apt/$DIST/$PATHNAME" |
+			egrep -v "^(Version: GnuPG|Hash: )" |
+			sed "s/^Source:/Package:/"
+			echo "Directory: DIRECTORY"
+			echo "Files:"
+			for FILENAME in "$DSC_FILENAME" "$ORIG_FILENAME" "$DIFF_FILENAME"
+			do
+				SIZE="$(apt_filesize "$VARCACHE/$POOL/$FILENAME")"
+				MD5="$(apt_md5 "$VARCACHE/$POOL/$FILENAME")"
+				echo " $MD5 $SIZE $FILENAME"
+			done
+			echo "Checksums-Sha1:"
+			for FILENAME in "$DSC_FILENAME" "$ORIG_FILENAME" "$DIFF_FILENAME"
+			do
+				SIZE="$(apt_filesize "$VARCACHE/$POOL/$FILENAME")"
+				SHA1="$(apt_sha1 "$VARCACHE/$POOL/$FILENAME")"
+				echo " $SHA1 $SIZE $FILENAME"
+			done
+			echo "Checksums-Sha256:"
+			for FILENAME in "$DSC_FILENAME" "$ORIG_FILENAME" "$DIFF_FILENAME"
+			do
+				SIZE="$(apt_filesize "$VARCACHE/$POOL/$FILENAME")"
+				SHA256="$(apt_sha256 "$VARCACHE/$POOL/$FILENAME")"
+				echo " $SHA256 $SIZE $FILENAME"
+			done
+			echo
+		} > "$CONTROL"
+	fi
 
-	sed "s,^Directory: DIRECTORY$,Directory: $POOL,g" "$VARLIB/apt/$DIST/$PATHNAME-cached" |
+	sed "s,^Directory: DIRECTORY$,Directory: $POOL,g" "$CONTROL" |
 	tee -a "$DISTCACHE/$COMP/source/Sources" >/dev/null
+
+# Clean up the tmp space
+	if [ -f "$TMP/$PATHNAME" ]; then
+		rm "$TMP/$PATHNAME"
+	fi
 
 }
 

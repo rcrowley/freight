@@ -12,6 +12,8 @@ ARCHS="i386 amd64"
 ORIGIN="Freight"
 LABEL="Freight"
 
+CACHE="off"
+
 # Source all existing configuration files from lowest- to highest-priority.
 PREFIX="$(dirname $(dirname $0))"
 if [ "$PREFIX" = "/usr" ]

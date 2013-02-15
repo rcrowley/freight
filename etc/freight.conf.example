@@ -9,6 +9,10 @@ VARCACHE="/var/cache/freight"
 ORIGIN="Freight"
 LABEL="Freight"
 
+# Whether or not Freight should regenerate all of the control files for each
+# run.
+CACHE="off"
+
 # GPG key to use to sign repositories.  This is required by the `apt`
 # repository provider.  Use `gpg --gen-key` (see `gpg`(1) for more
 # details) to generate a key and put its email address here.
