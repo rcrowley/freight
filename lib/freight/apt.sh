@@ -20,6 +20,10 @@ apt_binary_arch() {
 	apt_info "$1" Architecture
 }
 
+apt_binary_filesize() {
+	apt_info "$1" Size
+}
+
 # Print the source name from the given control file.
 apt_binary_sourcename() {
 	SOURCE="$(apt_info "$1" Source)"
@@ -233,7 +237,10 @@ apt_cache_binary() {
 	else
 		CONTROL="$TMP/DEBIAN/binary-control"
 	fi
-	if ! [ -e "$CONTROL" ]; then
+	# If caching is off or if the binary has changed size, this will generate the
+	# binary control file
+	if ! ( [ -e "$CONTROL" ] && \
+		[ "$(apt_binary_filesize "$CONTROL")" -eq "$(apt_filesize "$VARLIB/apt/$DIST/$PATHNAME")" ] ); then
 		dpkg-deb -e "$VARLIB/apt/$DIST/$PATHNAME" "$TMP/DEBIAN" || {
 			echo "# [freight] skipping invalid Debian package $PATHNAME" >&2
 			return
