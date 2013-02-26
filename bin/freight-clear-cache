@@ -1,0 +1,67 @@
+#!/bin/sh
+
+# Clear the cache that is built up during freight-cache runs
+# so that it can be regenerated on the next freight-cache invocation.
+
+#/ Usage: freight clear-cache [-c <conf>] [-v] [-h] [<manager>/<distro>][...]
+#/   -c <conf>, --conf=<conf>  config file to parse
+#/   -v, --verbose             verbose mode
+#/   -h, --help                show this help message
+
+set -e
+
+usage() {
+	grep "^#/" "$0" | cut -c"4-" >&2
+	exit "$1"
+}
+while [ "$#" -gt 0 ]
+do
+	case "$1" in
+		-c|--conf) CONF="$2" shift 2;;
+		-c*) CONF="$(echo "$1" | cut -c"3-")" shift;;
+		--conf=*) CONF="$(echo "$1" | cut -c"8-")" shift;;
+		-v|--verbose) VERBOSE=1 shift;;
+		-h|--help) usage 0;;
+		-*) echo "# [freight] unknown switch: $1" >&2;;
+		*) break;;
+	esac
+done
+
+. "$(dirname "$(dirname "$0")")/lib/freight/conf.sh"
+
+# Create a working directory on the same device as the Freight cache.
+mkdir -p "$VARCACHE"
+TMP="$(mktemp -d "$VARCACHE/work.$$.XXXXXXXXXX")"
+trap "rm -rf \"$TMP\"" EXIT INT TERM
+
+# Enter the Freight library directory so that items in `$@` may be given as
+# absolute paths or as partial paths of the form `<manager>/<distro>` that
+# are ultimately taken relative to the Freight library.
+mkdir -p "$VARLIB"
+cd "$VARLIB"
+
+# Rebuild each distro serially.
+if [ -z "$*" ]
+then
+	DIRS="$(
+		find "$VARLIB" -mindepth 2 -maxdepth 2 -type d -printf "%P\n" |
+		grep -v "^\\." |
+		tr "\n" " "
+	)"
+else
+	DIRS="$@"
+fi
+for DIR in $DIRS
+do
+
+	# Parse the manager and distro out of the Freight library path.
+	DIR="$(readlink -f "$DIR")"
+	DIR="${DIR##"$VARLIB/"}"
+	MANAGER="$(dirname "$DIR")"
+	DIST="$(basename "$DIR")"
+
+	# From here the process is customized on a per-manager basis.
+	. "$(dirname "$(dirname "$0")")/lib/freight/$MANAGER.sh"
+	eval "${MANAGER}_clear_cache" "$DIST"
+
+done
