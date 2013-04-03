@@ -69,8 +69,28 @@ do
 	for DIRNAME in "$@"
 	do
 		mkdir -p "$DIRNAME"
-		ln "$TMP/$FILENAME" "$DIRNAME/$FILENAME" 2>"/dev/null" &&
-		echo "# [freight] added $PATHNAME to $DIRNAME" >&2 ||
-		echo "# [freight] $DIRNAME already has $PATHNAME" >&2
+        case "$FILENAME" in
+            *_*_*.deb)
+                ln "$TMP/$FILENAME" "$DIRNAME/$FILENAME" 2>"/dev/null" &&
+                echo "# [freight] added $PATHNAME to $DIRNAME" >&2 ||
+                echo "# [freight] $DIRNAME already has $PATHNAME" >&2;;
+            *.deb)
+                . "$(dirname "$(dirname "$0")")/lib/freight/apt.sh"
+                dpkg-deb -I "$TMP/$FILENAME" "control" >"$TMP/$FILENAME-control"
+                DEBNAME="$(
+                    apt_binary_name "$TMP/$FILENAME-control"
+                )_$(
+                    apt_binary_version "$TMP/$FILENAME-control"
+                )_$(
+                    apt_binary_arch "$TMP/$FILENAME-control"
+                ).deb"
+                ln "$TMP/$FILENAME" "$DIRNAME/$DEBNAME" 2>"/dev/null" &&
+                echo "# [freight] added $PATHNAME to $DIRNAME as $DEBNAME" >&2 ||
+                echo "# [freight] $DIRNAME already has $PATHNAME as $DEBNAME" >&2;;
+            *)
+                ln "$TMP/$FILENAME" "$DIRNAME/$FILENAME" 2>"/dev/null" &&
+                echo "# [freight] added $PATHNAME to $DIRNAME" >&2 ||
+                echo "# [freight] $DIRNAME already has $PATHNAME" >&2;;
+        esac
 	done
 done
