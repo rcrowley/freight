@@ -59,13 +59,25 @@ apt_prefix() {
 
 # Print the checksum portion of the normal checksumming programs' output.
 apt_md5() {
-	md5sum "$1" | cut -d" " -f1
+    cache="${1}.md5"
+    if [ ! -f "$cache" ] ; then
+        md5sum "$1" | cut -d" " -f1 > "$cache"
+    fi
+    cat "$cache"
 }
 apt_sha1() {
-	sha1sum "$1" | cut -d" " -f1
+    cache="${1}.sha1"
+    if [ ! -f "$cache" ] ; then
+        sha1sum "$1" | cut -d" " -f1 > "$cache"
+    fi
+    cat "$cache"
 }
 apt_sha256() {
-	sha256sum "$1" | cut -d" " -f1
+    cache="${1}.sha256"
+    if [ ! -f "$cache" ] ; then
+        sha256sum "$1" | cut -d" " -f1 > "$cache"
+    fi
+    cat "$cache"
 }
 
 # Print the size of the given file.
@@ -110,7 +122,8 @@ apt_cache() {
 			# they are needed.
 			*.dsc) apt_cache_source "$DIST" "$DISTCACHE" "$PATHNAME" "$COMP" "$PACKAGE";;
 			*.debian.tar.gz|*.diff.gz|*.orig.tar.gz|*.deb-control|*.dsc-cached) ;;
-
+			*.deb.md5|*.deb.sha1|*.deb.sha256) ;;
+			
 			*) echo "# [freight] skipping extraneous file $PATHNAME" >&2;;
 		esac
 	done
