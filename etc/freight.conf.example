@@ -16,3 +16,7 @@ CACHE="off"
 # repository provider.  Use `gpg --gen-key` (see `gpg`(1) for more
 # details) to generate a key and put its email address here.
 GPG="example@example.com"
+
+# Should we follow symlinks in the lib directory to produce extra components
+# in the cache directory (present) or not (absent)
+# SYMLINKS=true
