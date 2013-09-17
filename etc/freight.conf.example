@@ -9,7 +9,8 @@ VARCACHE="/var/cache/freight"
 ORIGIN="Freight"
 LABEL="Freight"
 
-# Cache the control files after each run (on), or regenerate them every time (off)
+# Cache the control files after each run (on), or regenerate them every
+# time (off).
 CACHE="off"
 
 # GPG key to use to sign repositories.  This is required by the `apt`
@@ -17,6 +18,6 @@ CACHE="off"
 # details) to generate a key and put its email address here.
 GPG="example@example.com"
 
-# Should we follow symlinks in the lib directory to produce extra components
-# in the cache directory (present) or not (absent)
-# SYMLINKS=true
+# Whether to follow symbolic links in `$VARLIB` to produce extra components
+# in the cache directory (on) or not (off).
+SYMLINKS="off"
