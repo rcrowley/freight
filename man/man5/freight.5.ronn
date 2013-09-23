@@ -19,6 +19,8 @@ The Freight configuration is a `source`d shell script that defines a few importa
   The `Label` field in the Debian archive.
 * `GPG`:
   The GPG key to use.  This value must be set either in a configuration file or by using the `-g` option to `freight-cache`(1).
+* `GPG_PASSPHRASE_FILE`:
+  Path to a file containing the GPG key passphrase.  Useful for running Freight non-interactively. If set `gpg` will use the passphrase contained in the specified file and not ask for user input. This file should obviously be protected and only readable by the Freight system user. The passphrase file can be set in a configuration file or by using the `-p` option to `freight-cache`(1).
 
 ## FILES
 
