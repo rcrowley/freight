@@ -17,13 +17,19 @@ The Freight configuration is a `source`d shell script that defines a few importa
   The `Origin` field in the Debian archive.
 * `LABEL`:
   The `Label` field in the Debian archive.
+* `CACHE`:
+  _on_ to cache package control files or _off_ to read them from the packages on each `freight-cache`(1) run.
 * `GPG`:
   The GPG key to use.  This value must be set either in a configuration file or by using the `-g` option to `freight-cache`(1).
+* `SYMLINKS`:
+  _on_ to follow symbolic links in `VARLIB` to produce extra components in the cache directory or _off_ to offer no special treatment.
 
 ## FILES
 
 * _/etc/freight.conf_:
   The default configuration file.
+* _~/.freight.conf_:
+  User-specific configuration file.
 
 ## ENVIRONMENT VARIABLES
 

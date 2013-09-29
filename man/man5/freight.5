@@ -1,7 +1,7 @@
 .\" generated with Ronn/v0.7.3
 .\" http://github.com/rtomayko/ronn/tree/0.7.3
 .
-.TH "FREIGHT" "5" "January 2012" "" "Freight"
+.TH "FREIGHT" "5" "September 2013" "" "Freight"
 .
 .SH "NAME"
 \fBfreight\fR \- Freight configuration
@@ -32,14 +32,26 @@ The \fBOrigin\fR field in the Debian archive\.
 The \fBLabel\fR field in the Debian archive\.
 .
 .TP
+\fBCACHE\fR
+\fIon\fR to cache package control files or \fIoff\fR to read them from the packages on each \fBfreight\-cache\fR(1) run\.
+.
+.TP
 \fBGPG\fR
 The GPG key to use\. This value must be set either in a configuration file or by using the \fB\-g\fR option to \fBfreight\-cache\fR(1)\.
+.
+.TP
+\fBSYMLINKS\fR
+\fIon\fR to follow symbolic links in \fBVARLIB\fR to produce extra components in the cache directory or \fIoff\fR to offer no special treatment\.
 .
 .SH "FILES"
 .
 .TP
 \fI/etc/freight\.conf\fR
 The default configuration file\.
+.
+.TP
+\fI~/\.freight\.conf\fR
+User\-specific configuration file\.
 .
 .SH "ENVIRONMENT VARIABLES"
 .
