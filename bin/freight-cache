@@ -4,12 +4,14 @@
 # actual repositories that are suitable targets for `apt-get` (and maybe
 # more in the future).
 
-#/ Usage: freight cache [-k] [-g <email>] [-c <conf>] [-v] [-h] [<manager>/<distro>][...]
-#/   -k, --keep                keep unreferenced versions of packages
-#/   -g <email>, --gpg=<email> GPG key to use
-#/   -c <conf>, --conf=<conf>  config file to parse
-#/   -v, --verbose             verbose mode
-#/   -h, --help                show this help message
+#/ Usage: freight cache [-k] [-g <email>] [-p <passphrase-file>] [-c <conf>] [-v] [-h] [<manager>/<distro>][...]
+#/   -k, --keep                          keep unreferenced versions of packages
+#/   -g <email>, --gpg=<email>           GPG key to use
+#/   -p <passphrase file>, 
+#/   --passphrase-file=<passphrase-file> path to file containing the passphrase of the GPG key
+#/   -c <conf>, --conf=<conf>            config file to parse
+#/   -v, --verbose                       verbose mode
+#/   -h, --help                          show this help message
 
 set -e
 
@@ -24,6 +26,9 @@ do
 		-g|--gpg) GPG="$2" shift 2;;
 		-g*) GPG="$(echo "$1" | cut -c"3-")" shift;;
 		--gpg=*) GPG="$(echo "$1" | cut -c"7-")" shift;;
+		-p|--passphrase-file) GPG_PASSPHRASE_FILE="$2" shift 2;;
+		-p*) GPG_PASSPHRASE_FILE="$(echo "$1" | cut -c"3-")" shift;;
+		--passphrase-file=*) GPG_PASSPHRASE_FILE="$(echo "$1" | cut -c"19-")" shift;;
 		-c|--conf) CONF="$2" shift 2;;
 		-c*) CONF="$(echo "$1" | cut -c"3-")" shift;;
 		--conf=*) CONF="$(echo "$1" | cut -c"8-")" shift;;
@@ -35,6 +40,10 @@ do
 done
 
 . "$(dirname "$(dirname "$0")")/lib/freight/conf.sh"
+
+# If `GPG_PASSPHRASE_FILE` is set the specified file should exist and be
+# readable by the user running Freight.
+[ -z "$GPG_PASSPHRASE_FILE" -o -r "$GPG_PASSPHRASE_FILE" ] || echo "# [freight] could not read passphrase file: $GPG_PASSPHRASE_FILE." >&2
 
 # Create a working directory on the same device as the Freight cache.
 mkdir -p "$VARCACHE"

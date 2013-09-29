@@ -40,6 +40,10 @@ The \fBLabel\fR field in the Debian archive\.
 The GPG key to use\. This value must be set either in a configuration file or by using the \fB\-g\fR option to \fBfreight\-cache\fR(1)\.
 .
 .TP
+\fBGPG_PASSPHRASE_FILE\fR
+Pathname of a file containing the GPGP private key\'s passphrase\. This sets the \fB\-\-passphrase\-fd\fR and \fB\-\-passphrase\-file\fR options to \fBgpg\fR(1)\. The passphrase file can be set either in a configuration file or by using the \fB\-p\fR option to \fBfreight\-cache\fR(1)\.
+.
+.TP
 \fBSYMLINKS\fR
 \fIon\fR to follow symbolic links in \fBVARLIB\fR to produce extra components in the cache directory or \fIoff\fR to offer no special treatment\.
 .

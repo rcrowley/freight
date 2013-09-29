@@ -182,6 +182,7 @@ EOF
 
 	# Sign the top-level `Release` file with `gpg`.
 	gpg -abs$([ "$TTY" ] || echo " --no-tty") --use-agent -u"$GPG" \
+		$([ "$GPG_PASSPHRASE_FILE" ] && echo " --batch --passphrase-fd 1 --passphrase-file $GPG_PASSPHRASE_FILE") \
 		-o"$DISTCACHE/Release.gpg" "$DISTCACHE/Release" || {
 		cat <<EOF
 # [freight] couldn't sign the repository, perhaps you need to run

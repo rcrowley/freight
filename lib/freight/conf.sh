@@ -14,6 +14,8 @@ LABEL="Freight"
 
 CACHE="off"
 
+SYMLINKS="off"
+
 # Source all existing configuration files from lowest- to highest-priority.
 PREFIX="$(dirname $(dirname $0))"
 if [ "$PREFIX" = "/usr" ]
