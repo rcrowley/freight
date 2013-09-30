@@ -65,8 +65,8 @@ build:
 	make uninstall prefix=/usr sysconfdir=/etc DESTDIR=debian
 
 deploy:
-	scp freight_$(VERSION)-$(BUILD)_all.deb freight@packages.rcrowley.org:
-	ssh -t freight@packages.rcrowley.org "freight add freight_$(VERSION)-$(BUILD)_all.deb apt/lenny apt/squeeze apt/lucid apt/maverick apt/natty apt/oneiric apt/precise && rm freight_$(VERSION)-$(BUILD)_all.deb && freight cache apt/lenny apt/squeeze apt/lucid apt/maverick apt/natty apt/oneiric apt/precise"
+	scp freight_$(VERSION)-$(BUILD)_all.deb root@rcrowley.org:
+	ssh -t root@rcrowley.org "freight add freight_$(VERSION)-$(BUILD)_all.deb apt/squeeze apt/wheezy apt/lucid apt/precise apt/quantal apt/raring apt/saucy && rm freight_$(VERSION)-$(BUILD)_all.deb && freight cache apt/squeeze apt/wheezy apt/lucid apt/precise apt/quantal apt/raring apt/saucy"
 
 man:
 	find man -name \*.ronn | xargs -n1 ronn --manual=Freight --style=toc
