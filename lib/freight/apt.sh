@@ -123,7 +123,7 @@ apt_cache() {
 		for ARCH in $ARCHS
 		do
 			cat >"$DISTCACHE/$COMP/binary-$ARCH/Release" <<EOF
-Archive: $DIST
+Archive: $SUITE
 Component: $COMP
 Origin: $ORIGIN
 Label: $LABEL
@@ -135,7 +135,7 @@ EOF
 		if [ -d "$DISTCACHE/$COMP/source" ]
 		then
 			cat >"$DISTCACHE/$COMP/source/Release" <<EOF
-Archive: $DIST
+Archive: $SUITE
 Component: $COMP
 Origin: $ORIGIN
 Label: $LABEL
@@ -153,7 +153,7 @@ EOF
 		cat <<EOF
 Origin: $ORIGIN
 Label: $LABEL
-Suite: $DIST
+Suite: $SUITE
 Codename: $DIST
 Components: $(echo "$COMPS" | tr \\n " ")
 Architectures: $ARCHS
