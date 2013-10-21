@@ -77,6 +77,7 @@ apt_filesize() {
 # including all packages read from `stdin`.
 apt_cache() {
 	DIST="$1"
+	SUITE="${SUITE:-$DIST}"
 
 	# Generate a timestamp to use in this build's directory name.
 	DATE="$(date +%Y%m%d%H%M%S%N)"

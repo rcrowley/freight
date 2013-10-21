@@ -8,10 +8,9 @@ VARCACHE="/var/cache/freight"
 # Default architectures.
 ARCHS="i386 amd64"
 
-# Default `Origin`, `Label` and `Suite` fields for `Release` files.
+# Default `Origin` and `Label` fields for `Release` files.
 ORIGIN="Freight"
 LABEL="Freight"
-SUITE="experimental"
 
 CACHE="off"
 

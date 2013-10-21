@@ -10,7 +10,7 @@
 #/   --archs=<archs>          architectures to support (default "i386 amd64")
 #/   --origin=<origin>        Debian archive Origin field (default "Freight")
 #/   --label=<label>          Debian archive Label field (default "Freight")
-#/   --suite=<suite>          Debian archive Suite field (default "experimental")
+#/   --suite=<suite>          Debian archive Suite field
 #/   -v, --verbose            verbose mode
 #/   -h, --help               show this help message
 
