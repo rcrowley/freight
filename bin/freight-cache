@@ -39,7 +39,8 @@ do
 	esac
 done
 
-. "$(dirname "$(dirname "$0")")/lib/freight/conf.sh"
+LIB="$(cd "$(dirname "$(dirname "$0")")/lib/freight" && pwd)"
+. "$LIB/conf.sh"
 
 # If `GPG_PASSPHRASE_FILE` is set the specified file should exist and be
 # readable by the user running Freight.
@@ -83,7 +84,7 @@ do
 	# sorted list of package filenames comes on `stdin` and the name of
 	# the distro is the only argument.  From there, each manager can do
 	# whatever it wants.
-	. "$(dirname "$(dirname "$0")")/lib/freight/$MANAGER.sh"
+	. "$LIB/$MANAGER.sh"
 	SORT="$(sort -V <"/dev/null" 2>"/dev/null" && echo "sort -V" || echo "sort")"
 	find $FIND_L "$DIR" -type "f" -printf "%P\n" 2>"/dev/null" |
 	eval "$SORT" |

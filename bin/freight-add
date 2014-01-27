@@ -29,13 +29,13 @@ done
 . "$(dirname $(dirname $0))/lib/freight/conf.sh"
 
 # The non-option argument(s) following the last option are package files.
-# Binary packages have only one but source packages require three.  When the
-# last of these is found, the remaining arguments are each assumed to be
-# `<manager>/<distro>` pairs for this (source) package.
+# Binary packages have only one but source packages require two or three.
+# When the last of these is found, the remaining arguments are each assumed
+# to be `<manager>/<distro>` pairs for this (source) package.
 while [ "$#" -gt 0 ]
 do
 	case "$1" in
-		*.deb|*.dsc|*.orig.tar.gz|*.diff.gz|*.debian.tar.gz)
+		*.deb|*.dsc|*.orig.tar.gz|*.diff.gz|*.debian.tar.gz|*.tar.gz)
 			PATHNAMES="$PATHNAMES $1" shift;;
 		*.build|*.changes) shift;;
 		*) break;;
