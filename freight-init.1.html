@@ -3,7 +3,7 @@
 <head>
   <meta http-equiv='content-type' value='text/html;charset=utf8'>
   <meta name='generator' value='Ronn/v0.7.3 (http://github.com/rtomayko/ronn/tree/0.7.3)'>
-  <title>freight(1) - a modern take on the Debian archive</title>
+  <title>freight-init(1) - initialize a Freight directory</title>
   <style type='text/css' media='all'>
   /* style: man */
   body#manpage {margin:0}
@@ -62,35 +62,44 @@
     <a href="#NAME">NAME</a>
     <a href="#SYNOPSIS">SYNOPSIS</a>
     <a href="#DESCRIPTION">DESCRIPTION</a>
+    <a href="#OPTIONS">OPTIONS</a>
     <a href="#FILES">FILES</a>
-    <a href="#ENVIRONMENT-VARIABLES">ENVIRONMENT VARIABLES</a>
     <a href="#THEME-SONG">THEME SONG</a>
     <a href="#AUTHOR">AUTHOR</a>
     <a href="#SEE-ALSO">SEE ALSO</a>
   </div>
 
   <ol class='man-decor man-head man head'>
-    <li class='tl'>freight(1)</li>
+    <li class='tl'>freight-init(1)</li>
     <li class='tc'>Freight</li>
-    <li class='tr'>freight(1)</li>
+    <li class='tr'>freight-init(1)</li>
   </ol>
 
   <h2 id="NAME">NAME</h2>
 <p class="man-name">
-  <code>freight</code> - <span class="man-whatis">a modern take on the Debian archive</span>
+  <code>freight-init</code> - <span class="man-whatis">initialize a Freight directory</span>
 </p>
 
 <h2 id="SYNOPSIS">SYNOPSIS</h2>
 
-<p><code>freight</code> <em>command</em> [<em>...</em>]</p>
+<p><code>freight init</code> [<code>-l</code> <em>varlib</em>] [<code>--cache</code> <em>varcache</em>] <code>-g</code> <em>gpg</em> <em>dirname</em></p>
 
 <h2 id="DESCRIPTION">DESCRIPTION</h2>
 
-<p><code>freight</code> programs create the files needed to serve a Debian archive.  The actual serving is done via your favorite HTTP server.</p>
+<p><code>freight-init</code> will setup a directory to be used by Freight.  It will generate small wrappers around the original Freight commands.  Use <code>./freight-add</code> and <code>./freight-cache</code> to work against the <code>VARLIB</code> and <code>VARCACHE</code> given to <code>freight init</code>.</p>
+
+<p>The benefit of using <code>freight-init</code> is, that all data is stored in one place and dont have to pass <code>-c _conf_</code> option all the time.</p>
+
+<p>Configuration is stored in <code>_dirname_/.freight.conf</code>.</p>
+
+<h2 id="OPTIONS">OPTIONS</h2>
 
 <dl>
-<dt><code>freight-add</code>(1)</dt><dd>Add a package to Freight.</dd>
-<dt><code>freight-cache</code>(1)</dt><dd>(Re)builds package repositories.</dd>
+<dt><code>-g</code> <em>gpg</em>, <code>--gpg=</code><em>gpg</em>`</dt><dd>GPG key.</dd>
+<dt><code>-l</code> <em>varlib</em>, <code>--varlib=</code><em>varlib<code>_</code></em></dt><dd>VARLIB directory to use.  Defaults todirname_/lib`</dd>
+<dt><code>--varcache=</code><em>varcache<code>_</code></em></dt><dd>VARCACHE directory to use.  Defaults todirname_/cache`</dd>
+<dt><code>-v</code>, <code>--verbose</code></dt><dd>Verbose mode.</dd>
+<dt><code>-h</code>, <code>--help</code></dt><dd>Show a help message.</dd>
 </dl>
 
 
@@ -101,30 +110,23 @@
 </dl>
 
 
-<h2 id="ENVIRONMENT-VARIABLES">ENVIRONMENT VARIABLES</h2>
-
-<dl>
-<dt><code>FREIGHT_CONF</code></dt><dd>The pathname of an alternate configuration file.  See <code>freight</code>(5).</dd>
-</dl>
-
-
 <h2 id="THEME-SONG">THEME SONG</h2>
 
 <p>The New Pornographers - "All the Old Showstoppers"</p>
 
 <h2 id="AUTHOR">AUTHOR</h2>
 
-<p>Richard Crowley <a data-bare-link="true" href="&#x6d;&#97;&#105;&#x6c;&#x74;&#x6f;&#58;&#x72;&#x40;&#114;&#x63;&#114;&#x6f;&#x77;&#108;&#101;&#x79;&#46;&#x6f;&#114;&#103;">&#114;&#64;&#x72;&#99;&#x72;&#111;&#x77;&#x6c;&#x65;&#x79;&#x2e;&#111;&#x72;&#103;</a></p>
+<p>Jens Braeuer <a data-bare-link="true" href="&#x6d;&#97;&#105;&#x6c;&#x74;&#x6f;&#58;&#x62;&#x72;&#97;&#x65;&#117;&#x65;&#x72;&#46;&#106;&#x65;&#110;&#x73;&#64;&#103;&#111;&#111;&#x67;&#108;&#x65;&#109;&#x61;&#x69;&#x6c;&#x2e;&#x63;&#111;&#x6d;">&#98;&#x72;&#97;&#101;&#x75;&#101;&#x72;&#46;&#106;&#101;&#x6e;&#115;&#64;&#103;&#111;&#x6f;&#103;&#x6c;&#101;&#109;&#97;&#105;&#x6c;&#x2e;&#x63;&#x6f;&#109;</a></p>
 
 <h2 id="SEE-ALSO">SEE ALSO</h2>
 
-<p><code>reprepro</code>(1) manages Debian archives, too, if Freight isn't your thing.</p>
+<p>Part of <code>freight</code>(1).</p>
 
 
   <ol class='man-decor man-foot man foot'>
     <li class='tl'></li>
     <li class='tc'>January 2014</li>
-    <li class='tr'>freight(1)</li>
+    <li class='tr'>freight-init(1)</li>
   </ol>
 
   </div>

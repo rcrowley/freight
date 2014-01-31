@@ -92,7 +92,10 @@
 <dt class="flush"><code>ARCHS</code></dt><dd>The architectures to support.  Typically <em>i386 amd64</em>.</dd>
 <dt class="flush"><code>ORIGIN</code></dt><dd>The <code>Origin</code> field in the Debian archive.</dd>
 <dt class="flush"><code>LABEL</code></dt><dd>The <code>Label</code> field in the Debian archive.</dd>
-<dt class="flush"><code>GPG</code></dt><dd>The GPG key to use.  This value must be set either in a configuration file or by using the <code>-g</code> option to <span class="man-ref"><code>freight-cache</code><span class="s">(1)</span></span>.</dd>
+<dt class="flush"><code>CACHE</code></dt><dd><em>on</em> to cache package control files or <em>off</em> to read them from the packages on each <code>freight-cache</code>(1) run.</dd>
+<dt class="flush"><code>GPG</code></dt><dd>The GPG key to use.  This value must be set either in a configuration file or by using the <code>-g</code> option to <code>freight-cache</code>(1).</dd>
+<dt><code>GPG_PASSPHRASE_FILE</code></dt><dd>Pathname of a file containing the GPGP private key's passphrase.  This sets the <code>--passphrase-fd</code> and <code>--passphrase-file</code> options to <code>gpg</code>(1).  The passphrase file can be set either in a configuration file or by using the <code>-p</code> option to <code>freight-cache</code>(1).</dd>
+<dt><code>SYMLINKS</code></dt><dd><em>on</em> to follow symbolic links in <code>VARLIB</code> to produce extra components in the cache directory or <em>off</em> to offer no special treatment.</dd>
 </dl>
 
 
@@ -100,6 +103,8 @@
 
 <dl>
 <dt><em>/etc/freight.conf</em></dt><dd>The default configuration file.</dd>
+<dt><em>~/.freight.conf</em></dt><dd>User-specific configuration file.</dd>
+<dt><em>etc/freight.conf</em>, <em>.freight.conf</em></dt><dd>Directory-specific configuration files.</dd>
 </dl>
 
 
@@ -116,18 +121,18 @@
 
 <h2 id="AUTHOR">AUTHOR</h2>
 
-<p>Richard Crowley <a href="&#109;&#x61;&#105;&#x6c;&#x74;&#x6f;&#x3a;&#114;&#64;&#114;&#x63;&#x72;&#x6f;&#119;&#x6c;&#101;&#x79;&#46;&#x6f;&#114;&#x67;" data-bare-link="true">&#114;&#x40;&#114;&#x63;&#114;&#111;&#119;&#x6c;&#101;&#121;&#x2e;&#x6f;&#x72;&#x67;</a></p>
+<p>Richard Crowley <a data-bare-link="true" href="&#x6d;&#97;&#105;&#x6c;&#x74;&#x6f;&#58;&#x72;&#x40;&#114;&#x63;&#114;&#x6f;&#x77;&#108;&#101;&#x79;&#46;&#x6f;&#114;&#103;">&#114;&#64;&#x72;&#99;&#x72;&#111;&#x77;&#x6c;&#x65;&#x79;&#x2e;&#111;&#x72;&#103;</a></p>
 
 <h2 id="SEE-ALSO">SEE ALSO</h2>
 
-<p><span class="man-ref"><code>freight-add</code><span class="s">(1)</span></span> adds packages to the intermediate "Freight library" that is used by <span class="man-ref"><code>freight-cache</code><span class="s">(1)</span></span> to build the actual repositories.</p>
+<p><code>freight-add</code>(1) adds packages to the intermediate "Freight library" that is used by <code>freight-cache</code>(1) to build the actual repositories.</p>
 
-<p><span class="man-ref"><code>reprepro</code><span class="s">(1)</span></span> manages Debian archives, too, if Freight isn't your thing.</p>
+<p><code>reprepro</code>(1) manages Debian archives, too, if Freight isn't your thing.</p>
 
 
   <ol class='man-decor man-foot man foot'>
     <li class='tl'></li>
-    <li class='tc'>January 2012</li>
+    <li class='tc'>January 2014</li>
     <li class='tr'>freight(5)</li>
   </ol>
 

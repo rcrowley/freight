@@ -87,9 +87,9 @@
 
 <h2 id="DESCRIPTION">DESCRIPTION</h2>
 
-<p><code>freight-add</code> registers the given package with one or more <em>manager</em>/<em>distro</em>[/<em>component</em>] pairs (triples).  Currently, <code>apt</code> is the only supported <em>manager</em>.  <em>distro</em> may be any arbitrary value but is best suited to naming a particular version of the target operating system (for example, "lenny" or "lucid").  <em>component</em> is optional and for <code>apt</code> defaults to <code>main</code>.</p>
+<p><code>freight-add</code> registers <em>package</em> with one or more <em>manager</em>/<em>distro</em>[/<em>component</em>] pairs (or triples).  Currently, <code>apt</code> is the only supported <em>manager</em> and <em>package</em> must be one of <em>*.deb</em>, <em><em>.dsc </em>.debian.tar.gz *.orig.tar.gz, </em><em>.diff.gz </em>.orig.tar.gz<em>, or </em>*.tar.gz<em>.  </em>distro<em> may be any arbitrary value but is best suited to naming a particular version of the target operating system (for example, "wheezy" or "precise").  </em>component_ is optional and for <code>apt</code> defaults to <code>main</code>.</p>
 
-<p>The package files are organized in the Freight library so <span class="man-ref"><code>freight-cache</code><span class="s">(1)</span></span> has an easy time of creating package repositories for each <em>manager</em>/<em>distro</em>[/<em>component</em>] later.</p>
+<p>The package files are organized in the Freight library so <code>freight-cache</code>(1) has an easy time of creating package repositories for each <em>manager</em>/<em>distro</em>[/<em>component</em>] later.</p>
 
 <h2 id="OPTIONS">OPTIONS</h2>
 
@@ -103,14 +103,14 @@
 <h2 id="FILES">FILES</h2>
 
 <dl>
-<dt><em>/etc/freight.conf</em></dt><dd>The default configuration file.  See <span class="man-ref"><code>freight</code><span class="s">(5)</span></span>.</dd>
+<dt><em>/etc/freight.conf</em>, <em>~/.freight.conf</em>, <em>etc/freight.conf</em>, <em>.freight.conf</em></dt><dd>The default configuration files.  See <code>freight</code>(5).</dd>
 </dl>
 
 
 <h2 id="ENVIRONMENT-VARIABLES">ENVIRONMENT VARIABLES</h2>
 
 <dl>
-<dt><code>FREIGHT_CONF</code></dt><dd>The pathname of an alternate configuration file.  See <span class="man-ref"><code>freight</code><span class="s">(5)</span></span>.</dd>
+<dt><code>FREIGHT_CONF</code></dt><dd>The pathname of an alternate configuration file.  See <code>freight</code>(5).</dd>
 </dl>
 
 
@@ -120,18 +120,18 @@
 
 <h2 id="AUTHOR">AUTHOR</h2>
 
-<p>Richard Crowley <a href="&#x6d;&#x61;&#x69;&#x6c;&#x74;&#x6f;&#58;&#114;&#64;&#x72;&#x63;&#x72;&#111;&#x77;&#108;&#101;&#x79;&#46;&#x6f;&#114;&#103;" data-bare-link="true">&#114;&#x40;&#x72;&#x63;&#114;&#x6f;&#x77;&#x6c;&#x65;&#121;&#46;&#x6f;&#x72;&#103;</a></p>
+<p>Richard Crowley <a data-bare-link="true" href="&#x6d;&#97;&#105;&#x6c;&#x74;&#x6f;&#58;&#x72;&#x40;&#114;&#x63;&#114;&#x6f;&#x77;&#108;&#101;&#x79;&#46;&#x6f;&#114;&#103;">&#114;&#64;&#x72;&#99;&#x72;&#111;&#x77;&#x6c;&#x65;&#x79;&#x2e;&#111;&#x72;&#103;</a></p>
 
 <h2 id="SEE-ALSO">SEE ALSO</h2>
 
-<p>Part of <span class="man-ref"><code>freight</code><span class="s">(1)</span></span>.</p>
+<p>Part of <code>freight</code>(1).</p>
 
-<p><span class="man-ref"><code>freight-cache</code><span class="s">(1)</span></span> builds package repositories from the intermediate "Freight library" managed by <code>freight-add</code>.</p>
+<p><code>freight-cache</code>(1) builds package repositories from the intermediate "Freight library" managed by <code>freight-add</code>.</p>
 
 
   <ol class='man-decor man-foot man foot'>
     <li class='tl'></li>
-    <li class='tc'>January 2012</li>
+    <li class='tc'>January 2014</li>
     <li class='tr'>freight-add(1)</li>
   </ol>
 
