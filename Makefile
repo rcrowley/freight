@@ -66,7 +66,7 @@ build:
 
 deploy:
 	scp freight_$(VERSION)-$(BUILD)_all.deb root@rcrowley.org:
-	ssh -t root@rcrowley.org "freight add freight_$(VERSION)-$(BUILD)_all.deb apt/squeeze apt/wheezy apt/lucid apt/precise apt/quantal apt/raring apt/saucy && rm freight_$(VERSION)-$(BUILD)_all.deb && freight cache apt/squeeze apt/wheezy apt/lucid apt/precise apt/quantal apt/raring apt/saucy"
+	ssh -t root@rcrowley.org "freight add freight_$(VERSION)-$(BUILD)_all.deb apt/squeeze apt/wheezy apt/sid apt/lucid apt/precise apt/quantal apt/raring apt/saucy apt/trusty && rm freight_$(VERSION)-$(BUILD)_all.deb && freight cache apt/squeeze apt/wheezy apt/sid apt/lucid apt/precise apt/quantal apt/raring apt/saucy apt/trusty"
 
 man:
 	find man -name \*.ronn | xargs -n1 ronn --manual=Freight --style=toc
