@@ -10,7 +10,7 @@
 \fBfreight add\fR [\fB\-c\fR \fIconf\fR] [\fB\-v\fR] [\fB\-h\fR] \fIpackage\fR \fImanager\fR/\fIdistro\fR[/\fIcomponent\fR][\.\.\.]
 .
 .SH "DESCRIPTION"
-\fBfreight\-add\fR registers \fIpackage\fR with one or more \fImanager\fR/\fIdistro\fR[/\fIcomponent\fR] pairs (or triples)\. Currently, \fBapt\fR is the only supported \fImanager\fR and \fIpackage\fR must be one of \fI*\.deb\fR, \fI\fI\.dsc\fR\.debian\.tar\.gz *\.orig\.tar\.gz,\fR\fI\.diff\.gz\fR\.orig\.tar\.gz\fI, or\fR*\.tar\.gz\fI\.\fRdistro\fImay be any arbitrary value but is best suited to naming a particular version of the target operating system (for example, "wheezy" or "precise")\.\fRcomponent_ is optional and for \fBapt\fR defaults to \fBmain\fR\.
+\fBfreight\-add\fR registers \fIpackage\fR with one or more \fImanager\fR/\fIdistro\fR[/\fIcomponent\fR] pairs (or triples)\. Currently, \fBapt\fR is the only supported \fImanager\fR and \fIpackage\fR must be one of \fI*\.deb\fR, \fI*\.dsc *\.debian\.tar\.gz *\.orig\.tar\.gz,\fR*\.diff\.gz *\.orig\.tar\.gz\fI, or\fR*\.tar\.gz\fI\.\fRdistro\fImay be any arbitrary value but is best suited to naming a particular version of the target operating system (for example, "wheezy" or "precise")\.\fRcomponent_ is optional and for \fBapt\fR defaults to \fBmain\fR\.
 .
 .P
 The package files are organized in the Freight library so \fBfreight\-cache\fR(1) has an easy time of creating package repositories for each \fImanager\fR/\fIdistro\fR[/\fIcomponent\fR] later\.

@@ -7,7 +7,7 @@ freight-add(1) -- add a package to Freight
 
 ## DESCRIPTION
 
-`freight-add` registers _package_ with one or more _manager_/_distro_[/_component_] pairs (or triples).  Currently, `apt` is the only supported _manager_ and _package_ must be one of _*.deb_, _*.dsc *.debian.tar.gz *.orig.tar.gz, _*.diff.gz *.orig.tar.gz_, or _*.tar.gz_.  _distro_ may be any arbitrary value but is best suited to naming a particular version of the target operating system (for example, "wheezy" or "precise").  _component_ is optional and for `apt` defaults to `main`.
+`freight-add` registers _package_ with one or more _manager_/_distro_[/_component_] pairs (or triples).  Currently, `apt` is the only supported _manager_ and _package_ must be one of _\*.deb_, _\*.dsc \*.debian.tar.gz \*.orig.tar.gz, _\*.diff.gz \*.orig.tar.gz_, or _\*.tar.gz_.  _distro_ may be any arbitrary value but is best suited to naming a particular version of the target operating system (for example, "wheezy" or "precise").  _component_ is optional and for `apt` defaults to `main`.
 
 The package files are organized in the Freight library so `freight-cache`(1) has an easy time of creating package repositories for each _manager_/_distro_[/_component_] later.
 
