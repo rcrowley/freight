@@ -32,8 +32,8 @@ From version 0.0.8 onwards, distros in an APT repository no longer share the con
 
 ## FILES
 
-* _/etc/freight.conf_:
-  The default configuration file.  See `freight`(5).
+* _/etc/freight.conf_, _~/.freight.conf_, _etc/freight.conf_, _.freight.conf_:
+  The default configuration files.  See `freight`(5).
 * _$VARCACHE_`/pubkey.gpg`:
   The exported public key used for signing each release.
 

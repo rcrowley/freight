@@ -16,8 +16,8 @@ freight(1) -- a modern take on the Debian archive
 
 ## FILES
 
-* _/etc/freight.conf_:
-  The default configuration file.  See `freight`(5).
+* _/etc/freight.conf_, _~/.freight.conf_, _etc/freight.conf_, _.freight.conf_:
+  The default configuration files.  See `freight`(5).
 
 ## ENVIRONMENT VARIABLES
 

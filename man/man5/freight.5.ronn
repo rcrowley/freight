@@ -32,6 +32,8 @@ The Freight configuration is a `source`d shell script that defines a few importa
   The default configuration file.
 * _~/.freight.conf_:
   User-specific configuration file.
+* _etc/freight.conf_, _.freight.conf_:
+  Directory-specific configuration files.
 
 ## ENVIRONMENT VARIABLES
 

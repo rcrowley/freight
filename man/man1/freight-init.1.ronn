@@ -3,24 +3,24 @@ freight-init(1) -- initialize a Freight directory
 
 ## SYNOPSIS
 
-`freight init` [`-l` _libdir_] [`--cache` _cachedir_] `-g` _gpg_ _dir_
+`freight init` [`-l` _varlib_] [`--cache` _varcache_] `-g` _gpg_ _dirname_
 
 ## DESCRIPTION
 
-`freight-init` will setup a directory to be used by Freight. It will generate small wrappers around the original freight-commands. Use `./freight-add` and `./freight-cache` to work against the `libdir` and `cachedir` given to `freight init`.
+`freight-init` will setup a directory to be used by Freight.  It will generate small wrappers around the original Freight commands.  Use `./freight-add` and `./freight-cache` to work against the `VARLIB` and `VARCACHE` given to `freight init`.
 
 The benefit of using `freight-init` is, that all data is stored in one place and dont have to pass `-c _conf_` option all the time.
 
-Configuration is stored in `_dir_/.freight.conf`.
+Configuration is stored in `_dirname_/.freight.conf`.
 
 ## OPTIONS
 
 * `-g` _gpg_, `--gpg=`_gpg_`:
-  GPG signing key
-* `-l` _libdir_, `--libdir=`_libdir`_:
-  VARLIB directory to use. Defaults to `_dir_/lib`
-* `--cachedir=`_cachedir`_:
-  VARCACHE directory to use. Defaults to `_dir_/cache`
+  GPG key.
+* `-l` _varlib_, `--varlib=`_varlib`_:
+  VARLIB directory to use.  Defaults to `_dirname_/lib`
+* `--varcache=`_varcache`_:
+  VARCACHE directory to use.  Defaults to `_dirname_/cache`
 * `-v`, `--verbose`:
   Verbose mode.
 * `-h`, `--help`:
@@ -28,8 +28,8 @@ Configuration is stored in `_dir_/.freight.conf`.
 
 ## FILES
 
-* _/freight.conf_:
-  The default configuration file.  See `freight`(5).
+* _/etc/freight.conf_, _~/.freight.conf_, _etc/freight.conf_, _.freight.conf_:
+  The default configuration files.  See `freight`(5).
 
 ## THEME SONG
 
