@@ -60,6 +60,20 @@ done
 # are ultimately taken relative to the Freight library.
 cd "$VARLIB"
 
+# Add a file to the Freight library.  The arguments are FILENAME, DIRNAME, and
+# PATHNAME.  The first two are given fairly directly to ln(1); the final one
+# is used to create appropriate success or failure messages.
+add() {
+    if ln "$TMP/$1" "$2/$1" 2>"$TMP/ln"
+    then echo "# [freight] added $3 to $2${4+" as "}$4" >&2
+    else
+        if grep -q "File exists" "$TMP/ln"
+        then echo "# [freight] $2 already has $3${4+" as "}$4" >&2
+        else cat "$TMP/ln" >&2
+        fi
+    fi
+}
+
 # Hard link this package into every `<manager>/<distro>` given in `$@`.
 # These links will later be used to compile the `Release` and `Packages`
 # files in the Freight cache.
@@ -70,10 +84,7 @@ do
 	do
 		mkdir -p "$DIRNAME"
         case "$FILENAME" in
-            *_*_*.deb)
-                ln "$TMP/$FILENAME" "$DIRNAME/$FILENAME" 2>"/dev/null" &&
-                echo "# [freight] added $PATHNAME to $DIRNAME" >&2 ||
-                echo "# [freight] $DIRNAME already has $PATHNAME" >&2;;
+            *_*_*.deb) add "$FILENAME" "$DIRNAME" "$PATHNAME";;
             *.deb)
                 . "$(dirname "$(dirname "$0")")/lib/freight/apt.sh"
                 dpkg-deb -I "$TMP/$FILENAME" "control" >"$TMP/$FILENAME-control"
@@ -84,13 +95,8 @@ do
                 )_$(
                     apt_binary_arch "$TMP/$FILENAME-control"
                 ).deb"
-                ln "$TMP/$FILENAME" "$DIRNAME/$DEBNAME" 2>"/dev/null" &&
-                echo "# [freight] added $PATHNAME to $DIRNAME as $DEBNAME" >&2 ||
-                echo "# [freight] $DIRNAME already has $PATHNAME as $DEBNAME" >&2;;
-            *)
-                ln "$TMP/$FILENAME" "$DIRNAME/$FILENAME" 2>"/dev/null" &&
-                echo "# [freight] added $PATHNAME to $DIRNAME" >&2 ||
-                echo "# [freight] $DIRNAME already has $PATHNAME" >&2;;
+                add "$FILENAME" "$DIRNAME" "$PATHNAME" "$DEBNAME";;
+            *) add "$FILENAME" "$DIRNAME" "$PATHNAME";;
         esac
 	done
 done
