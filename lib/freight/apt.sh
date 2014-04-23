@@ -289,6 +289,7 @@ EOF
 	FILENAME="${NAME}_${VERSION##*:}_${ARCH}.deb"
 
 	# Link this package into the pool.
+set -x
 	POOL="pool/$DIST/$COMP/$PREFIX/$SOURCE"
 	mkdir -p "$VARCACHE/$POOL"
 	if [ ! -f "$VARCACHE/$POOL/$FILENAME" ]
@@ -299,6 +300,7 @@ EOF
 		fi
 		ln "$DISTCACHE/.refs/$COMP/$PACKAGE" "$VARCACHE/$POOL/$FILENAME"
 	fi
+set +x
 
 	# Build a list of the one-or-more `Packages` files to append with
 	# this package's info.
@@ -436,5 +438,8 @@ apt_cache_source() {
 
 # Clean up old packages in the pool.
 apt_clean() {
+set -x
+find "$VARCACHE/pool" -links 1 | xargs ls -il || :
+set +x
 	find "$VARCACHE/pool" -links 1 -delete || true
 }
