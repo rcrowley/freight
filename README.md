@@ -41,6 +41,8 @@ Serve `/var/cache/freight` via your favorite web server and install it as an APT
 
 * [Debian packaging for busy people](http://rcrowley.org/articles/packaging.html)
 
+There's also [French documentation](http://blog.valouille.fr/2014/03/creer-un-depot-debian-signe-avec-freight/) assembled by Valérian Beaudoin.
+
 ## Manuals
 
 * [`freight`(1)](http://rcrowley.github.com/freight/freight.1.html)
