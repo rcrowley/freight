@@ -174,9 +174,9 @@ EOF
 		done 3>"$TMP/md5sums" 4>"$TMP/sha1sums" 5>"$TMP/sha256sums"
 		echo "MD5Sum:"
 		cat "$TMP/md5sums"
-		echo "SHA1Sum:"
+		echo "SHA1:"
 		cat "$TMP/sha1sums"
-		echo "SHA256Sum:"
+		echo "SHA256:"
 		cat "$TMP/sha256sums"
 
 	} >"$DISTCACHE/Release"
