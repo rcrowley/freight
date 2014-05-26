@@ -254,6 +254,9 @@ apt_cache_binary() {
 			# cached control file. Add a Filename line that can be updated
 			# easily later with the real path.
 			grep . "$TMP/DEBIAN/control" |
+                        # Strip out empty control fields
+                        # as these might cause problems
+                        grep -E -v "^[A-Za-z-]+:\s+$" |
 			grep -v "^(Essential|Filename|MD5Sum|SHA1|SHA256|Size)"
 			cat <<EOF
 Filename: FILENAME
