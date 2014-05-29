@@ -33,6 +33,7 @@ do
 done
 [ "$FREIGHT_CONF" -a -f "$FREIGHT_CONF" ] && . "$FREIGHT_CONF"
 [ "$CONF" -a -f "$CONF" ] && . "$CONF"
+[ -n "$CONF" -a ! -e "$CONF" ] && echo "$0 invoked with '-c $CONF' but config file '$CONF' does not exist" && exit 1
 
 # Normalize directory names.
 VARLIB=${VARLIB%%/}
