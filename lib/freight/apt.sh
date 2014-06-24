@@ -252,8 +252,10 @@ apt_cache_binary() {
 			# `Size`, `MD5Sum`, etc. lines and replace them with newly
 			# generated values. Update it once when generating the
 			# cached control file. Add a Filename line that can be updated
-			# easily later with the real path.
+			# easily later with the real path.  Strip out empty control fields
+			# as these might cause problems.
 			grep . "$TMP/DEBIAN/control" |
+			grep -E -v "^[A-Za-z-]+:\s+$" |
 			grep -v "^(Essential|Filename|MD5Sum|SHA1|SHA256|Size)"
 			cat <<EOF
 Filename: FILENAME
