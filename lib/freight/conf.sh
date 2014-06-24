@@ -32,7 +32,15 @@ do
 	DIRNAME="$(dirname "$DIRNAME")"
 done
 [ "$FREIGHT_CONF" -a -f "$FREIGHT_CONF" ] && . "$FREIGHT_CONF"
-[ "$CONF" -a -f "$CONF" ] && . "$CONF"
+if [ "$CONF" ]
+then
+    if [ -f "$CONF" ]
+    then . "$CONF"
+    else
+        echo "# [freight] $CONF does not exist" >&2
+        exit 1
+    fi
+fi
 
 # Normalize directory names.
 VARLIB=${VARLIB%%/}
