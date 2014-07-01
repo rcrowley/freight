@@ -1,0 +1,43 @@
+freight-clear-cache(1) -- clears existing package repositories
+==============================================================
+
+## SYNOPSIS
+
+`freight clear-cache` [`-c` _conf_] [`-v`] [`-h`] [_manager_/_distro_][...]  
+
+## DESCRIPTION
+
+`freight-clear-cache` clears the cache generated during `freight-cache` runs so that it can be regenerated on the next `freight-cache` invocation.
+
+## OPTIONS
+
+* `-c` _conf_, `--conf=`_conf_:
+  Use an alternate configuration file.
+* `-v`, `--verbose`:
+  Verbose mode.
+* `-h`, `--help`:
+  Show a help message.
+
+## FILES
+
+* _/etc/freight.conf_, _~/.freight.conf_, _etc/freight.conf_, _.freight.conf_:
+  The default configuration files.  See `freight`(5).
+
+## ENVIRONMENT VARIABLES
+
+* `FREIGHT_CONF`:
+  The pathname of an alternate configuration file.  See `freight`(5).
+
+## THEME SONG
+
+The New Pornographers - "All the Old Showstoppers"
+
+## AUTHOR
+
+Richard Crowley <r@rcrowley.org>
+
+## SEE ALSO
+
+Part of `freight`(1).
+
+`freight-cache`(1) can be used to build the repository again.

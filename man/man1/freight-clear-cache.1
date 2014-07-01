@@ -1,0 +1,51 @@
+.\" generated with Ronn/v0.7.3
+.\" http://github.com/rtomayko/ronn/tree/0.7.3
+.
+.TH "FREIGHT\-CLEAR\-CACHE" "1" "July 2014" "" "Freight"
+.
+.SH "NAME"
+\fBfreight\-clear\-cache\fR \- clears existing package repositories
+.
+.SH "SYNOPSIS"
+\fBfreight clear\-cache\fR [\fB\-c\fR \fIconf\fR] [\fB\-v\fR] [\fB\-h\fR] [\fImanager\fR/\fIdistro\fR][\.\.\.]
+.
+.SH "DESCRIPTION"
+\fBfreight\-clear\-cache\fR clears the cache generated during \fBfreight\-cache\fR runs so that it can be regenerated on the next \fBfreight\-cache\fR invocation\.
+.
+.SH "OPTIONS"
+.
+.TP
+\fB\-c\fR \fIconf\fR, \fB\-\-conf=\fR\fIconf\fR
+Use an alternate configuration file\.
+.
+.TP
+\fB\-v\fR, \fB\-\-verbose\fR
+Verbose mode\.
+.
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Show a help message\.
+.
+.SH "FILES"
+.
+.TP
+\fI/etc/freight\.conf\fR, \fI~/\.freight\.conf\fR, \fIetc/freight\.conf\fR, \fI\.freight\.conf\fR
+The default configuration files\. See \fBfreight\fR(5)\.
+.
+.SH "ENVIRONMENT VARIABLES"
+.
+.TP
+\fBFREIGHT_CONF\fR
+The pathname of an alternate configuration file\. See \fBfreight\fR(5)\.
+.
+.SH "THEME SONG"
+The New Pornographers \- "All the Old Showstoppers"
+.
+.SH "AUTHOR"
+Richard Crowley \fIr@rcrowley\.org\fR
+.
+.SH "SEE ALSO"
+Part of \fBfreight\fR(1)\.
+.
+.P
+\fBfreight\-cache\fR(1) can be used to build the repository again\.
