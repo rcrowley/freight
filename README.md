@@ -37,6 +37,12 @@ Serve `/var/cache/freight` via your favorite web server and install it as an APT
 	sudo apt-get update
 	sudo apt-get -y install freight
 
+### From Fedora/EPEL repositories
+
+EL users must first [configure EPEL](http://fedoraproject.org/wiki/EPEL/FAQ#How_can_I_install_the_packages_from_the_EPEL_software_repository.3F).
+
+	yum -y install freight
+
 ## Documentation
 
 * [Debian packaging for busy people](http://rcrowley.org/articles/packaging.html)
