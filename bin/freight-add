@@ -59,6 +59,7 @@ done
 # absolute paths or as partial paths of the form `<manager>/<distro>` that
 # are ultimately taken relative to the Freight library.
 cd "$VARLIB"
+TMP="${TMP#"$VARLIB/"}"
 
 # Add a file to the Freight library.  The arguments are FILENAME, DIRNAME, and
 # PATHNAME.  The first two are given fairly directly to ln(1); the final one
