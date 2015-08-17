@@ -112,7 +112,7 @@ apt_cache() {
 			# and will find the associated *.orig.tar.gz, *.diff.gz, and/or
             # *.tar.gz as they are needed.
 			*.dsc) apt_cache_source "$DIST" "$DISTCACHE" "$PATHNAME" "$COMP" "$PACKAGE";;
-			*.debian.tar.gz|*.diff.gz|*.orig.tar.gz|*.tar.gz|*.deb-control|*.dsc-cached) ;;
+			*.debian.tar.gz|*.debian.tar.xz|*.diff.gz|*.orig.tar.gz|*.orig.tar.xz|*.tar.gz|*.tar.xz|*.deb-control|*.dsc-cached) ;;
 
 			*) echo "# [freight] skipping extraneous file $PATHNAME" >&2;;
 		esac
