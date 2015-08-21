@@ -349,14 +349,17 @@ apt_cache_source() {
 	ORIG_VERSION="$(apt_source_origversion "$PATHNAME")"
 	DIRNAME="$(dirname "$PATHNAME")"
 	DSC_FILENAME="${NAME}_${VERSION%*:}.dsc"
-	DEBTAR_FILENAME="${NAME}_${VERSION%*:}.debian.tar.gz"
+	DEBTAR_GZ_FILENAME="${NAME}_${VERSION%*:}.debian.tar.gz"
+	DEBTAR_XZ_FILENAME="${NAME}_${VERSION%*:}.debian.tar.xz"
 	DIFFGZ_FILENAME="${NAME}_${VERSION%*:}.diff.gz"
 	ORIG_FILENAME="${NAME}_${ORIG_VERSION}.orig.tar.gz"
 	TAR_FILENAME="${NAME}_${VERSION%*:}.tar.gz"
 
     # Find which style of diff they're using.
-	if [ -f "$VARLIB/apt/$DIST/$DIRNAME/$DEBTAR_FILENAME" ]
-	then DIFF_FILENAME=${DEBTAR_FILENAME}
+	if [ -f "$VARLIB/apt/$DIST/$DIRNAME/$DEBTAR_GZ_FILENAME" ]
+	then DIFF_FILENAME=${DEBTAR_GZ_FILENAME}
+	elif [ -f "$VARLIB/apt/$DIST/$DIRNAME/$DEBTAR_XZ_FILENAME" ]
+	then DIFF_FILENAME=${DEBTAR_XZ_FILENAME}
 	else DIFF_FILENAME=${DIFFGZ_FILENAME}
 	fi
 
