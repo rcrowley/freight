@@ -76,6 +76,8 @@ apt_filesize() {
 # Setup the repository for the distro named in the first argument,
 # including all packages read from `stdin`.
 apt_cache() {
+	REL_DATE="$(LC_ALL=en_US date '+%a, %d %b %Y %H:%M:%S %Z')"
+	VALID_DATE="Fri, 31 Nov 2038 00:00:00 JST"
 	DIST="$1"
 	SUITE="${SUITE:-$DIST}"
 
@@ -129,6 +131,8 @@ Component: $COMP
 Origin: $ORIGIN
 Label: $LABEL
 Architecture: $ARCH
+Date: $REL_DATE
+Valid-Until: $VALID_DATE
 EOF
 			gzip -c "$DISTCACHE/$COMP/binary-$ARCH/Packages" \
 				>"$DISTCACHE/$COMP/binary-$ARCH/Packages.gz"
@@ -141,6 +145,8 @@ Component: $COMP
 Origin: $ORIGIN
 Label: $LABEL
 Architecture: source
+Date: $REL_DATE
+Valid-Until: $VALID_DATE
 EOF
 			gzip -c "$DISTCACHE/$COMP/source/Sources" \
 				>"$DISTCACHE/$COMP/source/Sources.gz"
@@ -158,6 +164,8 @@ Suite: $SUITE
 Codename: $DIST
 Components: $(echo "$COMPS" | tr \\n " ")
 Architectures: $ARCHS
+Date: $REL_DATE
+Valid-Until: $VALID_DATE
 EOF
 
 		# Finish the top-level `Release` file with references and
