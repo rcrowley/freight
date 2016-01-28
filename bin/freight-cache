@@ -73,7 +73,7 @@ do
 
 	# Parse the manager and distro out of the Freight library path.
 	DIR="$(readlink -f "$DIR")"
-	DIR="${DIR##"$VARLIB/"}"
+	DIR="${DIR##"$(readlink -f "$VARLIB")/"}"
 	MANAGER="$(dirname "$DIR")"
 	DIST="$(basename "$DIR")"
 
