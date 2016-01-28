@@ -88,7 +88,7 @@ cd "$VARLIB"
 if [ -z "$*" ]
 then
     DIRS="$(
-        find "$VARLIB" -mindepth 2 -maxdepth 2 -type d -printf "%P\n" |
+        find "$VARLIB"/ -mindepth 2 -maxdepth 2 -type d -printf "%P\n" |
         grep -v "^\\." |
         tr "\n" " "
     )"
@@ -100,7 +100,7 @@ do
 
     # Parse the manager and distro out of the Freight library path.
     DIR="$(readlink -f "$DIR")"
-    DIR="${DIR##"$VARLIB/"}"
+    DIR="${DIR##"$(readlink -f "$VARLIB")/"}"
     MANAGER="$(dirname "$DIR")"
     DIST="$(basename "$DIR")"
 
