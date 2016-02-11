@@ -16,7 +16,7 @@ Configuration is stored in `_dirname_/.freight.conf`.
 ## OPTIONS
 
 * `-g` _gpg_, `--gpg=`_gpg_`:
-  GPG key.
+  GPG key.  May be given multiple times.
 * `-l` _varlib_, `--varlib=`_varlib`_:
   VARLIB directory to use.  Defaults to `_dirname_/lib`
 * `--varcache=`_varcache`_:

@@ -181,25 +181,30 @@ EOF
 
 	} >"$DISTCACHE/Release"
 
-	# Sign the top-level `Release` file with `gpg`.
-	gpg -abs$([ "$TTY" ] || echo " --no-tty") --use-agent -u"$GPG" \
-		$([ "$GPG_PASSPHRASE_FILE" ] && echo " --batch --passphrase-fd 1 --passphrase-file $GPG_PASSPHRASE_FILE") \
-		-o"$DISTCACHE/Release.gpg" "$DISTCACHE/Release" || {
-		cat <<EOF
+	# Sign the top-level `Release` file with `gpg`, for each key and
+	# concatenate signatures.
+	for GPGKEY in ${GPG[@]}; do
+		gpg -abs$([ "$TTY" ] || echo " --no-tty") --use-agent -u"$GPGKEY" \
+			$([ "$GPG_PASSPHRASE_FILE" ] && echo " --batch --passphrase-fd 1 --passphrase-file $GPG_PASSPHRASE_FILE") \
+			-o"$TMP/release_last_signature.gpg" "$DISTCACHE/Release" || {
+			cat <<EOF
 # [freight] couldn't sign the repository, perhaps you need to run
 # [freight] gpg --gen-key and update the GPG setting in $CONF
 # [freight] (see freight(5) for more information)
 EOF
-		rm -rf "$DISTCACHE"
-		exit 1
-	}
+			rm -rf "$DISTCACHE"
+			exit 1
+		}
+		cat $TMP/release_last_signature.gpg >> $DISTCACHE/Release.gpg
+		rm -f $TMP/release_last_signature.gpg
+	done
 
 	# Generate `pubkey.gpg` containing the plaintext public key and
 	# `keyring.gpg` containing a complete GPG keyring containing only
-	# the appropriate public key.  `keyring.gpg` is appropriate for
+	# the appropriate public keys.  `keyring.gpg` is appropriate for
 	# copying directly to `/etc/apt/trusted.gpg.d`.
 	mkdir -m700 -p "$TMP/gpg"
-	gpg -q --export -a "$GPG" |
+	gpg -q --export -a ${GPG[*]} |
 	tee "$VARCACHE/pubkey.gpg" |
 	gpg -q --homedir "$TMP/gpg" --import
 	chmod 644 "$TMP/gpg/pubring.gpg"
