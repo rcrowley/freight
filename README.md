@@ -2,6 +2,14 @@
 
 A modern take on the Debian archive.
 
+This repository has been forked (in the traditional sense of the word) from
+Richard Crowley's [freight](https://github.com/rcrowley/freight) repository. A
+fork had become necessary because the main project was not actively maintained
+and serious issues had started to crop up. While fixes and improvements were
+available in various freight GitHub forks, they were not merged to the main
+project. This fork and the associated GitHub organization,
+[freight-team](https://github.com/freight-team), attempts to fix these issues.
+
 ## Usage
 
 Install Freight and create a minimal configuration in `/usr/local/etc/freight.conf` or `/etc/freight.conf` as appropriate containing the name of your GPG key:
@@ -27,7 +35,7 @@ Serve `/var/cache/freight` via your favorite web server and install it as an APT
 
 ### From source
 
-	git clone git://github.com/rcrowley/freight.git
+	git clone git://github.com/freight-team/freight.git
 	cd freight && make && sudo make install
 
 ### From a Debian archive
@@ -58,8 +66,8 @@ There's also [French documentation](http://blog.valouille.fr/2014/03/creer-un-de
 
 ## Contribute
 
-Freight is [BSD-licensed](https://github.com/rcrowley/freight/blob/master/LICENSE)
+Freight is [BSD-licensed](https://github.com/freight-team/freight/blob/master/LICENSE)
 
-* Source code: <https://github.com/rcrowley/freight>
-* Issue tracker: <https://github.com/rcrowley/freight/issues>
-* Wiki: <https://github.com/rcrowley/freight/wiki>
+* Source code: <https://github.com/freight-team/freight>
+* Issue tracker: <https://github.com/freight-team/freight/issues>
+* Wiki: <https://github.com/freight-team/freight/wiki>
