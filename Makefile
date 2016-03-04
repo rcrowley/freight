@@ -55,7 +55,7 @@ build:
 		-n freight -v $(VERSION) --iteration $(BUILD) -a all \
 		-d coreutils -d dash -d dpkg -d gnupg -d grep \
 		-m "Richard Crowley <r@rcrowley.org>" \
-		--url "https://github.com/rcrowley/freight" \
+		--url "https://github.com/freight-team/freight" \
 		--description "A modern take on the Debian archive." \
 		-C debian .
 	make uninstall prefix=/usr sysconfdir=/etc DESTDIR=debian
