@@ -9,3 +9,5 @@
 *~
 etc/freight.conf
 var
+test/tmp
+!test/fixtures/*.deb

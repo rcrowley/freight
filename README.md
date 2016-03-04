@@ -1,5 +1,7 @@
 # Freight
 
+[![Build Status](https://travis-ci.org/freight-team/freight.svg?branch=master)](https://travis-ci.org/freight-team/freight)
+
 A modern take on the Debian archive.
 
 This repository has been forked (in the traditional sense of the word) from
@@ -71,3 +73,9 @@ Freight is [BSD-licensed](https://github.com/freight-team/freight/blob/master/LI
 * Source code: <https://github.com/freight-team/freight>
 * Issue tracker: <https://github.com/freight-team/freight/issues>
 * Wiki: <https://github.com/freight-team/freight/wiki>
+
+### Test suite
+
+The Freight test suite can be executed by running `make check` from any git checkout of this repository.  git and GnuPG are required for most tests, and extended tests require apt.
+
+Contributions should include a new test case where possible by extending one or more of the `test/*.bats` files.

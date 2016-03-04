@@ -1,0 +1,42 @@
+# vim: noet:ts=4:sw=4:ft=sh
+
+load freight_helpers
+load apt_helpers
+
+setup() {
+	freight_init
+	freight_add ${FIXTURES}/test_1.0_all.deb apt/example
+	freight_add ${FIXTURES}/test_1.0_all.deb apt/example/comp
+	configure_local_apt
+}
+
+@test "freight-cache builds distro Release file" {
+	freight_cache -v
+	test -e ${FREIGHT_CACHE}/dists/example/Release
+	egrep "^Components: comp main" ${FREIGHT_CACHE}/dists/example/Release
+}
+
+@test "freight-cache builds per-component Release file" {
+	freight_cache -v
+	test -e ${FREIGHT_CACHE}/dists/example/comp/binary-amd64/Release
+	test -e ${FREIGHT_CACHE}/dists/example/main/binary-amd64/Release
+}
+
+@test "freight-cache builds pool" {
+	freight_cache -v
+	test -e ${FREIGHT_CACHE}/pool/example/comp/t/test/test_1.0_all.deb
+	test -e ${FREIGHT_CACHE}/pool/example/main/t/test/test_1.0_all.deb
+}
+
+@test "freight-cache generates valid Release.gpg signature" {
+	freight_cache -v
+	gpg --verify ${FREIGHT_CACHE}/dists/example/Release.gpg ${FREIGHT_CACHE}/dists/example/Release
+}
+
+@test "apt-get fetches package list" {
+	check_apt_support
+	freight_cache -v
+	echo "deb file://${FREIGHT_CACHE} example main" > ${TMPDIR}/apt/etc/apt/sources.list
+	apt-get -c ${FIXTURES}/apt.conf update
+	apt-cache -c ${FIXTURES}/apt.conf show test
+}

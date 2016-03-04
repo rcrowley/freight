@@ -10,7 +10,7 @@ mandir=${prefix}/share/man
 all:
 
 clean:
-	rm -rf *.deb debian man/man*/*.html
+	rm -rf *.deb debian man/man*/*.html test/tmp
 	find . -name '*~' -delete
 
 install: install-bin install-lib install-man install-sysconf
@@ -79,4 +79,10 @@ gh-pages: man
 	git push origin gh-pages
 	git checkout -q master
 
-.PHONY: all install uninstall deb man gh-pages
+test/tmp/bats:
+	git clone https://github.com/sstephenson/bats test/tmp/bats
+
+check: test/tmp/bats
+	test/tmp/bats/bin/bats test/
+
+.PHONY: all install uninstall deb man gh-pages check
