@@ -60,10 +60,6 @@ build:
 		-C debian .
 	make uninstall prefix=/usr sysconfdir=/etc DESTDIR=debian
 
-deploy:
-	scp freight_$(VERSION)-$(BUILD)_all.deb root@rcrowley.org:
-	ssh -t root@rcrowley.org "freight add freight_$(VERSION)-$(BUILD)_all.deb apt/squeeze apt/wheezy apt/sid apt/lucid apt/precise apt/quantal apt/raring apt/saucy apt/trusty && rm freight_$(VERSION)-$(BUILD)_all.deb && freight cache apt/squeeze apt/wheezy apt/sid apt/lucid apt/precise apt/quantal apt/raring apt/saucy apt/trusty"
-
 man:
 	find man -name \*.ronn | xargs -n1 ronn --manual=Freight --style=toc
 
@@ -83,4 +79,4 @@ gh-pages: man
 	git push origin gh-pages
 	git checkout -q master
 
-.PHONY: all install uninstall deb deploy man gh-pages
+.PHONY: all install uninstall deb man gh-pages
