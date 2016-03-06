@@ -183,7 +183,7 @@ EOF
 
 	# Sign the top-level `Release` file with `gpg`, for each key and
 	# concatenate signatures.
-	for GPGKEY in ${GPG[@]}; do
+	for GPGKEY in $GPG; do
 		gpg -abs$([ "$TTY" ] || echo " --no-tty") --use-agent -u"$GPGKEY" \
 			$([ "$GPG_PASSPHRASE_FILE" ] && echo " --batch --passphrase-fd 1 --passphrase-file $GPG_PASSPHRASE_FILE") \
 			-o"$TMP/release_last_signature.gpg" "$DISTCACHE/Release" || {
@@ -204,7 +204,7 @@ EOF
 	# the appropriate public keys.  `keyring.gpg` is appropriate for
 	# copying directly to `/etc/apt/trusted.gpg.d`.
 	mkdir -m700 -p "$TMP/gpg"
-	gpg -q --export -a ${GPG[*]} |
+	gpg -q --export -a $GPG |
 	tee "$VARCACHE/pubkey.gpg" |
 	gpg -q --homedir "$TMP/gpg" --import
 	chmod 644 "$TMP/gpg/pubring.gpg"
