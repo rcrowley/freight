@@ -33,6 +33,13 @@ setup() {
 	gpg --verify ${FREIGHT_CACHE}/dists/example/Release.gpg ${FREIGHT_CACHE}/dists/example/Release
 }
 
+@test "freight-cache signs Release.gpg with two keys" {
+	sed -i 's/^GPG=.*/GPG="freight@example.com freight2@example.com"/' $FREIGHT_CONFIG
+	freight_cache -v
+	test $(grep -c BEGIN ${FREIGHT_CACHE}/dists/example/Release.gpg) -eq 2
+	gpg --verify ${FREIGHT_CACHE}/dists/example/Release.gpg ${FREIGHT_CACHE}/dists/example/Release
+}
+
 @test "apt-get fetches package list" {
 	check_apt_support
 	freight_cache -v

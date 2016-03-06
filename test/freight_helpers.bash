@@ -37,5 +37,6 @@ gpg_init() {
 		mkdir -p $GNUPGHOME
 		chmod 0700 $GNUPGHOME
 		gpg --batch --gen-key test/fixtures/gpg.conf
+		gpg --batch --gen-key test/fixtures/gpg2.conf
 	fi
 }
