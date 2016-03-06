@@ -1,3 +1,6 @@
 sudo: false
+env:
+  - SH=dash
+  - SH=bash
 script:
   - make check

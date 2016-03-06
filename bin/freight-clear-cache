@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env sh
 
 # Clear the cache that is built up during freight-cache runs
 # so that it can be regenerated on the next freight-cache invocation.

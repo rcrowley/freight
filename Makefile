@@ -1,6 +1,8 @@
 VERSION=0.3.5
 BUILD=1
 
+SH=dash
+
 prefix=/usr/local
 bindir=${prefix}/bin
 libdir=${prefix}/lib
@@ -82,7 +84,13 @@ gh-pages: man
 test/tmp/bats:
 	git clone https://github.com/sstephenson/bats test/tmp/bats
 
-check: test/tmp/bats
-	test/tmp/bats/bin/bats test/
+test/tmp/bin:
+	mkdir -p test/tmp/bin
+
+test/tmp/bin/sh: test/tmp/bin
+	ln -sf $$(which $(SH)) test/tmp/bin/sh
+
+check: test/tmp/bats test/tmp/bin/sh
+	PATH=test/tmp/bin/:$$PATH test/tmp/bats/bin/bats test/
 
 .PHONY: all install uninstall deb man gh-pages check
