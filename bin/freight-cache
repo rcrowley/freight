@@ -24,16 +24,25 @@ do
 	case "$1" in
 		-k|--keep) KEEP=1 shift;;
 		-g|--gpg)
-			[ -z "$GPG" ] && GPG=()
-			GPG+=("$2")
+			if [ -z "$GPG" ]; then
+				GPG=$2
+			else
+				GPG="$GPG $2"
+			fi
 			shift 2;;
 		-g*)
-			[ -z "$GPG" ] && GPG=()
-			GPG+=("$(echo "$1" | cut -c"3-")")
+			if [ -z "$GPG" ]; then
+				GPG=$(echo "$1" | cut -c"3-")
+			else
+				GPG="$GPG $(echo "$1" | cut -c"3-")"
+			fi
 			shift;;
 		--gpg=*)
-			[ -z "$GPG" ] && GPG=()
-			GPG+=("$(echo "$1" | cut -c"7-")")
+			if [ -z "$GPG" ]; then
+				GPG=$(echo "$1" | cut -c"7-")
+			else
+				GPG="$GPG $(echo "$1" | cut -c"7-")"
+			fi
 			shift;;
 		-p|--passphrase-file) GPG_PASSPHRASE_FILE="$2" shift 2;;
 		-p*) GPG_PASSPHRASE_FILE="$(echo "$1" | cut -c"3-")" shift;;
