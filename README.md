@@ -62,10 +62,11 @@ There's also [French documentation](http://blog.valouille.fr/2014/03/creer-un-de
 
 ## Manuals
 
-* [`freight`(1)](http://rcrowley.github.com/freight/freight.1.html)
-* [`freight-add`(1)](http://rcrowley.github.com/freight/freight-add.1.html)
-* [`freight-cache`(1)](http://rcrowley.github.com/freight/freight-cache.1.html)
-* [`freight`(5)](http://rcrowley.github.com/freight/freight.5.html)
+* [`freight`(1)](http://freight-team.github.io/freight/freight.1.html)
+* [`freight-add`(1)](http://freight-team.github.io/freight/freight-add.1.html)
+* [`freight-cache`(1)](http://freight-team.github.io/freight/freight-cache.1.html)
+* [`freight-clear-cache`(1)](http://freight-team.github.io/freight/freight-clear-cache.1.html)
+* [`freight`(5)](http://freight-team.github.io/freight/freight.5.html)
 
 ## Contribute
 
