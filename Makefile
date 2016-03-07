@@ -1,6 +1,8 @@
 VERSION=0.3.5
 BUILD=1
 
+SH=dash
+
 prefix=/usr/local
 bindir=${prefix}/bin
 libdir=${prefix}/lib
@@ -10,7 +12,7 @@ mandir=${prefix}/share/man
 all:
 
 clean:
-	rm -rf *.deb debian man/man*/*.html
+	rm -rf *.deb debian man/man*/*.html test/tmp
 	find . -name '*~' -delete
 
 install: install-bin install-lib install-man install-sysconf
@@ -79,4 +81,16 @@ gh-pages: man
 	git push origin gh-pages
 	git checkout -q master
 
-.PHONY: all install uninstall deb man gh-pages
+test/tmp/bats:
+	git clone https://github.com/sstephenson/bats test/tmp/bats
+
+test/tmp/bin:
+	mkdir -p test/tmp/bin
+
+test/tmp/bin/sh: test/tmp/bin
+	ln -sf $$(which $(SH)) test/tmp/bin/sh
+
+check: test/tmp/bats test/tmp/bin/sh
+	PATH=test/tmp/bin/:$$PATH test/tmp/bats/bin/bats test/
+
+.PHONY: all install uninstall deb man gh-pages check

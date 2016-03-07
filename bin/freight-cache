@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env sh
 
 # Rebuild the Freight cache from the Freight library.  The cache contains
 # actual repositories that are suitable targets for `apt-get` (and maybe
