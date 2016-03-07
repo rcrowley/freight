@@ -4,3 +4,5 @@ env:
   - SH=bash
 script:
   - make check
+notifications:
+  irc: "chat.freenode.net#freight"
