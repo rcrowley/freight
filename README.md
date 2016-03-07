@@ -1,5 +1,6 @@
 # Freight
 
+[![IRC channel](https://kiwiirc.com/buttons/irc.freenode.net/freight.png)](https://kiwiirc.com/client/irc.freenode.net/?#freight)
 [![Build Status](https://travis-ci.org/freight-team/freight.svg?branch=master)](https://travis-ci.org/freight-team/freight)
 
 A modern take on the Debian archive.
