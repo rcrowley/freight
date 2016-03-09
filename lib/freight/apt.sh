@@ -460,5 +460,6 @@ apt_cache_source() {
 
 # Clean up old packages in the pool.
 apt_clean() {
-	find "$VARCACHE/pool" -links 1 -delete || true
+	find "$VARCACHE/pool" -links 1 -type f -delete
+	find "$VARCACHE/pool" -type d -empty -delete
 }
