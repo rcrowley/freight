@@ -43,10 +43,19 @@ Serve `/var/cache/freight` via your favorite web server and install it as an APT
 
 ### From a Debian archive
 
-	echo "deb http://packages.rcrowley.org $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/rcrowley.list
-	sudo wget -O /etc/apt/trusted.gpg.d/rcrowley.gpg http://packages.rcrowley.org/keyring.gpg
+	wget -O - https://swupdate.openvpn.net/repos/repo-public.gpg|sudo apt-key add -
+	echo "deb http://build.openvpn.net/freight_team $(lsb_release -sc) main" | sudo tee  /etc/apt/sources.list.d/freight.list
 	sudo apt-get update
 	sudo apt-get -y install freight
+
+### From a custom-made Debian package
+
+First [install FPM](https://github.com/jordansissel/fpm). Then clone the freight
+repository, build a package and install it:
+
+	git clone git://github.com/freight-team/freight.git
+	cd freight && make build
+	sudo dpkg -i freight_<version>-<build>_all.deb
 
 ### From Fedora/EPEL repositories
 
