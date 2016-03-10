@@ -4,6 +4,8 @@ TOPDIR=$PWD
 FIXTURES=${TOPDIR}/test/fixtures
 TMPDIR=${TOPDIR}/test/tmp
 
+load ${TMPDIR}/bats-assert/all.bash
+
 FREIGHT_HOME=${TMPDIR}/freight
 FREIGHT_CONFIG=${FREIGHT_HOME}/etc/freight.conf
 FREIGHT_CACHE=${FREIGHT_HOME}/var/cache

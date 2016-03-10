@@ -47,3 +47,25 @@ setup() {
 	apt-get -c ${FIXTURES}/apt.conf update
 	apt-cache -c ${FIXTURES}/apt.conf show test
 }
+
+@test "freight-cache removes deleted packages from pool" {
+	freight_cache -v
+	test -e ${FREIGHT_CACHE}/pool/example/main/t/test/test_1.0_all.deb
+	rm -f ${FREIGHT_LIB}/apt/example/test_1.0_all.deb
+
+	run freight_cache -v
+	assert_success
+	assert_output ""
+	test ! -e ${FREIGHT_CACHE}/pool/example/main/t/test/test_1.0_all.deb
+}
+
+@test "freight-cache --keep retains deleted packages in pool" {
+	freight_cache -v
+	test -e ${FREIGHT_CACHE}/pool/example/main/t/test/test_1.0_all.deb
+	rm -f ${FREIGHT_LIB}/apt/example/test_1.0_all.deb
+
+	run freight_cache -v --keep
+	assert_success
+	assert_output ""
+	test -e ${FREIGHT_CACHE}/pool/example/main/t/test/test_1.0_all.deb
+}

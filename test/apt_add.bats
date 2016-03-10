@@ -7,7 +7,9 @@ setup() {
 }
 
 @test "freight-add adds package to distro main component" {
-	test "$(freight_add ${FIXTURES}/test_1.0_all.deb apt/example 2>&1)" = "# [freight] added ${FIXTURES}/test_1.0_all.deb to apt/example"
+	run freight_add ${FIXTURES}/test_1.0_all.deb apt/example
+	assert_success
+	assert_output "# [freight] added ${FIXTURES}/test_1.0_all.deb to apt/example"
 	test -e ${FREIGHT_LIB}/apt/example/test_1.0_all.deb
 }
 
@@ -25,5 +27,7 @@ setup() {
 
 @test "freight-add detects duplicate package" {
 	freight_add ${FIXTURES}/test_1.0_all.deb apt/example
-	test "$(freight_add ${FIXTURES}/test_1.0_all.deb apt/example 2>&1)" = "# [freight] apt/example already has ${FIXTURES}/test_1.0_all.deb"
+	run freight_add ${FIXTURES}/test_1.0_all.deb apt/example
+	assert_success
+	assert_output "# [freight] apt/example already has ${FIXTURES}/test_1.0_all.deb"
 }

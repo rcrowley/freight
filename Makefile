@@ -82,7 +82,10 @@ gh-pages: man
 	git checkout -q master
 
 test/tmp/bats:
-	git clone https://github.com/sstephenson/bats test/tmp/bats
+	git clone --depth 1 https://github.com/sstephenson/bats.git test/tmp/bats
+
+test/tmp/bats-assert:
+	git clone --depth 1 https://github.com/jasonkarns/bats-assert.git test/tmp/bats-assert
 
 test/tmp/bin:
 	mkdir -p test/tmp/bin
@@ -90,7 +93,7 @@ test/tmp/bin:
 test/tmp/bin/sh: test/tmp/bin
 	ln -sf $$(which $(SH)) test/tmp/bin/sh
 
-check: test/tmp/bats test/tmp/bin/sh
+check: test/tmp/bats test/tmp/bats-assert test/tmp/bin/sh
 	PATH=test/tmp/bin/:$$PATH test/tmp/bats/bin/bats test/
 
 .PHONY: all install uninstall deb man gh-pages check
