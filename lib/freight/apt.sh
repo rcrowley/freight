@@ -112,7 +112,7 @@ apt_cache() {
 			# and will find the associated *.orig.tar.gz, *.diff.gz, and/or
             # *.tar.gz as they are needed.
 			*.dsc) apt_cache_source "$DIST" "$DISTCACHE" "$PATHNAME" "$COMP" "$PACKAGE";;
-			*.debian.tar.gz|*.debian.tar.xz|*.diff.gz|*.orig.tar.gz|*.orig.tar.xz|*.tar.gz|*.tar.xz|*.deb-control|*.dsc-cached) ;;
+			*.debian.tar.gz|*.debian.tar.bz2|*.debian.tar.xz|*.debian.tar.lzma|*.diff.gz|*.orig.tar.gz|*.orig.tar.bz2|*.orig.tar.xz|*.orig.tar.lzma|*.tar.gz|*.tar.bz2|*.tar.xz|*.tar.lzma|*.deb-control|*.dsc-cached) ;;
 
 			*) echo "# [freight] skipping extraneous file $PATHNAME" >&2;;
 		esac
@@ -350,7 +350,9 @@ apt_cache_source() {
 	DIRNAME="$(dirname "$PATHNAME")"
 	DSC_FILENAME="${NAME}_${VERSION%*:}.dsc"
 	DEBTAR_GZ_FILENAME="${NAME}_${VERSION%*:}.debian.tar.gz"
+	DEBTAR_BZ2_FILENAME="${NAME}_${VERSION%*:}.debian.tar.bz2"
 	DEBTAR_XZ_FILENAME="${NAME}_${VERSION%*:}.debian.tar.xz"
+	DEBTAR_LZMA_FILENAME="${NAME}_${VERSION%*:}.debian.tar.lzma"
 	DIFFGZ_FILENAME="${NAME}_${VERSION%*:}.diff.gz"
 	ORIG_FILENAME="${NAME}_${ORIG_VERSION}.orig.tar.gz"
 	TAR_FILENAME="${NAME}_${VERSION%*:}.tar.gz"
@@ -358,8 +360,12 @@ apt_cache_source() {
     # Find which style of diff they're using.
 	if [ -f "$VARLIB/apt/$DIST/$DIRNAME/$DEBTAR_GZ_FILENAME" ]
 	then DIFF_FILENAME=${DEBTAR_GZ_FILENAME}
+	elif [ -f "$VARLIB/apt/$DIST/$DIRNAME/$DEBTAR_BZ2_FILENAME" ]
+	then DIFF_FILENAME=${DEBTAR_BZ2_FILENAME}
 	elif [ -f "$VARLIB/apt/$DIST/$DIRNAME/$DEBTAR_XZ_FILENAME" ]
 	then DIFF_FILENAME=${DEBTAR_XZ_FILENAME}
+	elif [ -f "$VARLIB/apt/$DIST/$DIRNAME/$DEBTAR_LZMA_FILENAME" ]
+	then DIFF_FILENAME=${DEBTAR_LZMA_FILENAME}
 	else DIFF_FILENAME=${DIFFGZ_FILENAME}
 	fi
 
