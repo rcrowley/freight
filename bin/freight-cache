@@ -109,6 +109,8 @@ do
 	eval "${MANAGER}_cache" "$DIST"
 
 	# Clean up old packages as dictated by the manager.
-	[ -z "$KEEP" ] && eval "${MANAGER}_clean"
+	if [ -z "$KEEP" ]; then
+		eval "${MANAGER}_clean"
+	fi
 
 done
