@@ -13,10 +13,13 @@ LABEL="Freight"
 # time (off).
 CACHE="off"
 
-# GPG key to use to sign repositories.  This is required by the `apt`
+# GPG key(s) to use to sign repositories.  This is required by the `apt`
 # repository provider.  Use `gpg --gen-key` (see `gpg`(1) for more
 # details) to generate a key and put its email address here.
+#
+# Multiple addresses can be given sign the repository with them all.
 GPG="example@example.com"
+# GPG="example@example.com another@example.com"
 
 # Whether to follow symbolic links in `$VARLIB` to produce extra components
 # in the cache directory (on) or not (off).
