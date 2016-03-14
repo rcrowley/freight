@@ -6,18 +6,23 @@ VARLIB="/var/lib/freight"
 VARCACHE="/var/cache/freight"
 
 # Default architectures.
+# shellcheck disable=SC2034
 ARCHS="i386 amd64"
 
 # Default `Origin` and `Label` fields for `Release` files.
+# shellcheck disable=SC2034
 ORIGIN="Freight"
+# shellcheck disable=SC2034
 LABEL="Freight"
 
+# shellcheck disable=SC2034
 CACHE="off"
 
+# shellcheck disable=SC2034
 SYMLINKS="off"
 
 # Source all existing configuration files from lowest- to highest-priority.
-PREFIX="$(dirname $(dirname $0))"
+PREFIX="$(dirname "$(dirname "$0")")"
 if [ "$PREFIX" = "/usr" ]
 then [ -f "/etc/freight.conf" ] && . "/etc/freight.conf"
 else [ -f "$PREFIX/etc/freight.conf" ] && . "$PREFIX/etc/freight.conf"

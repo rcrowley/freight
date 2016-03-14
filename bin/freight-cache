@@ -67,6 +67,7 @@ LIB="$(cd "$(dirname "$(dirname "$0")")/lib/freight" && pwd)"
 # Create a working directory on the same device as the Freight cache.
 mkdir -p "$VARCACHE"
 TMP="$(mktemp -d "$VARCACHE/work.$$.XXXXXXXXXX")"
+# shellcheck disable=SC2064
 trap "rm -rf \"$TMP\"" EXIT INT TERM
 
 # Enter the Freight library directory so that items in `$@` may be given as
@@ -84,7 +85,7 @@ then
 		tr "\n" " "
 	)"
 else
-	DIRS="$@"
+	DIRS=$*
 fi
 for DIR in $DIRS
 do

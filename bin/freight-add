@@ -26,7 +26,7 @@ do
 	esac
 done
 
-. "$(dirname $(dirname $0))/lib/freight/conf.sh"
+. "$(dirname "$(dirname "$0")")/lib/freight/conf.sh"
 
 # The non-option argument(s) following the last option are package files.
 # Binary packages have only one but source packages require two or three.
@@ -36,6 +36,7 @@ while [ "$#" -gt 0 ]
 do
 	case "$1" in
 		*.deb|*.dsc|*.orig.tar.gz|*.orig.tar.bz2|*.orig.tar.xz|*.orig.tar.lzma|*.diff.gz|*.debian.tar.gz|*.debian.tar.bz2|*.debian.tar.xz|*.debian.tar.lzma|*.tar.gz|*.tar.bz2|*.tar.xz|*.tar.lzma)
+			# shellcheck disable=SC2153
 			PATHNAMES="$PATHNAMES $1" shift;;
 		*.build|*.changes) shift;;
 		*) break;;
@@ -49,6 +50,7 @@ done
 # later Freight commands will rely on the link count being reduced to one.
 mkdir -p "$VARLIB"
 TMP="$(mktemp -d "$VARLIB/freight.$$.XXXXXXXXXX")"
+# shellcheck disable=SC2064
 trap "rm -rf \"$TMP\"" EXIT INT TERM
 for PATHNAME in $PATHNAMES
 do
