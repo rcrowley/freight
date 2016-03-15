@@ -1,4 +1,6 @@
-TTY="$(tty -s && echo "1" || :)"
+if tty -s; then
+  TTY="1"
+fi
 
 # Fetch the given field from the package's control file.
 apt_info() {
@@ -123,6 +125,7 @@ apt_cache() {
 	# the `Packages` file, too.
 	for COMP in $COMPS
 	do
+		# shellcheck disable=SC2153
 		for ARCH in $ARCHS
 		do
 			cat >"$DISTCACHE/$COMP/binary-$ARCH/Release" <<EOF
@@ -192,7 +195,8 @@ EOF
 	# Sign the top-level `Release` file with `gpg`, for each key and
 	# concatenate signatures.
 	for GPGKEY in $GPG; do
-		gpg -abs$([ "$TTY" ] || echo " --no-tty") --use-agent -u"$GPGKEY" \
+		# shellcheck disable=SC2046
+		gpg -abs"$([ "$TTY" ] || echo " --no-tty")" --use-agent -u"$GPGKEY" \
 			$([ "$GPG_PASSPHRASE_FILE" ] && echo " --batch --passphrase-fd 1 --passphrase-file $GPG_PASSPHRASE_FILE") \
 			-o"$TMP/release_last_signature.gpg" "$DISTCACHE/Release" || {
 			cat <<EOF
@@ -203,8 +207,8 @@ EOF
 			rm -rf "$DISTCACHE"
 			exit 1
 		}
-		cat $TMP/release_last_signature.gpg >> $DISTCACHE/Release.gpg
-		rm -f $TMP/release_last_signature.gpg
+		cat "$TMP"/release_last_signature.gpg >> "$DISTCACHE"/Release.gpg
+		rm -f "$TMP"/release_last_signature.gpg
 	done
 
 	# Generate `pubkey.gpg` containing the plaintext public key and
@@ -212,6 +216,7 @@ EOF
 	# the appropriate public keys.  `keyring.gpg` is appropriate for
 	# copying directly to `/etc/apt/trusted.gpg.d`.
 	mkdir -m700 -p "$TMP/gpg"
+	# shellcheck disable=SC2086
 	gpg -q --export -a $GPG |
 	tee "$VARCACHE/pubkey.gpg" |
 	gpg -q --homedir "$TMP/gpg" --import
@@ -229,9 +234,9 @@ EOF
 # Clear the cached control files from the dist
 apt_clear_cache() {
 	# First remove the binary control cache
-	find "$VARLIB/apt/$DIST" -name *-control | xargs --no-run-if-empty rm
+	find "$VARLIB/apt/$DIST" -name '*-control' -print0 | xargs -0 --no-run-if-empty rm
 	# Next remove the source control cache
-	find "$VARLIB/apt/$DIST" -name *-cached | xargs --no-run-if-empty rm
+	find "$VARLIB/apt/$DIST" -name '*-cached' -print0 | xargs -0 --no-run-if-empty rm
 }
 
 # Add a binary package to the given dist and to the pool.
@@ -324,6 +329,7 @@ EOF
 
 	# Add the `Filename` field containing the path to the
 	# package, starting with `pool/`.
+	# shellcheck disable=SC2086
 	sed "s,^Filename: FILENAME$,Filename: $POOL/$FILENAME,g" "$CONTROL" |
 	tee -a $FILES >/dev/null
 
