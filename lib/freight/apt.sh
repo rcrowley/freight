@@ -79,7 +79,7 @@ apt_filesize() {
 # including all packages read from `stdin`.
 apt_cache() {
 	REL_DATE="$(LC_ALL=en_US date '+%a, %d %b %Y %H:%M:%S %Z')"
-	VALID_DATE="Fri, 31 Nov 2038 00:00:00 JST"
+	VALID_DATE="Tue, 30 Nov 2038 00:00:00 JST"
 	DIST="$1"
 	SUITE="${SUITE:-$DIST}"
 
