@@ -95,3 +95,5 @@ EOF
 
 # return 0 when we come here
 exit 0
+
+# vim: et:ts=4:sw=4

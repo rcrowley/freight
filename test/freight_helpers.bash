@@ -1,4 +1,4 @@
-# vim: noet:ts=4:sw=4:ft=sh
+# vim: et:ts=4:sw=4:ft=sh
 
 TOPDIR=$PWD
 FIXTURES=${TOPDIR}/test/fixtures

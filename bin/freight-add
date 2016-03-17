@@ -102,3 +102,5 @@ do
         esac
 	done
 done
+
+# vim: et:ts=4:sw=4

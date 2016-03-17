@@ -1,4 +1,4 @@
-# vim: noet:ts=4:sw=4:ft=sh
+# vim: et:ts=4:sw=4:ft=sh
 
 configure_local_apt() {
 	mkdir -p ${TMPDIR}/apt/etc/apt

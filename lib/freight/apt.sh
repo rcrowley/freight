@@ -469,3 +469,5 @@ apt_clean() {
 	find "$VARCACHE/pool" -links 1 -type f -delete
 	find "$VARCACHE/pool" -type d -empty -delete
 }
+
+# vim: et:ts=4:sw=4

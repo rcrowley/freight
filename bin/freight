@@ -17,3 +17,5 @@ echo "Usage: $(basename "$0") <command> [...]" >&2
 echo "Common commands: add cache init" >&2
 echo "See all available commands by typing \"$(basename "$0")-<TAB><TAB>\"" >&2
 exit 1
+
+# vim: et:ts=4:sw=4
