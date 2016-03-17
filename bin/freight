@@ -8,8 +8,8 @@ set -e
 # a subcommand that really just completes the name of a real command.
 COMMAND=$0-$1
 [ -x "$COMMAND" ] && {
-	shift
-	exec "$COMMAND" "$@"
+    shift
+    exec "$COMMAND" "$@"
 }
 
 # Be helpful in this case since no subcommand was found.

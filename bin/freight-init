@@ -25,48 +25,48 @@ usage() {
 }
 while [ "$#" -gt 0 ]
 do
-	case "$1" in
-		-g|--gpg)
-			if [ -z "$GPG" ]; then
-				GPG=$2
-			else
-				GPG="$GPG $2"
-			fi
-			shift 2;;
-		-g*)
-			if [ -z "$GPG" ]; then
-				GPG=$(echo "$1" | cut -c"3-")
-			else
-				GPG="$GPG $(echo "$1" | cut -c"3-")"
-			fi
-			shift;;
-		--gpg=*)
-			if [ -z "$GPG" ]; then
-				GPG=$(echo "$1" | cut -c"7-")
-			else
-				GPG="$GPG $(echo "$1" | cut -c"7-")"
-			fi
-			shift;;
-		-c|--conf) CONF="$2" shift 2;;
-		-c*) CONF="$(echo "$1" | cut -c"3-")" shift;;
-		--conf=*) CONF="$(echo "$1" | cut -c"8-")" shift;;
-		--libdir) VARLIB="$2" shift 2;;
-		--libdir=*) VARLIB="$(echo "$1" | cut -c"10-")" shift;;
-		--cachedir) VARCACHE="$2" shift 2;;
-		--cachedir=*) VARCACHE="$(echo "$1" | cut -c"12-")" shift;;
-		--archs) ARCHS="$2" shift 2;;
-		--archs=*) ARCHS="$(echo "$1" | cut -c"9-")" shift;;
-		--origin) ORIGIN="$2" shift 2;;
-		--origin=*) ORIGIN="$(echo "$1" | cut -c"10-")" shift;;
-		--label) LABEL="$2" shift 2;;
-		--label=*) LABEL="$(echo "$1" | cut -c"9-")" shift;;
-		--suite) SUITE="$2" shift 2;;
-		--suite=*) SUITE="$(echo "$1" | cut -c"9-")" shift;;
-		-v|--verbose) VERBOSE=1 shift;;
-		-h|--help) usage 0;;
-		-*) echo "# [freight] unknown switch: $1" >&2;;
-		*) break;;
-	esac
+    case "$1" in
+        -g|--gpg)
+            if [ -z "$GPG" ]; then
+                GPG=$2
+            else
+                GPG="$GPG $2"
+            fi
+            shift 2;;
+        -g*)
+            if [ -z "$GPG" ]; then
+                GPG=$(echo "$1" | cut -c"3-")
+            else
+                GPG="$GPG $(echo "$1" | cut -c"3-")"
+            fi
+            shift;;
+        --gpg=*)
+            if [ -z "$GPG" ]; then
+                GPG=$(echo "$1" | cut -c"7-")
+            else
+                GPG="$GPG $(echo "$1" | cut -c"7-")"
+            fi
+            shift;;
+        -c|--conf) CONF="$2" shift 2;;
+        -c*) CONF="$(echo "$1" | cut -c"3-")" shift;;
+        --conf=*) CONF="$(echo "$1" | cut -c"8-")" shift;;
+        --libdir) VARLIB="$2" shift 2;;
+        --libdir=*) VARLIB="$(echo "$1" | cut -c"10-")" shift;;
+        --cachedir) VARCACHE="$2" shift 2;;
+        --cachedir=*) VARCACHE="$(echo "$1" | cut -c"12-")" shift;;
+        --archs) ARCHS="$2" shift 2;;
+        --archs=*) ARCHS="$(echo "$1" | cut -c"9-")" shift;;
+        --origin) ORIGIN="$2" shift 2;;
+        --origin=*) ORIGIN="$(echo "$1" | cut -c"10-")" shift;;
+        --label) LABEL="$2" shift 2;;
+        --label=*) LABEL="$(echo "$1" | cut -c"9-")" shift;;
+        --suite) SUITE="$2" shift 2;;
+        --suite=*) SUITE="$(echo "$1" | cut -c"9-")" shift;;
+        -v|--verbose) VERBOSE=1 shift;;
+        -h|--help) usage 0;;
+        -*) echo "# [freight] unknown switch: $1" >&2;;
+        *) break;;
+    esac
 done
 DIRNAME="$(cd "${1:-"."}" && pwd)"
 [ -z "$GPG" -o -z "$DIRNAME" ] && usage 1

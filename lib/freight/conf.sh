@@ -31,10 +31,10 @@ fi
 DIRNAME="$PWD"
 while true
 do
-	[ -f "$DIRNAME/etc/freight.conf" ] && . "$DIRNAME/etc/freight.conf" && break
-	[ -f "$DIRNAME/.freight.conf" ] && . "$DIRNAME/.freight.conf" && break
-	[ "$DIRNAME" = "/" ] && break
-	DIRNAME="$(dirname "$DIRNAME")"
+    [ -f "$DIRNAME/etc/freight.conf" ] && . "$DIRNAME/etc/freight.conf" && break
+    [ -f "$DIRNAME/.freight.conf" ] && . "$DIRNAME/.freight.conf" && break
+    [ "$DIRNAME" = "/" ] && break
+    DIRNAME="$(dirname "$DIRNAME")"
 done
 [ "$FREIGHT_CONF" -a -f "$FREIGHT_CONF" ] && . "$FREIGHT_CONF"
 if [ "$CONF" ]
