@@ -44,6 +44,10 @@ The GPG key(s) to use\. This value must be set either in a configuration file or
 Pathname of a file containing the GPGP private key\'s passphrase\. This sets the \fB\-\-passphrase\-fd\fR and \fB\-\-passphrase\-file\fR options to \fBgpg\fR(1)\. The passphrase file can be set either in a configuration file or by using the \fB\-p\fR option to \fBfreight\-cache\fR(1)\.
 .
 .TP
+\fBGPG_DIGEST_ALGO\fR
+Message digest algorithm that GPG should use to sign the repository\. Apt is phasing out SHA1 so it is recommended to use SHA512 for most use\-cases\. This sets the \fB\-\-personal\-digest\-preferences\fR option to \fBgpg\fR(1)\. The digest algorithm can be set either in a configuration file or by using the \fB\-a\fR option to \fBfreight\-cache\fR(1)\.
+.
+.TP
 \fBSYMLINKS\fR
 \fIon\fR to follow symbolic links in \fBVARLIB\fR to produce extra components in the cache directory or \fIoff\fR to offer no special treatment\.
 .

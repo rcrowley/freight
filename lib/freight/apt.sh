@@ -69,6 +69,9 @@ apt_sha1() {
 apt_sha256() {
     sha256sum "$1" | cut -d" " -f1
 }
+apt_sha512() {
+    sha512sum "$1" | cut -d" " -f1
+}
 
 # Print the size of the given file.
 apt_filesize() {
@@ -182,13 +185,16 @@ EOF
             echo " $(apt_md5 "$DISTCACHE/$FILE" ) $SIZE $FILE" >&3
             echo " $(apt_sha1 "$DISTCACHE/$FILE" ) $SIZE $FILE" >&4
             echo " $(apt_sha256 "$DISTCACHE/$FILE" ) $SIZE $FILE" >&5
-        done 3>"$TMP/md5sums" 4>"$TMP/sha1sums" 5>"$TMP/sha256sums"
+            echo " $(apt_sha512 "$DISTCACHE/$FILE" ) $SIZE $FILE" >&6
+        done 3>"$TMP/md5sums" 4>"$TMP/sha1sums" 5>"$TMP/sha256sums" 6>"$TMP/sha512sums"
         echo "MD5Sum:"
         cat "$TMP/md5sums"
         echo "SHA1:"
         cat "$TMP/sha1sums"
         echo "SHA256:"
         cat "$TMP/sha256sums"
+        echo "SHA512:"
+        cat "$TMP/sha512sums"
 
     } >"$DISTCACHE/Release"
 
@@ -198,6 +204,7 @@ EOF
         # shellcheck disable=SC2046
         gpg -abs"$([ "$TTY" ] || echo " --no-tty")" --use-agent -u"$GPGKEY" \
             $([ "$GPG_PASSPHRASE_FILE" ] && echo " --batch --passphrase-fd 1 --passphrase-file $GPG_PASSPHRASE_FILE") \
+            $([ "$GPG_DIGEST_ALGO" ] && echo " --personal-digest-preferences $GPG_DIGEST_ALGO") \
             -o"$TMP/release_last_signature.gpg" "$DISTCACHE/Release" || {
             cat <<EOF
 # [freight] couldn't sign the repository, perhaps you need to run
@@ -274,12 +281,13 @@ apt_cache_binary() {
             # as these might cause problems.
             grep . "$TMP/DEBIAN/control" |
             grep -E -v "^[A-Za-z-]+:\s+$" |
-            grep -v "^(Essential|Filename|MD5Sum|SHA1|SHA256|Size)"
+            grep -v "^(Essential|Filename|MD5Sum|SHA1|SHA256|SHA512|Size)"
             cat <<EOF
 Filename: FILENAME
 MD5sum: $(apt_md5 "$VARLIB/apt/$DIST/$PATHNAME")
 SHA1: $(apt_sha1 "$VARLIB/apt/$DIST/$PATHNAME")
 SHA256: $(apt_sha256 "$VARLIB/apt/$DIST/$PATHNAME")
+SHA512: $(apt_sha512 "$VARLIB/apt/$DIST/$PATHNAME")
 Size: $(apt_filesize "$VARLIB/apt/$DIST/$PATHNAME")
 EOF
         echo
@@ -449,6 +457,14 @@ apt_cache_source() {
                 SIZE="$(apt_filesize "$VARCACHE/$POOL/$FILENAME")"
                 SHA256="$(apt_sha256 "$VARCACHE/$POOL/$FILENAME")"
                 echo " $SHA256 $SIZE $FILENAME"
+            done
+            echo "Checksums-Sha512:"
+            for FILENAME in "$DSC_FILENAME" "$ORIG_FILENAME" "$DIFF_FILENAME" "$TAR_FILENAME"
+            do
+                [ -f "$VARCACHE/$POOL/$FILENAME" ] || continue
+                SIZE="$(apt_filesize "$VARCACHE/$POOL/$FILENAME")"
+                SHA512="$(apt_sha512 "$VARCACHE/$POOL/$FILENAME")"
+                echo " $SHA512 $SIZE $FILENAME"
             done
             echo
         } > "$CONTROL"

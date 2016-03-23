@@ -21,6 +21,13 @@ CACHE="off"
 GPG="example@example.com"
 # GPG="example@example.com another@example.com"
 
+# Message digest algorithm that GPG should use to sign the repository.
+# It is not recommended to use SHA1 as new versions of `apt` will report
+# that the repository is half-broken due to weak digest.
+#
+# SHA512 is the default
+GPG_DIGEST_ALGO="SHA512"
+
 # Whether to follow symbolic links in `$VARLIB` to produce extra components
 # in the cache directory (on) or not (off).
 SYMLINKS="off"
