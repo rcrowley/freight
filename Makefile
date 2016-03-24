@@ -1,5 +1,5 @@
-VERSION=0.3.6
-BUILD=2
+VERSION=0.3.7
+BUILD=1
 
 SH=dash
 
