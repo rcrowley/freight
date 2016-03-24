@@ -4,11 +4,13 @@
 # actual repositories that are suitable targets for `apt-get` (and maybe
 # more in the future).
 
-#/ Usage: freight cache [-k] [-g <email>] [-p <passphrase-file>] [-c <conf>] [-v] [-h] [<manager>/<distro>][...]
+#/ Usage: freight cache [-k] [-g <email>] [-p <passphrase-file>] [-a <digest-algorithm>] [-c <conf>] [-v] [-h] [<manager>/<distro>][...]
 #/   -k, --keep                          keep unreferenced versions of packages
 #/   -g <email>, --gpg=<email>           GPG key to use, may be given multiple times
 #/   -p <passphrase file>, 
 #/   --passphrase-file=<passphrase-file> path to file containing the passphrase of the GPG key
+#/   -a <digest algorithm>,
+#/   --digest-algo=<digest-algorithm>    digest algorithm that GPG should use, e.g SHA512
 #/   -c <conf>, --conf=<conf>            config file to parse
 #/   -v, --verbose                       verbose mode
 #/   -h, --help                          show this help message
@@ -47,6 +49,9 @@ do
         -p|--passphrase-file) GPG_PASSPHRASE_FILE="$2" shift 2;;
         -p*) GPG_PASSPHRASE_FILE="$(echo "$1" | cut -c"3-")" shift;;
         --passphrase-file=*) GPG_PASSPHRASE_FILE="$(echo "$1" | cut -c"19-")" shift;;
+        -a|--digest-algo) GPG_DIGEST_ALGO="$2" shift 2;;
+        -a*) GPG_DIGEST_ALGO="$(echo "$1" | cut -c"3-")" shift;;
+        --digest-algo=*) GPG_DIGEST_ALGO="$(echo "$1" | cut -c"15-")" shift;;
         -c|--conf) CONF="$2" shift 2;;
         -c*) CONF="$(echo "$1" | cut -c"3-")" shift;;
         --conf=*) CONF="$(echo "$1" | cut -c"8-")" shift;;
@@ -63,6 +68,9 @@ LIB="$(cd "$(dirname "$(dirname "$0")")/lib/freight" && pwd)"
 # If `GPG_PASSPHRASE_FILE` is set the specified file should exist and be
 # readable by the user running Freight.
 [ -z "$GPG_PASSPHRASE_FILE" -o -r "$GPG_PASSPHRASE_FILE" ] || echo "# [freight] could not read passphrase file: $GPG_PASSPHRASE_FILE." >&2
+
+# If `GPG_DIGEST_ALGO` is unset, force it to the freight default of SHA512
+[ -z "$GPG_DIGEST_ALGO" ] && GPG_DIGEST_ALGO="SHA512"
 
 # Create a working directory on the same device as the Freight cache.
 mkdir -p "$VARCACHE"
