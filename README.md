@@ -75,6 +75,7 @@ There's also [French documentation](http://blog.valouille.fr/2014/03/creer-un-de
 * [`freight-add`(1)](http://freight-team.github.io/freight/freight-add.1.html)
 * [`freight-cache`(1)](http://freight-team.github.io/freight/freight-cache.1.html)
 * [`freight-clear-cache`(1)](http://freight-team.github.io/freight/freight-clear-cache.1.html)
+* [`freight-init`(1)](http://freight-team.github.io/freight/freight-init.1.html)
 * [`freight`(5)](http://freight-team.github.io/freight/freight.5.html)
 
 ## Contribute
