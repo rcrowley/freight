@@ -131,7 +131,9 @@ apt_cache() {
         # shellcheck disable=SC2153
         for ARCH in $ARCHS
         do
-            cat >"$DISTCACHE/$COMP/binary-$ARCH/Release" <<EOF
+            if [ -d "$DISTCACHE/$COMP/binary-$ARCH" ]
+            then
+                cat >"$DISTCACHE/$COMP/binary-$ARCH/Release" <<EOF
 Archive: $SUITE
 Component: $COMP
 Origin: $ORIGIN
@@ -140,8 +142,9 @@ Architecture: $ARCH
 Date: $REL_DATE
 Valid-Until: $VALID_DATE
 EOF
-            gzip -c "$DISTCACHE/$COMP/binary-$ARCH/Packages" \
-                >"$DISTCACHE/$COMP/binary-$ARCH/Packages.gz"
+                gzip -c "$DISTCACHE/$COMP/binary-$ARCH/Packages" \
+                    >"$DISTCACHE/$COMP/binary-$ARCH/Packages.gz"
+            fi
         done
         if [ -d "$DISTCACHE/$COMP/source" ]
         then

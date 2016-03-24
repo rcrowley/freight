@@ -31,3 +31,24 @@ setup() {
     assert_success
     assert_output "# [freight] apt/example already has ${FIXTURES}/test_1.0_all.deb"
 }
+
+@test "freight-add adds source .dsc files" {
+    run freight_add ${FIXTURES}/source_1.0-1.dsc apt/example
+    assert_success
+    assert_output "# [freight] added ${FIXTURES}/source_1.0-1.dsc to apt/example"
+    test -e ${FREIGHT_LIB}/apt/example/source_1.0-1.dsc
+}
+
+@test "freight-add adds source .tar.gz files" {
+    run freight_add ${FIXTURES}/source_1.0-1.tar.gz apt/example
+    assert_success
+    assert_output "# [freight] added ${FIXTURES}/source_1.0-1.tar.gz to apt/example"
+    test -e ${FREIGHT_LIB}/apt/example/source_1.0-1.tar.gz
+}
+
+@test "freight-add adds source .orig.tar.gz files" {
+    run freight_add ${FIXTURES}/source_1.0.orig.tar.gz apt/example
+    assert_success
+    assert_output "# [freight] added ${FIXTURES}/source_1.0.orig.tar.gz to apt/example"
+    test -e ${FREIGHT_LIB}/apt/example/source_1.0.orig.tar.gz
+}
