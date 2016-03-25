@@ -69,3 +69,11 @@ setup() {
     assert_output ""
     test -e ${FREIGHT_CACHE}/pool/example/main/t/test/test_1.0_all.deb
 }
+
+@test "freight-cache handles VARLIB being a symlink" {
+    mv $FREIGHT_LIB ${FREIGHT_LIB}_real
+    ln -s ${FREIGHT_LIB}_real $FREIGHT_LIB
+    freight_cache
+    test -e ${FREIGHT_CACHE}/pool/example/comp/t/test/test_1.0_all.deb
+    test -e ${FREIGHT_CACHE}/pool/example/main/t/test/test_1.0_all.deb
+}
