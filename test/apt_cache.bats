@@ -40,6 +40,11 @@ setup() {
     gpg --verify ${FREIGHT_CACHE}/dists/example/Release.gpg ${FREIGHT_CACHE}/dists/example/Release
 }
 
+@test "freight-cache works without tty" {
+    run freight_cache_nohup -v
+    assert_success
+}
+
 @test "apt-get fetches package list" {
     check_apt_support
     freight_cache -v

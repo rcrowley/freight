@@ -205,7 +205,7 @@ EOF
     # concatenate signatures.
     for GPGKEY in $GPG; do
         # shellcheck disable=SC2046
-        gpg -abs"$([ "$TTY" ] || echo " --no-tty")" --use-agent -u"$GPGKEY" \
+        gpg -abs$([ "$TTY" ] || echo " --no-tty") --use-agent -u"$GPGKEY" \
             $([ "$GPG_PASSPHRASE_FILE" ] && echo " --batch --passphrase-fd 1 --passphrase-file $GPG_PASSPHRASE_FILE") \
             $([ "$GPG_DIGEST_ALGO" ] && echo " --personal-digest-preferences $GPG_DIGEST_ALGO") \
             -o"$TMP/release_last_signature.gpg" "$DISTCACHE/Release" || {
