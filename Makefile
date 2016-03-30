@@ -1,4 +1,4 @@
-VERSION=0.3.7
+VERSION=0.3.8
 BUILD=1
 
 SH=dash
