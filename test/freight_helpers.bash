@@ -33,6 +33,10 @@ freight_cache() {
     bin/freight cache -c $FREIGHT_CONFIG "$@"
 }
 
+freight_cache_nohup() {
+    nohup bin/freight cache -c $FREIGHT_CONFIG "$@"
+}
+
 # Generates a GPG key for all tests, once only due to entropy required
 gpg_init() {
     if [ ! -e $GNUPGHOME ]; then
