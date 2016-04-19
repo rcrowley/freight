@@ -365,26 +365,19 @@ apt_cache_source() {
     VERSION="$(apt_source_version "$PATHNAME")"
     ORIG_VERSION="$(apt_source_origversion "$PATHNAME")"
     DIRNAME="$(dirname "$PATHNAME")"
-    DSC_FILENAME="${NAME}_${VERSION%*:}.dsc"
-    DEBTAR_GZ_FILENAME="${NAME}_${VERSION%*:}.debian.tar.gz"
-    DEBTAR_BZ2_FILENAME="${NAME}_${VERSION%*:}.debian.tar.bz2"
-    DEBTAR_XZ_FILENAME="${NAME}_${VERSION%*:}.debian.tar.xz"
-    DEBTAR_LZMA_FILENAME="${NAME}_${VERSION%*:}.debian.tar.lzma"
-    DIFFGZ_FILENAME="${NAME}_${VERSION%*:}.diff.gz"
-    ORIG_FILENAME="${NAME}_${ORIG_VERSION}.orig.tar.gz"
-    TAR_FILENAME="${NAME}_${VERSION%*:}.tar.gz"
+    DSC_FILENAME="${NAME}_${VERSION##*:}.dsc"
 
-    # Find which style of diff they're using.
-    if [ -f "$VARLIB/apt/$DIST/$DIRNAME/$DEBTAR_GZ_FILENAME" ]
-    then DIFF_FILENAME=${DEBTAR_GZ_FILENAME}
-    elif [ -f "$VARLIB/apt/$DIST/$DIRNAME/$DEBTAR_BZ2_FILENAME" ]
-    then DIFF_FILENAME=${DEBTAR_BZ2_FILENAME}
-    elif [ -f "$VARLIB/apt/$DIST/$DIRNAME/$DEBTAR_XZ_FILENAME" ]
-    then DIFF_FILENAME=${DEBTAR_XZ_FILENAME}
-    elif [ -f "$VARLIB/apt/$DIST/$DIRNAME/$DEBTAR_LZMA_FILENAME" ]
-    then DIFF_FILENAME=${DEBTAR_LZMA_FILENAME}
-    else DIFF_FILENAME=${DIFFGZ_FILENAME}
-    fi
+    for EXT in gz bz2 xz lzma; do
+	if [ -z "$ORIG_FILENAME" ] && [ -f "$VARLIB/apt/$DIST/$DIRNAME/${NAME}_${ORIG_VERSION}.orig.tar.$EXT" ]
+	then ORIG_FILENAME="${NAME}_${ORIG_VERSION}.orig.tar.$EXT"
+	fi
+	if [ -z "$DIFF_FILENAME" ] && [ -f "$VARLIB/apt/$DIST/$DIRNAME/${NAME}_${VERSION##*:}.diff.$EXT" ]
+	then DIFF_FILENAME="${NAME}_${VERSION##*:}.diff.$EXT"
+	fi
+	if [ -z "$TAR_FILENAME" ] && [ -f "$VARLIB/apt/$DIST/$DIRNAME/${NAME}_${VERSION##*:}.tar.$EXT" ]
+	then TAR_FILENAME="${NAME}_${VERSION##*:}.tar.$EXT"
+	fi
+    done
 
     # Verify this package by ensuring the other necessary files are present.
     [ -f "$VARLIB/apt/$DIST/$DIRNAME/$ORIG_FILENAME" -a -f "$VARLIB/apt/$DIST/$DIRNAME/$DIFF_FILENAME" -o -f "$VARLIB/apt/$DIST/$DIRNAME/$TAR_FILENAME" ] || {
