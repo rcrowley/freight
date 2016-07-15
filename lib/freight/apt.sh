@@ -81,8 +81,8 @@ apt_filesize() {
 # Setup the repository for the distro named in the first argument,
 # including all packages read from `stdin`.
 apt_cache() {
-    REL_DATE="$(LC_ALL=en_US date '+%a, %d %b %Y %H:%M:%S %Z')"
-    VALID_DATE="Tue, 30 Nov 2038 00:00:00 JST"
+    REL_DATE="$(LC_ALL=en_US date -u '+%a, %d %b %Y %H:%M:%S %Z')"
+    VALID_DATE="Tue, 30 Nov 2038 00:00:00 UTC"
     DIST="$1"
     SUITE="${SUITE:-$DIST}"
 
