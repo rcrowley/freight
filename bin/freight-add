@@ -5,6 +5,7 @@
 #/ Usage: freight add [-c <conf>] [-v] [-h] <package> <manager>/<distro>...
 #/   -c <conf>, --conf=<conf> config file to parse
 #/   -v, --verbose            verbose mode
+#/   -e, --add-error          exit with error if package already added
 #/   -h, --help               show this help message
 
 set -e
@@ -20,6 +21,7 @@ do
         -c*) CONF="$(echo "$1" | cut -c"3-")" shift;;
         --conf=*) CONF="$(echo "$1" | cut -c"8-")" shift;;
         -v|--verbose) VERBOSE=1 shift;;
+        -e|--add-error) FREIGHT_ADD_ERROR="YES" shift;;
         -h|--help) usage 0;;
         -*) echo "# [freight] unknown switch: $1" >&2;;
         *) break;;
@@ -72,6 +74,9 @@ add() {
         if grep -q "File exists" "$TMP/ln"
         then echo "# [freight] $2 already has $3${4+" as "}$4" >&2
         else cat "$TMP/ln" >&2
+        fi
+        if [ -n "$FREIGHT_ADD_ERROR" ]
+        then exit 2
         fi
     fi
 }
