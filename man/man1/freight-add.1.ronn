@@ -17,6 +17,8 @@ The package files are organized in the Freight library so `freight-cache`(1) has
   Use an alternate configuration file.
 * `-v`, `--verbose`:
   Verbose mode.
+* `-e`, `--add-error`:
+  Raises an error if the package to add is already registered.
 * `-h`, `--help`:
   Show a help message.
 
@@ -29,6 +31,8 @@ The package files are organized in the Freight library so `freight-cache`(1) has
 
 * `FREIGHT_CONF`:
   The pathname of an alternate configuration file.  See `freight`(5).
+* `FREIGHT_ADD_ERROR`:
+  If not empty acts as --add-error option.
 
 ## THEME SONG
 
