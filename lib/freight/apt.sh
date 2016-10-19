@@ -169,13 +169,10 @@ EOF
 		do
 			SIZE="$(apt_filesize "$DISTCACHE/$FILE")"
 			echo " $(apt_md5 "$DISTCACHE/$FILE" ) $SIZE $FILE" >&3
-			echo " $(apt_sha1 "$DISTCACHE/$FILE" ) $SIZE $FILE" >&4
 			echo " $(apt_sha256 "$DISTCACHE/$FILE" ) $SIZE $FILE" >&5
-		done 3>"$TMP/md5sums" 4>"$TMP/sha1sums" 5>"$TMP/sha256sums"
+		done 3>"$TMP/md5sums" 5>"$TMP/sha256sums"
 		echo "MD5Sum:"
 		cat "$TMP/md5sums"
-		echo "SHA1:"
-		cat "$TMP/sha1sums"
 		echo "SHA256:"
 		cat "$TMP/sha256sums"
 
