@@ -64,7 +64,7 @@ do
         --suite=*) SUITE="$(echo "$1" | cut -c"9-")" shift;;
         -v|--verbose) VERBOSE=1 shift;;
         -h|--help) usage 0;;
-        -*) echo "# [freight] unknown switch: $1" >&2;;
+        -*) echo "# [freight] unknown switch: $1" >&2; usage 1;;
         *) break;;
     esac
 done

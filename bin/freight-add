@@ -24,7 +24,7 @@ do
         -v|--verbose) VERBOSE=1 shift;;
         -e|--add-error) FREIGHT_ADD_ERROR="YES" shift;;
         -h|--help) usage 0;;
-        -*) echo "# [freight] unknown switch: $1" >&2;;
+        -*) echo "# [freight] unknown switch: $1" >&2; usage 1;;
         *) break;;
     esac
 done
