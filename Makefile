@@ -12,7 +12,7 @@ mandir=${prefix}/share/man
 all:
 
 clean:
-	rm -rf *.deb debian man/man*/*.html test/tmp
+	rm -rf *.deb deb man/man*/*.html test/tmp
 	find . -name '*~' -delete
 
 install: install-bin install-lib install-man install-sysconf
@@ -52,15 +52,15 @@ uninstall-sysconf:
 	rmdir -p --ignore-fail-on-non-empty $(DESTDIR)$(sysconfdir) || true
 
 build:
-	make install prefix=/usr sysconfdir=/etc DESTDIR=debian
+	make install prefix=/usr sysconfdir=/etc DESTDIR=deb
 	fpm -s dir -t deb \
 		-n freight -v $(VERSION) --iteration $(BUILD) -a all \
 		-d coreutils -d dash -d dpkg -d gnupg -d grep \
 		-m "Richard Crowley <r@rcrowley.org>" \
 		--url "https://github.com/freight-team/freight" \
 		--description "A modern take on the Debian archive." \
-		-C debian .
-	make uninstall prefix=/usr sysconfdir=/etc DESTDIR=debian
+		-C deb .
+	make uninstall prefix=/usr sysconfdir=/etc DESTDIR=deb
 
 man:
 	find man -name \*.ronn | xargs -n1 ronn --manual=Freight --style=toc
@@ -96,4 +96,4 @@ test/tmp/bin/sh: test/tmp/bin
 check: test/tmp/bats test/tmp/bats-assert test/tmp/bin/sh
 	PATH=test/tmp/bin/:$$PATH test/tmp/bats/bin/bats test/
 
-.PHONY: all install uninstall deb man gh-pages check
+.PHONY: all clean install uninstall build man docs gh-pages check
