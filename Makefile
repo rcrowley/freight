@@ -25,7 +25,7 @@ install-lib:
 
 install-man:
 	find man -type f -name \*.[12345678] -printf %P\\0 | xargs -0r -I__ install -m644 -D man/__ $(DESTDIR)$(mandir)/__
-	find man -type f -name \*.[12345678] -printf %P\\0 | xargs -0r -I__ gzip $(DESTDIR)$(mandir)/__
+	find man -type f -name \*.[12345678] -printf %P\\0 | xargs -0r -I__ gzip -f $(DESTDIR)$(mandir)/__
 
 install-sysconf:
 	find etc -type f -not -name freight.conf -printf %P\\0 | xargs -0r -I__ install -m644 -D etc/__ $(DESTDIR)$(sysconfdir)/__
