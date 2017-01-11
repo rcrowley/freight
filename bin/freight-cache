@@ -94,3 +94,6 @@ do
 	[ -z "$KEEP" ] && eval "${MANAGER}_clean"
 
 done
+
+# Clean up the working directory after $MANAGER is finished
+rm -rf "$TMP"
