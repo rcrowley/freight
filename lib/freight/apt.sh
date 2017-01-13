@@ -316,7 +316,7 @@ EOF
 
     # Link or copy this package into this distro's `.refs` directory.
     mkdir -p "$DISTCACHE/.refs/$COMP"
-    ln "$VARLIB/apt/$DIST/$PATHNAME" "$DISTCACHE/.refs/$COMP" ||
+    ln "$VARLIB/apt/$DIST/$PATHNAME" "$DISTCACHE/.refs/$COMP" > /dev/null 2>&1 ||
     cp "$VARLIB/apt/$DIST/$PATHNAME" "$DISTCACHE/.refs/$COMP"
 
     # Package properties.  Remove the epoch from the version number
@@ -413,7 +413,7 @@ apt_cache_source() {
     do
         [ -f "$VARLIB/apt/$DIST/$DIRNAME/$FILENAME" ] || continue
         [ -f "$DISTCACHE/.refs/$COMP/$FILENAME" ] ||
-        ln "$VARLIB/apt/$DIST/$DIRNAME/$FILENAME" "$DISTCACHE/.refs/$COMP" ||
+        ln "$VARLIB/apt/$DIST/$DIRNAME/$FILENAME" "$DISTCACHE/.refs/$COMP" > /dev/null 2>&1 ||
         cp "$VARLIB/apt/$DIST/$DIRNAME/$FILENAME" "$DISTCACHE/.refs/$COMP"
     done
 
