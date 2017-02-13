@@ -226,11 +226,13 @@ EOF
     # the appropriate public keys.  `keyring.gpg` is appropriate for
     # copying directly to `/etc/apt/trusted.gpg.d`.
     mkdir -m700 -p "$TMP/gpg"
+    # Create `pubring.gpg` to prevent gpg version >= 2.1 from using the
+    # new `pubring.kbx` format during an initial `gpg --import`.
+    : > "$TMP/gpg/pubring.gpg" && chmod 644 "$TMP/gpg/pubring.gpg"
     # shellcheck disable=SC2086
     gpg -q --export -a $GPG |
     tee "$VARCACHE/pubkey.gpg" |
     gpg -q --homedir "$TMP/gpg" --import
-    chmod 644 "$TMP/gpg/pubring.gpg"
     mv "$TMP/gpg/pubring.gpg" "$VARCACHE/keyring.gpg"
 
     # Move the symbolic link for this distro to this build.
