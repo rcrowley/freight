@@ -138,6 +138,8 @@ Archive: $SUITE
 Component: $COMP
 Origin: $ORIGIN
 Label: $LABEL
+NotAutomatic: $NOT_AUTOMATIC
+ButAutomaticUpgrades: $BUT_AUTOMATIC_UPGRADES
 Architecture: $ARCH
 Date: $REL_DATE
 Valid-Until: $VALID_DATE
@@ -153,6 +155,8 @@ Archive: $SUITE
 Component: $COMP
 Origin: $ORIGIN
 Label: $LABEL
+NotAutomatic: $NOT_AUTOMATIC
+ButAutomaticUpgrades: $BUT_AUTOMATIC_UPGRADES
 Architecture: source
 Date: $REL_DATE
 Valid-Until: $VALID_DATE
@@ -171,6 +175,8 @@ Origin: $ORIGIN
 Label: $LABEL
 Suite: $SUITE
 Codename: $DIST
+NotAutomatic: $NOT_AUTOMATIC
+ButAutomaticUpgrades: $BUT_AUTOMATIC_UPGRADES
 Components: $(echo "$COMPS" | tr \\n " ")
 Architectures: $ARCHS
 Date: $REL_DATE
