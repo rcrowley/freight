@@ -5,9 +5,12 @@
 VARLIB="/var/lib/freight"
 VARCACHE="/var/cache/freight"
 
-# Default `Origin` and `Label` fields for `Release` files.
+# Default `Origin`, `Label`, `NotAutomatic`, and
+# `ButAutomaticUpgrades` fields for `Release` files.
 ORIGIN="Freight"
 LABEL="Freight"
+NOT_AUTOMATIC="no"
+BUT_AUTOMATIC_UPGRADES="no"
 
 # Cache the control files after each run (on), or regenerate them every
 # time (off).

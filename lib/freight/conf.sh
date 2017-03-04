@@ -9,11 +9,16 @@ VARCACHE="/var/cache/freight"
 # shellcheck disable=SC2034
 ARCHS="i386 amd64"
 
-# Default `Origin` and `Label` fields for `Release` files.
+# Default `Origin`, `Label`, 'NotAutomatic`, and
+# `ButAutomaticUpgrades` fields for `Release` files.
 # shellcheck disable=SC2034
 ORIGIN="Freight"
 # shellcheck disable=SC2034
 LABEL="Freight"
+# shellcheck disable=SC2034
+NOT_AUTOMATIC="no"
+# shellcheck disable=SC2034
+BUT_AUTOMATIC_UPGRADES="no"
 
 # shellcheck disable=SC2034
 CACHE="off"
