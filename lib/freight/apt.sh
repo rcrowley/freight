@@ -156,7 +156,7 @@ Origin: $ORIGIN
 Label: $LABEL
 Suite: $SUITE
 Codename: $DIST
-Date: $(date -R)
+Date: $(date -R -u)
 Components: $(echo "$COMPS" | tr \\n " ")
 Architectures: $ARCHS
 EOF
