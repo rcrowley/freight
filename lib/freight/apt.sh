@@ -156,6 +156,7 @@ Origin: $ORIGIN
 Label: $LABEL
 Suite: $SUITE
 Codename: $DIST
+Date: $(date -R -u)
 Components: $(echo "$COMPS" | tr \\n " ")
 Architectures: $ARCHS
 EOF
@@ -168,14 +169,8 @@ EOF
 		while read FILE
 		do
 			SIZE="$(apt_filesize "$DISTCACHE/$FILE")"
-			echo " $(apt_md5 "$DISTCACHE/$FILE" ) $SIZE $FILE" >&3
-			echo " $(apt_sha1 "$DISTCACHE/$FILE" ) $SIZE $FILE" >&4
 			echo " $(apt_sha256 "$DISTCACHE/$FILE" ) $SIZE $FILE" >&5
-		done 3>"$TMP/md5sums" 4>"$TMP/sha1sums" 5>"$TMP/sha256sums"
-		echo "MD5Sum:"
-		cat "$TMP/md5sums"
-		echo "SHA1:"
-		cat "$TMP/sha1sums"
+		done  5>"$TMP/sha256sums"
 		echo "SHA256:"
 		cat "$TMP/sha256sums"
 
@@ -259,8 +254,6 @@ apt_cache_binary() {
 			grep -v "^(Essential|Filename|MD5Sum|SHA1|SHA256|Size)"
 			cat <<EOF
 Filename: FILENAME
-MD5sum: $(apt_md5 "$VARLIB/apt/$DIST/$PATHNAME")
-SHA1: $(apt_sha1 "$VARLIB/apt/$DIST/$PATHNAME")
 SHA256: $(apt_sha256 "$VARLIB/apt/$DIST/$PATHNAME")
 Size: $(apt_filesize "$VARLIB/apt/$DIST/$PATHNAME")
 EOF
@@ -405,14 +398,6 @@ apt_cache_source() {
 				SIZE="$(apt_filesize "$VARCACHE/$POOL/$FILENAME")"
 				MD5="$(apt_md5 "$VARCACHE/$POOL/$FILENAME")"
 				echo " $MD5 $SIZE $FILENAME"
-			done
-			echo "Checksums-Sha1:"
-			for FILENAME in "$DSC_FILENAME" "$ORIG_FILENAME" "$DIFF_FILENAME" "$TAR_FILENAME"
-			do
-                [ -f "$VARCACHE/$POOL/$FILENAME" ] || continue
-				SIZE="$(apt_filesize "$VARCACHE/$POOL/$FILENAME")"
-				SHA1="$(apt_sha1 "$VARCACHE/$POOL/$FILENAME")"
-				echo " $SHA1 $SIZE $FILENAME"
 			done
 			echo "Checksums-Sha256:"
 			for FILENAME in "$DSC_FILENAME" "$ORIG_FILENAME" "$DIFF_FILENAME" "$TAR_FILENAME"
