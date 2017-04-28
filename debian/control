@@ -1,0 +1,11 @@
+Source: freight
+Section: utils
+Priority: extra
+Maintainer: Freight team
+Build-Depends: debhelper (>=9)
+Homepage: https://github.com/freight-team/freight
+
+Package: freight
+Architecture: all
+Depends: gnupg
+Description: A modern take on the Debian archive

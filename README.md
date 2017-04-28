@@ -50,12 +50,11 @@ Serve `/var/cache/freight` via your favorite web server and install it as an APT
 
 ### From a custom-made Debian package
 
-First [install FPM](https://github.com/jordansissel/fpm). Then clone the freight
-repository, build a package and install it:
+You need `build-essential` package installed. Clone the freight repository, build a package and install it:
 
 	git clone git://github.com/freight-team/freight.git
-	cd freight && make build
-	sudo dpkg -i freight_<version>-<build>_all.deb
+	cd freight && dpkg-buildpackage -uc -us -b
+	sudo dpkg -i ../freight_<version>-<build>_all.deb
 
 ### From Fedora/EPEL repositories
 
