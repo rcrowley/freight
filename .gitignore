@@ -11,3 +11,5 @@ etc/freight.conf
 var
 test/tmp
 !test/fixtures/*
+debian/freight*
+debian/files
