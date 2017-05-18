@@ -1,3 +1,14 @@
+freight (0.3.11) stable; urgency=low
+
+  * bump version to 0.3.11 (Michael Moll, de67c6e)
+  * Add the ability to build deb package the Debian way (Vasily, e935511)
+  * Include NotAutomatic and ButAutomaticUpgrades in Release files (David R. Bild, fb4b600)
+  * Add NotAutomatic and ButAutomaticUpgrades to conf (David R. Bild, 6968e48)
+  * Prevent GPG >= 2.1 from using .kbx pubring format (Jeremy Teale, fb02979)
+  * Let install-man task work on second and subsequent attempts (Stephen Ryan, 4f412fa)
+
+ -- Samuli Seppänen <samuli.seppanen@gmail.com>  Thu, 18 May 2017 15:00:00 +0000
+
 freight (0.3.10) UNRELEASED; urgency=low
 
   * Initial release.
