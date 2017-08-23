@@ -75,7 +75,7 @@ apt_sha512() {
 
 # Print the size of the given file.
 apt_filesize() {
-    stat -c%s "$1"
+    stat -c%s "$(readlink -f "$1")"
 }
 
 # Setup the repository for the distro named in the first argument,
