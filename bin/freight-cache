@@ -1,4 +1,5 @@
 #!/usr/bin/env sh
+# shellcheck disable=SC1090
 
 # Rebuild the Freight cache from the Freight library.  The cache contains
 # actual repositories that are suitable targets for `apt-get` (and maybe
@@ -67,7 +68,7 @@ LIB="$(cd "$(dirname "$(dirname "$0")")/lib/freight" && pwd)"
 
 # If `GPG_PASSPHRASE_FILE` is set the specified file should exist and be
 # readable by the user running Freight.
-[ -z "$GPG_PASSPHRASE_FILE" -o -r "$GPG_PASSPHRASE_FILE" ] || echo "# [freight] could not read passphrase file: $GPG_PASSPHRASE_FILE." >&2
+[ -z "$GPG_PASSPHRASE_FILE" ] || [ -r "$GPG_PASSPHRASE_FILE" ] || echo "# [freight] could not read passphrase file: $GPG_PASSPHRASE_FILE." >&2
 
 # If `GPG_DIGEST_ALGO` is unset, force it to the freight default of SHA512
 [ -z "$GPG_DIGEST_ALGO" ] && GPG_DIGEST_ALGO="SHA512"

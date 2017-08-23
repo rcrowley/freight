@@ -69,7 +69,7 @@ do
     esac
 done
 DIRNAME="$(cd "${1:-"."}" && pwd)"
-[ -z "$GPG" -o -z "$DIRNAME" ] && usage 1
+[ -z "$GPG" ] || [ -z "$DIRNAME" ] && usage 1
 
 # The default value for VARLIB and VARCACHE lies within DIRNAME but otherwise
 # follows the FHS style.

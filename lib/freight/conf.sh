@@ -1,3 +1,4 @@
+# shellcheck disable=SC1090,SC1091
 # Freight configuration.
 
 # Default directories for the Freight library and Freight cache.  Your
@@ -41,7 +42,7 @@ do
     [ "$DIRNAME" = "/" ] && break
     DIRNAME="$(dirname "$DIRNAME")"
 done
-[ "$FREIGHT_CONF" -a -f "$FREIGHT_CONF" ] && . "$FREIGHT_CONF"
+[ "$FREIGHT_CONF" ] && [ -f "$FREIGHT_CONF" ] && . "$FREIGHT_CONF"
 if [ "$CONF" ]
 then
     if [ -f "$CONF" ]

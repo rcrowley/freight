@@ -4,7 +4,7 @@ fi
 
 # Fetch the given field from the package's control file.
 apt_info() {
-    egrep -i "^$2:" "$1" | cut -d: -f2- | awk '{print $1}'
+    grep -E -i "^$2:" "$1" | cut -d: -f2- | awk '{print $1}'
 }
 
 # Print the package name from the given control file.
@@ -99,7 +99,7 @@ apt_cache() {
     mkdir -p "$VARCACHE/pool/$DIST"
 
     # Work through every package that should be part of this distro.
-    while read PATHNAME
+    while read -r PATHNAME
     do
 
         # Extract the component, if present, from the package's pathname.
@@ -188,7 +188,7 @@ EOF
         # In the future, `Sources` may find a place here, too.
         find "$DISTCACHE" -mindepth 2 -type f -printf %P\\n |
         grep -v ^\\. |
-        while read FILE
+        while read -r FILE
         do
             SIZE="$(apt_filesize "$DISTCACHE/$FILE")"
             echo " $(apt_md5 "$DISTCACHE/$FILE" ) $SIZE $FILE" >&3
@@ -231,6 +231,7 @@ EOF
     # `keyring.gpg` containing a complete GPG keyring containing only
     # the appropriate public keys.  `keyring.gpg` is appropriate for
     # copying directly to `/etc/apt/trusted.gpg.d`.
+    # shellcheck disable=SC2174
     mkdir -m700 -p "$TMP/gpg"
     # Create `pubring.gpg` to prevent gpg version >= 2.1 from using the
     # new `pubring.kbx` format during an initial `gpg --import`.
@@ -395,7 +396,7 @@ apt_cache_source() {
     fi
 
     # Verify this package by ensuring the other necessary files are present.
-    [ -f "$VARLIB/apt/$DIST/$DIRNAME/$ORIG_FILENAME" -a -f "$VARLIB/apt/$DIST/$DIRNAME/$DIFF_FILENAME" -o -f "$VARLIB/apt/$DIST/$DIRNAME/$TAR_FILENAME" ] || {
+    [ -f "$VARLIB/apt/$DIST/$DIRNAME/$ORIG_FILENAME" ] && [ -f "$VARLIB/apt/$DIST/$DIRNAME/$DIFF_FILENAME" ] || [ -f "$VARLIB/apt/$DIST/$DIRNAME/$TAR_FILENAME" ] || {
         echo "# [freight] skipping invalid Debian source package $PATHNAME" >&2
         return
     }
@@ -424,7 +425,7 @@ apt_cache_source() {
     mkdir -p "$VARCACHE/$POOL"
     for FILENAME in "$DSC_FILENAME" "$ORIG_FILENAME" "$DIFF_FILENAME" "$TAR_FILENAME"
     do
-        if [ -f "$DISTCACHE/.refs/$COMP/$FILENAME" -a ! -f "$VARCACHE/$POOL/$FILENAME" ]
+        if [ -f "$DISTCACHE/.refs/$COMP/$FILENAME" ] && ! [ -f "$VARCACHE/$POOL/$FILENAME" ]
         then
             echo "# [freight] adding $FILENAME to pool" >&2
             ln "$DISTCACHE/.refs/$COMP/$FILENAME" "$VARCACHE/$POOL"
@@ -441,8 +442,8 @@ apt_cache_source() {
     fi
     if ! [ -e "$CONTROL" ]; then
         {
-            egrep "^[A-Z][^:]+: ." "$VARLIB/apt/$DIST/$PATHNAME" |
-            egrep -v "^(Version: GnuPG|Hash: )" |
+            grep -E "^[A-Z][^:]+: ." "$VARLIB/apt/$DIST/$PATHNAME" |
+            grep -E -v "^(Version: GnuPG|Hash: )" |
             sed "s/^Source:/Package:/"
             echo "Directory: DIRECTORY"
             echo "Files:"

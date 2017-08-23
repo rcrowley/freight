@@ -1,4 +1,5 @@
 #!/usr/bin/env sh
+# shellcheck disable=SC1090
 
 # Clear the cache that is built up during freight-cache runs
 # so that it can be regenerated on the next freight-cache invocation.
