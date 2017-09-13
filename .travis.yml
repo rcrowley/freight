@@ -1,12 +1,10 @@
 sudo: required
-dist: trusty
 env:
   - SH=dash
   - SH=bash
 before_script:
-  - sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu/ trusty-backports restricted main universe"
   - sudo apt-get -y update
-  - sudo apt-get -y install shellcheck rng-tools
+  - sudo apt-get -y install rng-tools
 # see https://github.com/travis-ci/travis-ci/issues/1913#issuecomment-53972361
   - sudo rm -f /dev/random
   - sudo mknod -m 0666 /dev/random c 1 9
