@@ -207,25 +207,26 @@ EOF
 
     } >"$DISTCACHE/Release"
 
-    # Sign the top-level `Release` file with `gpg`, for each key and
-    # concatenate signatures.
+    # compose one gpg parameter string with all GPG keys
+    USERKEYS=""
     for GPGKEY in $GPG; do
-        # shellcheck disable=SC2046
-        gpg -abs$([ "$TTY" ] || echo " --no-tty") --use-agent -u"$GPGKEY" \
-            $([ "$GPG_PASSPHRASE_FILE" ] && echo " --batch --passphrase-fd 1 --passphrase-file $GPG_PASSPHRASE_FILE") \
-            $([ "$GPG_DIGEST_ALGO" ] && echo " --personal-digest-preferences $GPG_DIGEST_ALGO") \
-            -o"$TMP/release_last_signature.gpg" "$DISTCACHE/Release" || {
-            cat <<EOF
+        USERKEYS="$USERKEYS$(printf %s "-u$GPGKEY") "
+    done
+
+    # Sign the top-level `Release` file with `gpg`
+    # shellcheck disable=SC2046 disable=SC2086
+    gpg -abs$([ "$TTY" ] || echo " --no-tty") --use-agent ${USERKEYS} \
+        $([ "$GPG_PASSPHRASE_FILE" ] && echo " --batch --passphrase-fd 1 --passphrase-file $GPG_PASSPHRASE_FILE") \
+        $([ "$GPG_DIGEST_ALGO" ] && echo " --personal-digest-preferences $GPG_DIGEST_ALGO") \
+        -o"$DISTCACHE/Release.gpg" "$DISTCACHE/Release" || {
+        cat <<EOF
 # [freight] couldn't sign the repository, perhaps you need to run
 # [freight] gpg --gen-key and update the GPG setting in $CONF
 # [freight] (see freight(5) for more information)
 EOF
-            rm -rf "$DISTCACHE"
-            exit 1
-        }
-        cat "$TMP"/release_last_signature.gpg >> "$DISTCACHE"/Release.gpg
-        rm -f "$TMP"/release_last_signature.gpg
-    done
+        rm -rf "$DISTCACHE"
+        exit 1
+    }
 
     # Generate `pubkey.gpg` containing the plaintext public key and
     # `keyring.gpg` containing a complete GPG keyring containing only
