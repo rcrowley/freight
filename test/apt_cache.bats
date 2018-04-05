@@ -10,10 +10,12 @@ setup() {
     configure_local_apt
 }
 
-@test "freight-cache builds distro Release file" {
+@test "freight-cache builds distro Release/InRelease file" {
     freight_cache -v
     test -e ${FREIGHT_CACHE}/dists/example/Release
     egrep "^Components: comp main" ${FREIGHT_CACHE}/dists/example/Release
+    test -e ${FREIGHT_CACHE}/dists/example/InRelease
+    egrep "^Components: comp main" ${FREIGHT_CACHE}/dists/example/InRelease
 }
 
 @test "freight-cache builds per-component Release file" {
@@ -28,16 +30,21 @@ setup() {
     test -e ${FREIGHT_CACHE}/pool/example/main/t/test/test_1.0_all.deb
 }
 
-@test "freight-cache generates valid Release.gpg signature" {
+@test "freight-cache generates valid Release/InRelease signatures" {
     freight_cache -v
     gpg --verify ${FREIGHT_CACHE}/dists/example/Release.gpg ${FREIGHT_CACHE}/dists/example/Release
+    gpg --verify ${FREIGHT_CACHE}/dists/example/InRelease
 }
 
-@test "freight-cache signs Release.gpg with two keys" {
+@test "freight-cache signs Release/InRelease with two keys" {
     sed -i 's/^GPG=.*/GPG="freight@example.com freight2@example.com"/' $FREIGHT_CONFIG
     freight_cache -v
 
     gpg --status-fd 1 --verify ${FREIGHT_CACHE}/dists/example/Release.gpg ${FREIGHT_CACHE}/dists/example/Release >/tmp/verify.out
+    run grep -c GOODSIG /tmp/verify.out
+    assert_output "2"
+
+    gpg --status-fd 1 --verify ${FREIGHT_CACHE}/dists/example/InRelease >/tmp/verify.out
     run grep -c GOODSIG /tmp/verify.out
     assert_output "2"
 }

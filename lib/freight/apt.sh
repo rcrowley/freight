@@ -214,11 +214,16 @@ EOF
     done
 
     # Sign the top-level `Release` file with `gpg`
-    # shellcheck disable=SC2046 disable=SC2086
+    # shellcheck disable=SC2046 disable=SC2086 disable=SC2015
     gpg -abs$([ "$TTY" ] || echo " --no-tty") --use-agent ${USERKEYS} \
         $([ "$GPG_PASSPHRASE_FILE" ] && echo " --batch --passphrase-fd 1 --passphrase-file $GPG_PASSPHRASE_FILE") \
         $([ "$GPG_DIGEST_ALGO" ] && echo " --personal-digest-preferences $GPG_DIGEST_ALGO") \
-        -o"$DISTCACHE/Release.gpg" "$DISTCACHE/Release" || {
+        -o"$DISTCACHE/Release.gpg" "$DISTCACHE/Release" &&
+    # Create/Sign the top-level `InRelease` file with `gpg`
+    gpg --clearsign$([ "$TTY" ] || echo " --no-tty") --use-agent ${USERKEYS} \
+        $([ "$GPG_PASSPHRASE_FILE" ] && echo " --batch --passphrase-fd 1 --passphrase-file $GPG_PASSPHRASE_FILE") \
+        $([ "$GPG_DIGEST_ALGO" ] && echo " --personal-digest-preferences $GPG_DIGEST_ALGO") \
+        -o"$DISTCACHE/InRelease" "$DISTCACHE/Release" || {
         cat <<EOF
 # [freight] couldn't sign the repository, perhaps you need to run
 # [freight] gpg --gen-key and update the GPG setting in $CONF
