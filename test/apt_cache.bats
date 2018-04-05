@@ -36,8 +36,10 @@ setup() {
 @test "freight-cache signs Release.gpg with two keys" {
     sed -i 's/^GPG=.*/GPG="freight@example.com freight2@example.com"/' $FREIGHT_CONFIG
     freight_cache -v
-    test $(grep -c BEGIN ${FREIGHT_CACHE}/dists/example/Release.gpg) -eq 2
-    gpg --verify ${FREIGHT_CACHE}/dists/example/Release.gpg ${FREIGHT_CACHE}/dists/example/Release
+
+    gpg --status-fd 1 --verify ${FREIGHT_CACHE}/dists/example/Release.gpg ${FREIGHT_CACHE}/dists/example/Release >/tmp/verify.out
+    run grep -c GOODSIG /tmp/verify.out
+    assert_output "2"
 }
 
 @test "freight-cache works without tty" {
