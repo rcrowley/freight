@@ -4,6 +4,8 @@ env:
   - SH=bash
 script:
   - find bin lib -type f | xargs shellcheck -s sh
+  - shfmt -i 4 -ci -p -l -s -w lib/ bin/
+  - git diff --exit-code
   - make check
 notifications:
   irc: "chat.freenode.net#freight"

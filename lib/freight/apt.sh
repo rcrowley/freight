@@ -1,5 +1,5 @@
 if tty -s; then
-  TTY="1"
+    TTY="1"
 fi
 
 # Fetch the given field from the package's control file.
@@ -99,40 +99,36 @@ apt_cache() {
     mkdir -p "$VARCACHE/pool/$DIST"
 
     # Work through every package that should be part of this distro.
-    while read -r PATHNAME
-    do
+    while read -r PATHNAME; do
 
         # Extract the component, if present, from the package's pathname.
         case "$PATHNAME" in
-            */*) COMP="${PATHNAME%%/*}" PACKAGE="${PATHNAME##*/}";;
-            *) COMP="main" PACKAGE="$PATHNAME";;
+            */*) COMP="${PATHNAME%%/*}" PACKAGE="${PATHNAME##*/}" ;;
+            *) COMP="main" PACKAGE="$PATHNAME" ;;
         esac
 
         case "$PATHNAME" in
 
             # Binary packages.
-            *.deb) apt_cache_binary "$DIST" "$DISTCACHE" "$PATHNAME" "$COMP" "$PACKAGE";;
+            *.deb) apt_cache_binary "$DIST" "$DISTCACHE" "$PATHNAME" "$COMP" "$PACKAGE" ;;
 
             # Source packages.  The *.dsc file is considered the "entrypoint"
             # and will find the associated *.orig.tar.gz, *.diff.gz, and/or
             # *.tar.gz as they are needed.
-            *.dsc) apt_cache_source "$DIST" "$DISTCACHE" "$PATHNAME" "$COMP" "$PACKAGE";;
-            *.debian.tar.gz|*.debian.tar.bz2|*.debian.tar.xz|*.debian.tar.lzma|*.diff.gz|*.orig.tar.gz|*.orig.tar.bz2|*.orig.tar.xz|*.orig.tar.lzma|*.tar.gz|*.tar.bz2|*.tar.xz|*.tar.lzma|*.deb-control|*.dsc-cached) ;;
+            *.dsc) apt_cache_source "$DIST" "$DISTCACHE" "$PATHNAME" "$COMP" "$PACKAGE" ;;
+            *.debian.tar.gz | *.debian.tar.bz2 | *.debian.tar.xz | *.debian.tar.lzma | *.diff.gz | *.orig.tar.gz | *.orig.tar.bz2 | *.orig.tar.xz | *.orig.tar.lzma | *.tar.gz | *.tar.bz2 | *.tar.xz | *.tar.lzma | *.deb-control | *.dsc-cached) ;;
 
-            *) echo "# [freight] skipping extraneous file $PATHNAME" >&2;;
+            *) echo "# [freight] skipping extraneous file $PATHNAME" >&2 ;;
         esac
     done
     COMPS="$(ls "$DISTCACHE")"
 
     # Build a `Release` file for each component and architecture.  `gzip`
     # the `Packages` file, too.
-    for COMP in $COMPS
-    do
+    for COMP in $COMPS; do
         # shellcheck disable=SC2153
-        for ARCH in $ARCHS
-        do
-            if [ -d "$DISTCACHE/$COMP/binary-$ARCH" ]
-            then
+        for ARCH in $ARCHS; do
+            if [ -d "$DISTCACHE/$COMP/binary-$ARCH" ]; then
                 cat >"$DISTCACHE/$COMP/binary-$ARCH/Release" <<EOF
 Archive: $SUITE
 Component: $COMP
@@ -148,8 +144,7 @@ EOF
                     >"$DISTCACHE/$COMP/binary-$ARCH/Packages.gz"
             fi
         done
-        if [ -d "$DISTCACHE/$COMP/source" ]
-        then
+        if [ -d "$DISTCACHE/$COMP/source" ]; then
             cat >"$DISTCACHE/$COMP/source/Release" <<EOF
 Archive: $SUITE
 Component: $COMP
@@ -187,15 +182,14 @@ EOF
         # checksums for each sub-`Release` file and `Packages.gz` file.
         # In the future, `Sources` may find a place here, too.
         find "$DISTCACHE" -mindepth 2 -type f -printf %P\\n |
-        grep -v ^\\. |
-        while read -r FILE
-        do
-            SIZE="$(apt_filesize "$DISTCACHE/$FILE")"
-            echo " $(apt_md5 "$DISTCACHE/$FILE" ) $SIZE $FILE" >&3
-            echo " $(apt_sha1 "$DISTCACHE/$FILE" ) $SIZE $FILE" >&4
-            echo " $(apt_sha256 "$DISTCACHE/$FILE" ) $SIZE $FILE" >&5
-            echo " $(apt_sha512 "$DISTCACHE/$FILE" ) $SIZE $FILE" >&6
-        done 3>"$TMP/md5sums" 4>"$TMP/sha1sums" 5>"$TMP/sha256sums" 6>"$TMP/sha512sums"
+            grep -v ^\\. |
+            while read -r FILE; do
+                SIZE="$(apt_filesize "$DISTCACHE/$FILE")"
+                echo " $(apt_md5 "$DISTCACHE/$FILE") $SIZE $FILE" >&3
+                echo " $(apt_sha1 "$DISTCACHE/$FILE") $SIZE $FILE" >&4
+                echo " $(apt_sha256 "$DISTCACHE/$FILE") $SIZE $FILE" >&5
+                echo " $(apt_sha512 "$DISTCACHE/$FILE") $SIZE $FILE" >&6
+            done 3>"$TMP/md5sums" 4>"$TMP/sha1sums" 5>"$TMP/sha256sums" 6>"$TMP/sha512sums"
         echo "MD5Sum:"
         cat "$TMP/md5sums"
         echo "SHA1:"
@@ -219,11 +213,11 @@ EOF
         $([ "$GPG_PASSPHRASE_FILE" ] && echo " --batch --passphrase-fd 1 --passphrase-file $GPG_PASSPHRASE_FILE") \
         $([ "$GPG_DIGEST_ALGO" ] && echo " --personal-digest-preferences $GPG_DIGEST_ALGO") \
         -o"$DISTCACHE/Release.gpg" "$DISTCACHE/Release" &&
-    # Create/Sign the top-level `InRelease` file with `gpg`
-    gpg --clearsign$([ "$TTY" ] || echo " --no-tty") --use-agent ${USERKEYS} \
-        $([ "$GPG_PASSPHRASE_FILE" ] && echo " --batch --passphrase-fd 1 --passphrase-file $GPG_PASSPHRASE_FILE") \
-        $([ "$GPG_DIGEST_ALGO" ] && echo " --personal-digest-preferences $GPG_DIGEST_ALGO") \
-        -o"$DISTCACHE/InRelease" "$DISTCACHE/Release" || {
+        # Create/Sign the top-level `InRelease` file with `gpg`
+        gpg --clearsign$([ "$TTY" ] || echo " --no-tty") --use-agent ${USERKEYS} \
+            $([ "$GPG_PASSPHRASE_FILE" ] && echo " --batch --passphrase-fd 1 --passphrase-file $GPG_PASSPHRASE_FILE") \
+            $([ "$GPG_DIGEST_ALGO" ] && echo " --personal-digest-preferences $GPG_DIGEST_ALGO") \
+            -o"$DISTCACHE/InRelease" "$DISTCACHE/Release" || {
         cat <<EOF
 # [freight] couldn't sign the repository, perhaps you need to run
 # [freight] gpg --gen-key and update the GPG setting in $CONF
@@ -241,11 +235,11 @@ EOF
     mkdir -m700 -p "$TMP/gpg"
     # Create `pubring.gpg` to prevent gpg version >= 2.1 from using the
     # new `pubring.kbx` format during an initial `gpg --import`.
-    : > "$TMP/gpg/pubring.gpg" && chmod 644 "$TMP/gpg/pubring.gpg"
+    : >"$TMP/gpg/pubring.gpg" && chmod 644 "$TMP/gpg/pubring.gpg"
     # shellcheck disable=SC2086
     gpg -q --export -a $GPG |
-    tee "$VARCACHE/pubkey.gpg" |
-    gpg -q --homedir "$TMP/gpg" --import
+        tee "$VARCACHE/pubkey.gpg" |
+        gpg -q --homedir "$TMP/gpg" --import
     mv "$TMP/gpg/pubring.gpg" "$VARCACHE/keyring.gpg"
 
     # Move the symbolic link for this distro to this build.
@@ -284,8 +278,8 @@ apt_cache_binary() {
     fi
     # If caching is off or if the binary has changed size, this will generate the
     # binary control file
-    if ! ( [ -e "$CONTROL" ] && \
-        [ "$(apt_binary_filesize "$CONTROL")" -eq "$(apt_filesize "$VARLIB/apt/$DIST/$PATHNAME")" ] ); then
+    if ! ([ -e "$CONTROL" ] &&
+        [ "$(apt_binary_filesize "$CONTROL")" -eq "$(apt_filesize "$VARLIB/apt/$DIST/$PATHNAME")" ]); then
         dpkg-deb -e "$VARLIB/apt/$DIST/$PATHNAME" "$TMP/DEBIAN" || {
             echo "# [freight] skipping invalid Debian package $PATHNAME" >&2
             return
@@ -298,8 +292,8 @@ apt_cache_binary() {
             # easily later with the real path.  Strip out empty control fields
             # as these might cause problems.
             grep . "$TMP/DEBIAN/control" |
-            grep -E -v "^[A-Za-z-]+:\s+$" |
-            grep -v "^(Essential|Filename|MD5Sum|SHA1|SHA256|SHA512|Size)"
+                grep -E -v "^[A-Za-z-]+:\s+$" |
+                grep -v "^(Essential|Filename|MD5Sum|SHA1|SHA256|SHA512|Size)"
             cat <<EOF
 Filename: FILENAME
 MD5sum: $(apt_md5 "$VARLIB/apt/$DIST/$PATHNAME")
@@ -308,22 +302,21 @@ SHA256: $(apt_sha256 "$VARLIB/apt/$DIST/$PATHNAME")
 SHA512: $(apt_sha512 "$VARLIB/apt/$DIST/$PATHNAME")
 Size: $(apt_filesize "$VARLIB/apt/$DIST/$PATHNAME")
 EOF
-        echo
-        } > "$CONTROL"
+            echo
+        } >"$CONTROL"
     fi
 
     # Create all architecture-specific directories.  This will allow
     # packages marked `all` to actually be placed in all architectures.
-    for ARCH in $ARCHS
-    do
+    for ARCH in $ARCHS; do
         mkdir -p "$DISTCACHE/$COMP/binary-$ARCH"
         touch "$DISTCACHE/$COMP/binary-$ARCH/Packages"
     done
 
     # Link or copy this package into this distro's `.refs` directory.
     mkdir -p "$DISTCACHE/.refs/$COMP"
-    ln "$VARLIB/apt/$DIST/$PATHNAME" "$DISTCACHE/.refs/$COMP" > /dev/null 2>&1 ||
-    cp "$VARLIB/apt/$DIST/$PATHNAME" "$DISTCACHE/.refs/$COMP"
+    ln "$VARLIB/apt/$DIST/$PATHNAME" "$DISTCACHE/.refs/$COMP" >/dev/null 2>&1 ||
+        cp "$VARLIB/apt/$DIST/$PATHNAME" "$DISTCACHE/.refs/$COMP"
 
     # Package properties.  Remove the epoch from the version number
     # in the package filename, as is customary.
@@ -337,10 +330,8 @@ EOF
     # Link this package into the pool.
     POOL="pool/$DIST/$COMP/$PREFIX/$SOURCE"
     mkdir -p "$VARCACHE/$POOL"
-    if [ ! -f "$VARCACHE/$POOL/$FILENAME" ]
-    then
-        if [ "$PACKAGE" != "$FILENAME" ]
-        then echo "# [freight] adding $PACKAGE to pool (as $FILENAME)" >&2
+    if [ ! -f "$VARCACHE/$POOL/$FILENAME" ]; then
+        if [ "$PACKAGE" != "$FILENAME" ]; then echo "# [freight] adding $PACKAGE to pool (as $FILENAME)" >&2
         else echo "# [freight] adding $PACKAGE to pool" >&2
         fi
         ln "$DISTCACHE/.refs/$COMP/$PACKAGE" "$VARCACHE/$POOL/$FILENAME"
@@ -348,8 +339,7 @@ EOF
 
     # Build a list of the one-or-more `Packages` files to append with
     # this package's info.
-    if [ "$ARCH" = "all" ]
-    then FILES="$(find "$DISTCACHE/$COMP" -type f -name "Packages")"
+    if [ "$ARCH" = "all" ]; then FILES="$(find "$DISTCACHE/$COMP" -type f -name "Packages")"
     else FILES="$DISTCACHE/$COMP/binary-$ARCH/Packages"
     fi
 
@@ -357,7 +347,7 @@ EOF
     # package, starting with `pool/`.
     # shellcheck disable=SC2086
     sed "s,^Filename: FILENAME$,Filename: $POOL/$FILENAME,g" "$CONTROL" |
-    tee -a $FILES >/dev/null
+        tee -a $FILES >/dev/null
 
     # Cleanup the extracted package
     if [ -d "$TMP/DEBIAN" ]; then
@@ -390,14 +380,10 @@ apt_cache_source() {
     TAR_FILENAME="${NAME}_${VERSION%*:}.tar.gz"
 
     # Find which style of diff they're using.
-    if [ -f "$VARLIB/apt/$DIST/$DIRNAME/$DEBTAR_GZ_FILENAME" ]
-    then DIFF_FILENAME=${DEBTAR_GZ_FILENAME}
-    elif [ -f "$VARLIB/apt/$DIST/$DIRNAME/$DEBTAR_BZ2_FILENAME" ]
-    then DIFF_FILENAME=${DEBTAR_BZ2_FILENAME}
-    elif [ -f "$VARLIB/apt/$DIST/$DIRNAME/$DEBTAR_XZ_FILENAME" ]
-    then DIFF_FILENAME=${DEBTAR_XZ_FILENAME}
-    elif [ -f "$VARLIB/apt/$DIST/$DIRNAME/$DEBTAR_LZMA_FILENAME" ]
-    then DIFF_FILENAME=${DEBTAR_LZMA_FILENAME}
+    if [ -f "$VARLIB/apt/$DIST/$DIRNAME/$DEBTAR_GZ_FILENAME" ]; then DIFF_FILENAME=${DEBTAR_GZ_FILENAME}
+    elif [ -f "$VARLIB/apt/$DIST/$DIRNAME/$DEBTAR_BZ2_FILENAME" ]; then DIFF_FILENAME=${DEBTAR_BZ2_FILENAME}
+    elif [ -f "$VARLIB/apt/$DIST/$DIRNAME/$DEBTAR_XZ_FILENAME" ]; then DIFF_FILENAME=${DEBTAR_XZ_FILENAME}
+    elif [ -f "$VARLIB/apt/$DIST/$DIRNAME/$DEBTAR_LZMA_FILENAME" ]; then DIFF_FILENAME=${DEBTAR_LZMA_FILENAME}
     else DIFF_FILENAME=${DIFFGZ_FILENAME}
     fi
 
@@ -415,12 +401,11 @@ apt_cache_source() {
     # if it isn't already there (which can happen when two packages derive
     # from the same original tarball).
     mkdir -p "$DISTCACHE/.refs/$COMP"
-    for FILENAME in "$DSC_FILENAME" "$ORIG_FILENAME" "$DIFF_FILENAME" "$TAR_FILENAME"
-    do
+    for FILENAME in "$DSC_FILENAME" "$ORIG_FILENAME" "$DIFF_FILENAME" "$TAR_FILENAME"; do
         [ -f "$VARLIB/apt/$DIST/$DIRNAME/$FILENAME" ] || continue
         [ -f "$DISTCACHE/.refs/$COMP/$FILENAME" ] ||
-        ln "$VARLIB/apt/$DIST/$DIRNAME/$FILENAME" "$DISTCACHE/.refs/$COMP" > /dev/null 2>&1 ||
-        cp "$VARLIB/apt/$DIST/$DIRNAME/$FILENAME" "$DISTCACHE/.refs/$COMP"
+            ln "$VARLIB/apt/$DIST/$DIRNAME/$FILENAME" "$DISTCACHE/.refs/$COMP" >/dev/null 2>&1 ||
+            cp "$VARLIB/apt/$DIST/$DIRNAME/$FILENAME" "$DISTCACHE/.refs/$COMP"
     done
 
     # Package properties.  Remove the epoch from the version number
@@ -429,10 +414,8 @@ apt_cache_source() {
     # Link this source package into the pool.
     POOL="pool/$DIST/$COMP/$(apt_prefix "$NAME")/$NAME"
     mkdir -p "$VARCACHE/$POOL"
-    for FILENAME in "$DSC_FILENAME" "$ORIG_FILENAME" "$DIFF_FILENAME" "$TAR_FILENAME"
-    do
-        if [ -f "$DISTCACHE/.refs/$COMP/$FILENAME" ] && ! [ -f "$VARCACHE/$POOL/$FILENAME" ]
-        then
+    for FILENAME in "$DSC_FILENAME" "$ORIG_FILENAME" "$DIFF_FILENAME" "$TAR_FILENAME"; do
+        if [ -f "$DISTCACHE/.refs/$COMP/$FILENAME" ] && ! [ -f "$VARCACHE/$POOL/$FILENAME" ]; then
             echo "# [freight] adding $FILENAME to pool" >&2
             ln "$DISTCACHE/.refs/$COMP/$FILENAME" "$VARCACHE/$POOL"
         fi
@@ -449,49 +432,45 @@ apt_cache_source() {
     if ! [ -e "$CONTROL" ]; then
         {
             grep -E "^[A-Z][^:]+: ." "$VARLIB/apt/$DIST/$PATHNAME" |
-            grep -E -v "^(Version: GnuPG|Hash: )" |
-            sed "s/^Source:/Package:/"
+                grep -E -v "^(Version: GnuPG|Hash: )" |
+                sed "s/^Source:/Package:/"
             echo "Directory: DIRECTORY"
             echo "Files:"
-            for FILENAME in "$DSC_FILENAME" "$ORIG_FILENAME" "$DIFF_FILENAME" "$TAR_FILENAME"
-            do
+            for FILENAME in "$DSC_FILENAME" "$ORIG_FILENAME" "$DIFF_FILENAME" "$TAR_FILENAME"; do
                 [ -f "$VARCACHE/$POOL/$FILENAME" ] || continue
                 SIZE="$(apt_filesize "$VARCACHE/$POOL/$FILENAME")"
                 MD5="$(apt_md5 "$VARCACHE/$POOL/$FILENAME")"
                 echo " $MD5 $SIZE $FILENAME"
             done
             echo "Checksums-Sha1:"
-            for FILENAME in "$DSC_FILENAME" "$ORIG_FILENAME" "$DIFF_FILENAME" "$TAR_FILENAME"
-            do
+            for FILENAME in "$DSC_FILENAME" "$ORIG_FILENAME" "$DIFF_FILENAME" "$TAR_FILENAME"; do
                 [ -f "$VARCACHE/$POOL/$FILENAME" ] || continue
                 SIZE="$(apt_filesize "$VARCACHE/$POOL/$FILENAME")"
                 SHA1="$(apt_sha1 "$VARCACHE/$POOL/$FILENAME")"
                 echo " $SHA1 $SIZE $FILENAME"
             done
             echo "Checksums-Sha256:"
-            for FILENAME in "$DSC_FILENAME" "$ORIG_FILENAME" "$DIFF_FILENAME" "$TAR_FILENAME"
-            do
+            for FILENAME in "$DSC_FILENAME" "$ORIG_FILENAME" "$DIFF_FILENAME" "$TAR_FILENAME"; do
                 [ -f "$VARCACHE/$POOL/$FILENAME" ] || continue
                 SIZE="$(apt_filesize "$VARCACHE/$POOL/$FILENAME")"
                 SHA256="$(apt_sha256 "$VARCACHE/$POOL/$FILENAME")"
                 echo " $SHA256 $SIZE $FILENAME"
             done
             echo "Checksums-Sha512:"
-            for FILENAME in "$DSC_FILENAME" "$ORIG_FILENAME" "$DIFF_FILENAME" "$TAR_FILENAME"
-            do
+            for FILENAME in "$DSC_FILENAME" "$ORIG_FILENAME" "$DIFF_FILENAME" "$TAR_FILENAME"; do
                 [ -f "$VARCACHE/$POOL/$FILENAME" ] || continue
                 SIZE="$(apt_filesize "$VARCACHE/$POOL/$FILENAME")"
                 SHA512="$(apt_sha512 "$VARCACHE/$POOL/$FILENAME")"
                 echo " $SHA512 $SIZE $FILENAME"
             done
             echo
-        } > "$CONTROL"
+        } >"$CONTROL"
     fi
 
     sed "s,^Directory: DIRECTORY$,Directory: $POOL,g" "$CONTROL" |
-    tee -a "$DISTCACHE/$COMP/source/Sources" >/dev/null
+        tee -a "$DISTCACHE/$COMP/source/Sources" >/dev/null
 
-# Clean up the tmp space
+    # Clean up the tmp space
     if [ -f "$TMP/source-control" ]; then
         rm "$TMP/source-control"
     fi

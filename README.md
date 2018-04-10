@@ -50,7 +50,7 @@ Serve `/var/cache/freight` via your favorite web server and install it as an APT
 ### From a Debian archive
 
 	wget -O - https://swupdate.openvpn.net/repos/repo-public.gpg|sudo apt-key add -
-	echo "deb http://build.openvpn.net/debian/freight_team $(lsb_release -sc) main" | sudo tee  /etc/apt/sources.list.d/freight.list
+	echo "deb http://build.openvpn.net/debian/freight_team $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/freight.list
 	sudo apt-get update
 	sudo apt-get -y install freight
 
@@ -91,8 +91,12 @@ Freight is [BSD-licensed](https://github.com/freight-team/freight/blob/master/LI
 * Issue tracker: <https://github.com/freight-team/freight/issues>
 * Wiki: <https://github.com/freight-team/freight/wiki>
 
+### Static analysis and code style
+
+[Shellcheck](https://www.shellcheck.net/) and [shfmt](https://github.com/mvdan/sh) are used to ensure consistency, please see the Travis configuration for the actual tests.
+
 ### Test suite
 
-The Freight test suite can be executed by running `make check` from any git checkout of this repository.  git and GnuPG are required for most tests, and extended tests require apt.
+The Freight test suite can be executed by running `make check` from any git checkout of this repository. git and GnuPG are required for most tests, and extended tests require apt.
 
 Contributions should include a new test case where possible by extending one or more of the `test/*.bats` files.

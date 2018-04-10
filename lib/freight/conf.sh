@@ -29,24 +29,20 @@ SYMLINKS="off"
 
 # Source all existing configuration files from lowest- to highest-priority.
 PREFIX="$(dirname "$(dirname "$0")")"
-if [ "$PREFIX" = "/usr" ]
-then [ -f "/etc/freight.conf" ] && . "/etc/freight.conf"
+if [ "$PREFIX" = "/usr" ]; then [ -f "/etc/freight.conf" ] && . "/etc/freight.conf"
 else [ -f "$PREFIX/etc/freight.conf" ] && . "$PREFIX/etc/freight.conf"
 fi
 [ -f "$HOME/.freight.conf" ] && . "$HOME/.freight.conf"
 DIRNAME="$PWD"
-while true
-do
+while true; do
     [ -f "$DIRNAME/etc/freight.conf" ] && . "$DIRNAME/etc/freight.conf" && break
     [ -f "$DIRNAME/.freight.conf" ] && . "$DIRNAME/.freight.conf" && break
     [ "$DIRNAME" = "/" ] && break
     DIRNAME="$(dirname "$DIRNAME")"
 done
 [ "$FREIGHT_CONF" ] && [ -f "$FREIGHT_CONF" ] && . "$FREIGHT_CONF"
-if [ "$CONF" ]
-then
-    if [ -f "$CONF" ]
-    then . "$CONF"
+if [ "$CONF" ]; then
+    if [ -f "$CONF" ]; then . "$CONF"
     else
         echo "# [freight] $CONF does not exist" >&2
         exit 1
