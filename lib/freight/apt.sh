@@ -207,15 +207,22 @@ EOF
         USERKEYS="$USERKEYS$(printf %s "-u$GPGKEY") "
     done
 
+    # Check if gpg supports --pinentry loopback option
+    # See https://wiki.archlinux.org/index.php/GnuPG#Unattended_passphrase
+    PINENTRY_LOOPBACK=""
+    [ "$GPG_PASSPHRASE_FILE" ] &&
+        gpg --no-tty --pinentry-mode loopback --list-keys >/dev/null 2>&1 &&
+        PINENTRY_LOOPBACK=" --pinentry-mode loopback"
+
     # Sign the top-level `Release` file with `gpg`
     # shellcheck disable=SC2046 disable=SC2086 disable=SC2015
     gpg -abs$([ "$TTY" ] || echo " --no-tty") --use-agent ${USERKEYS} \
-        $([ "$GPG_PASSPHRASE_FILE" ] && echo " --batch --passphrase-fd 1 --passphrase-file $GPG_PASSPHRASE_FILE") \
+        $([ "$GPG_PASSPHRASE_FILE" ] && echo " --batch$PINENTRY_LOOPBACK --passphrase-fd 1 --passphrase-file $GPG_PASSPHRASE_FILE") \
         $([ "$GPG_DIGEST_ALGO" ] && echo " --personal-digest-preferences $GPG_DIGEST_ALGO") \
         -o"$DISTCACHE/Release.gpg" "$DISTCACHE/Release" &&
         # Create/Sign the top-level `InRelease` file with `gpg`
         gpg --clearsign$([ "$TTY" ] || echo " --no-tty") --use-agent ${USERKEYS} \
-            $([ "$GPG_PASSPHRASE_FILE" ] && echo " --batch --passphrase-fd 1 --passphrase-file $GPG_PASSPHRASE_FILE") \
+            $([ "$GPG_PASSPHRASE_FILE" ] && echo " --batch$PINENTRY_LOOPBACK --passphrase-fd 1 --passphrase-file $GPG_PASSPHRASE_FILE") \
             $([ "$GPG_DIGEST_ALGO" ] && echo " --personal-digest-preferences $GPG_DIGEST_ALGO") \
             -o"$DISTCACHE/InRelease" "$DISTCACHE/Release" || {
         cat <<EOF
