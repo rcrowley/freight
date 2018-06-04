@@ -29,7 +29,8 @@ Build the cache of all the files needed to be accepted as a Debian archive:
 
 If your system has GnuPG 2.x make sure that a gpg-agent is running and that you 
 have installed a pinentry package (e.g. pinentry-curses) that suits your needs. 
-You may also need to set GPG_TTY environment variable like this:
+On freight 0.3.11 and older you may also need to set the GPG_TTY environment 
+variable like this:
 
     export GPG_TTY=$(tty)
 
