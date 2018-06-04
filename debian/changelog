@@ -1,3 +1,21 @@
+freight (0.3.12) stable; urgency=low
+
+  * bump version to 0.3.12 (Michael Moll, 6f31de8)
+  * Support gpg2 in freight cache passphrase file option (Hiroaki Nakamura, 60b5263)
+  * use shfmt and add it to travis (Michael Moll, 92dc0e2)
+  * Unrecognized switches caused infinite loop in all the commands. (Stanislaw Klekot, 105c1dc)
+  * create InRelease file (Michael Moll, 0a8c99a)
+  * refactor signing of the Release file (Michael Moll, 12060a3)
+  * refactor multikey signing test (Michael Moll, de3c875)
+  * Document caveats when using GnuPG 2.x (Samuli Seppänen, 2d967bc)
+  * Travis does provide haveged now (Michael Moll, a1af28b)
+  * adjust .travis.yml after Travis updates (Michael Moll, 32ce114)
+  * Suppress link error messages. (Dancho Penev, 78949f8)
+  * calculate size correctly (Michael Moll, ba9f37e)
+  * fix new shellcheck warnings (Michael Moll, 42d0067)
+
+ -- Samuli Seppänen <samuli.seppanen@gmail.com>  Mon, 4 Jun 2018 06:00:00 +0000
+
 freight (0.3.11) stable; urgency=low
 
   * bump version to 0.3.11 (Michael Moll, de67c6e)
