@@ -39,7 +39,7 @@ done
 # to be `<manager>/<distro>` pairs for this (source) package.
 while [ "$#" -gt 0 ]; do
     case "$1" in
-        *.deb | *.dsc | *.orig.tar.gz | *.orig.tar.bz2 | *.orig.tar.xz | *.orig.tar.lzma | *.diff.gz | *.debian.tar.gz | *.debian.tar.bz2 | *.debian.tar.xz | *.debian.tar.lzma | *.tar.gz | *.tar.bz2 | *.tar.xz | *.tar.lzma)
+        *.deb | *.ddeb | *.dsc | *.orig.tar.gz | *.orig.tar.bz2 | *.orig.tar.xz | *.orig.tar.lzma | *.diff.gz | *.debian.tar.gz | *.debian.tar.bz2 | *.debian.tar.xz | *.debian.tar.lzma | *.tar.gz | *.tar.bz2 | *.tar.xz | *.tar.lzma)
             # shellcheck disable=SC2153
             PATHNAMES="$PATHNAMES $1" shift
             ;;
@@ -88,8 +88,8 @@ for PATHNAME in $PATHNAMES; do
     for DIRNAME in "$@"; do
         mkdir -p "$DIRNAME"
         case "$FILENAME" in
-            *_*_*.deb) add "$FILENAME" "$DIRNAME" "$PATHNAME" ;;
-            *.deb)
+            *_*_*.deb | *_*_*.ddeb) add "$FILENAME" "$DIRNAME" "$PATHNAME" ;;
+            *.deb | *.ddeb)
                 . "$(dirname "$(dirname "$0")")/lib/freight/apt.sh"
                 dpkg-deb -I "$TMP/$FILENAME" "control" >"$TMP/$FILENAME-control"
                 DEBNAME="$(
@@ -98,7 +98,7 @@ for PATHNAME in $PATHNAMES; do
                     apt_binary_version "$TMP/$FILENAME-control"
                 )_$(
                     apt_binary_arch "$TMP/$FILENAME-control"
-                ).deb"
+                ).${FILENAME##*.}"
                 add "$FILENAME" "$DIRNAME" "$PATHNAME" "$DEBNAME"
                 ;;
             *) add "$FILENAME" "$DIRNAME" "$PATHNAME" ;;
