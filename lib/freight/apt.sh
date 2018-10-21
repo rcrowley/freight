@@ -285,8 +285,8 @@ apt_cache_binary() {
     fi
     # If caching is off or if the binary has changed size, this will generate the
     # binary control file
-    if ! ([ -e "$CONTROL" ] &&
-        [ "$(apt_binary_filesize "$CONTROL")" -eq "$(apt_filesize "$VARLIB/apt/$DIST/$PATHNAME")" ]); then
+    if ! { [ -e "$CONTROL" ] &&
+        [ "$(apt_binary_filesize "$CONTROL")" -eq "$(apt_filesize "$VARLIB/apt/$DIST/$PATHNAME")" ]; }; then
         dpkg-deb -e "$VARLIB/apt/$DIST/$PATHNAME" "$TMP/DEBIAN" || {
             echo "# [freight] skipping invalid Debian package $PATHNAME" >&2
             return
@@ -338,16 +338,20 @@ EOF
     POOL="pool/$DIST/$COMP/$PREFIX/$SOURCE"
     mkdir -p "$VARCACHE/$POOL"
     if [ ! -f "$VARCACHE/$POOL/$FILENAME" ]; then
-        if [ "$PACKAGE" != "$FILENAME" ]; then echo "# [freight] adding $PACKAGE to pool (as $FILENAME)" >&2
-        else echo "# [freight] adding $PACKAGE to pool" >&2
+        if [ "$PACKAGE" != "$FILENAME" ]; then
+            echo "# [freight] adding $PACKAGE to pool (as $FILENAME)" >&2
+        else
+            echo "# [freight] adding $PACKAGE to pool" >&2
         fi
         ln "$DISTCACHE/.refs/$COMP/$PACKAGE" "$VARCACHE/$POOL/$FILENAME"
     fi
 
     # Build a list of the one-or-more `Packages` files to append with
     # this package's info.
-    if [ "$ARCH" = "all" ]; then FILES="$(find "$DISTCACHE/$COMP" -type f -name "Packages")"
-    else FILES="$DISTCACHE/$COMP/binary-$ARCH/Packages"
+    if [ "$ARCH" = "all" ]; then
+        FILES="$(find "$DISTCACHE/$COMP" -type f -name "Packages")"
+    else
+        FILES="$DISTCACHE/$COMP/binary-$ARCH/Packages"
     fi
 
     # Add the `Filename` field containing the path to the
@@ -387,11 +391,16 @@ apt_cache_source() {
     TAR_FILENAME="${NAME}_${VERSION%*:}.tar.gz"
 
     # Find which style of diff they're using.
-    if [ -f "$VARLIB/apt/$DIST/$DIRNAME/$DEBTAR_GZ_FILENAME" ]; then DIFF_FILENAME=${DEBTAR_GZ_FILENAME}
-    elif [ -f "$VARLIB/apt/$DIST/$DIRNAME/$DEBTAR_BZ2_FILENAME" ]; then DIFF_FILENAME=${DEBTAR_BZ2_FILENAME}
-    elif [ -f "$VARLIB/apt/$DIST/$DIRNAME/$DEBTAR_XZ_FILENAME" ]; then DIFF_FILENAME=${DEBTAR_XZ_FILENAME}
-    elif [ -f "$VARLIB/apt/$DIST/$DIRNAME/$DEBTAR_LZMA_FILENAME" ]; then DIFF_FILENAME=${DEBTAR_LZMA_FILENAME}
-    else DIFF_FILENAME=${DIFFGZ_FILENAME}
+    if [ -f "$VARLIB/apt/$DIST/$DIRNAME/$DEBTAR_GZ_FILENAME" ]; then
+        DIFF_FILENAME=${DEBTAR_GZ_FILENAME}
+    elif [ -f "$VARLIB/apt/$DIST/$DIRNAME/$DEBTAR_BZ2_FILENAME" ]; then
+        DIFF_FILENAME=${DEBTAR_BZ2_FILENAME}
+    elif [ -f "$VARLIB/apt/$DIST/$DIRNAME/$DEBTAR_XZ_FILENAME" ]; then
+        DIFF_FILENAME=${DEBTAR_XZ_FILENAME}
+    elif [ -f "$VARLIB/apt/$DIST/$DIRNAME/$DEBTAR_LZMA_FILENAME" ]; then
+        DIFF_FILENAME=${DEBTAR_LZMA_FILENAME}
+    else
+        DIFF_FILENAME=${DIFFGZ_FILENAME}
     fi
 
     # Verify this package by ensuring the other necessary files are present.
