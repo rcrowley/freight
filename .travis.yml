@@ -9,3 +9,4 @@ script:
   - make check
 notifications:
   irc: "chat.freenode.net#freight"
+dist: xenial
