@@ -41,6 +41,8 @@ Serve `/var/cache/freight` via your favorite web server and install it as an APT
 	sudo apt-get update
 	sudo apt-get -y install foobar
 
+Make sure your webserver is configured to follow symlinks inside of the hosted directory. 
+
 ## Installation
 
 ### From source
