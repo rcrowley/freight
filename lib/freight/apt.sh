@@ -110,7 +110,7 @@ apt_cache() {
         case "$PATHNAME" in
 
             # Binary packages.
-            *.deb) apt_cache_binary "$DIST" "$DISTCACHE" "$PATHNAME" "$COMP" "$PACKAGE" ;;
+            *.deb | *.ddeb) apt_cache_binary "$DIST" "$DISTCACHE" "$PATHNAME" "$COMP" "$PACKAGE" ;;
 
             # Source packages.  The *.dsc file is considered the "entrypoint"
             # and will find the associated *.orig.tar.gz, *.diff.gz, and/or
@@ -332,7 +332,7 @@ EOF
     VERSION="$(apt_binary_version "$CONTROL")"
     PREFIX="$(apt_binary_prefix "$CONTROL")"
     SOURCE="$(apt_binary_sourcename "$CONTROL")"
-    FILENAME="${NAME}_${VERSION##*:}_${ARCH}.deb"
+    FILENAME="${NAME}_${VERSION##*:}_${ARCH}.${PATHNAME##*.}"
 
     # Link this package into the pool.
     POOL="pool/$DIST/$COMP/$PREFIX/$SOURCE"
