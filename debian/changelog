@@ -1,3 +1,13 @@
+freight (0.3.13) stable; urgency=low
+
+  * Merge pull request #90 from stuwil/ddeb_support (Samuli Seppänen, 6baefb5)
+  * Added missing symlink requirement (Ben Tyger, df4f2d9)
+  * use xenial for travis tests (Michael Moll, d110d7d)
+  * Reformat with newer shfmt version (Michael Moll, bc1d80c)
+  * Support 'ddeb' file extension (Stuart Williams, dab1dbe)
+
+ -- Samuli Seppänen <samuli.seppanen@gmail.com>  Wed, 4 Nov 2020 13:05:00 +0000
+
 freight (0.3.12) stable; urgency=low
 
   * bump version to 0.3.12 (Michael Moll, 6f31de8)
