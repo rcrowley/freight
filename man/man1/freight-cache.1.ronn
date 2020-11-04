@@ -20,9 +20,11 @@ From version 0.0.8 onwards, distros in an APT repository no longer share the con
 * `-k`, `--keep`:
   Keep unreferenced versions of packages.  This is different than keeping multiple versions of a package in the repository, which is supported without any special options.
 * `-g` _email_, `--gpg=`_email_:
-  Use an alternate GPG key.
+  Use an alternate GPG key. May be given multiple times.
 * `-p` _passphrase file_, `--passphrase-file=`_passphrase file_:
   Use an alternate file containing the GPG key passphrase. This file should obviously be protected and only readable by the user running Freight.
+* `-a` _digest algorithm_, `--digest-algo=`_digest algorithm_:
+  Message digest algorithm that GPG should use to sign the repository, e.g SHA512
 * `-c` _conf_, `--conf=`_conf_:
   Use an alternate configuration file.
 * `-v`, `--verbose`:

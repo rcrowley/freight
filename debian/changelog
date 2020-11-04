@@ -1,0 +1,44 @@
+freight (0.3.13) stable; urgency=low
+
+  * Merge pull request #90 from stuwil/ddeb_support (Samuli Seppänen, 6baefb5)
+  * Added missing symlink requirement (Ben Tyger, df4f2d9)
+  * use xenial for travis tests (Michael Moll, d110d7d)
+  * Reformat with newer shfmt version (Michael Moll, bc1d80c)
+  * Support 'ddeb' file extension (Stuart Williams, dab1dbe)
+
+ -- Samuli Seppänen <samuli.seppanen@gmail.com>  Wed, 4 Nov 2020 13:05:00 +0000
+
+freight (0.3.12) stable; urgency=low
+
+  * bump version to 0.3.12 (Michael Moll, 6f31de8)
+  * Support gpg2 in freight cache passphrase file option (Hiroaki Nakamura, 60b5263)
+  * use shfmt and add it to travis (Michael Moll, 92dc0e2)
+  * Unrecognized switches caused infinite loop in all the commands. (Stanislaw Klekot, 105c1dc)
+  * create InRelease file (Michael Moll, 0a8c99a)
+  * refactor signing of the Release file (Michael Moll, 12060a3)
+  * refactor multikey signing test (Michael Moll, de3c875)
+  * Document caveats when using GnuPG 2.x (Samuli Seppänen, 2d967bc)
+  * Travis does provide haveged now (Michael Moll, a1af28b)
+  * adjust .travis.yml after Travis updates (Michael Moll, 32ce114)
+  * Suppress link error messages. (Dancho Penev, 78949f8)
+  * calculate size correctly (Michael Moll, ba9f37e)
+  * fix new shellcheck warnings (Michael Moll, 42d0067)
+
+ -- Samuli Seppänen <samuli.seppanen@gmail.com>  Mon, 4 Jun 2018 06:00:00 +0000
+
+freight (0.3.11) stable; urgency=low
+
+  * bump version to 0.3.11 (Michael Moll, de67c6e)
+  * Add the ability to build deb package the Debian way (Vasily, e935511)
+  * Include NotAutomatic and ButAutomaticUpgrades in Release files (David R. Bild, fb4b600)
+  * Add NotAutomatic and ButAutomaticUpgrades to conf (David R. Bild, 6968e48)
+  * Prevent GPG >= 2.1 from using .kbx pubring format (Jeremy Teale, fb02979)
+  * Let install-man task work on second and subsequent attempts (Stephen Ryan, 4f412fa)
+
+ -- Samuli Seppänen <samuli.seppanen@gmail.com>  Thu, 18 May 2017 15:00:00 +0000
+
+freight (0.3.10) UNRELEASED; urgency=low
+
+  * Initial release.
+
+ -- Vasily Laur <laurvasily@gmail.com>  Tue, 11 Apr 2017 14:46:08 +0000

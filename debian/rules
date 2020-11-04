@@ -1,0 +1,10 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@
+
+# hide next line to enable tests 
+override_dh_auto_test: ;
+
+override_dh_auto_install:
+	dh_auto_install -- prefix=/usr sysconfdir=/etc

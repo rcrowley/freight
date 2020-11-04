@@ -1,36 +1,52 @@
 .\" generated with Ronn/v0.7.3
 .\" http://github.com/rtomayko/ronn/tree/0.7.3
 .
-.TH "FREIGHT\-INIT" "1" "January 2014" "" "Freight"
+.TH "FREIGHT\-INIT" "1" "March 2016" "" "Freight"
 .
 .SH "NAME"
 \fBfreight\-init\fR \- initialize a Freight directory
 .
 .SH "SYNOPSIS"
-\fBfreight init\fR [\fB\-l\fR \fIvarlib\fR] [\fB\-\-cache\fR \fIvarcache\fR] \fB\-g\fR \fIgpg\fR \fIdirname\fR
+\fBfreight init\fR [\fB\-\-libdir\fR \fIvarlib\fR] [\fB\-\-cachedir\fR \fIvarcache\fR] [\fB\-\-archs\fR \fIarchs\fR] [\fB\-\-origin\fR \fIorigin\fR] [\fB\-\-label\fR \fIlabel\fR] [\fB\-v\fR] [\fB\-h\fR] \fB\-g\fR \fIgpg\fR \fIdirname\fR
 .
 .SH "DESCRIPTION"
-\fBfreight\-init\fR will setup a directory to be used by Freight\. It will generate small wrappers around the original Freight commands\. Use \fB\./freight\-add\fR and \fB\./freight\-cache\fR to work against the \fBVARLIB\fR and \fBVARCACHE\fR given to \fBfreight init\fR\.
+\fBfreight\-init\fR will setup a directory to be used by Freight\. It will generate small wrappers around the original Freight commands\. Use \fBfreight\-add\fR(1) and \fBfreight\-cache\fR(1) to work against the \fBVARLIB\fR and \fBVARCACHE\fR given to \fBfreight init\fR\.
 .
 .P
-The benefit of using \fBfreight\-init\fR is, that all data is stored in one place and dont have to pass \fB\-c _conf_\fR option all the time\.
+The benefit of using \fBfreight\-init\fR is to automate the setup of Freight and to configure all data to be stored in one directory\.
 .
 .P
-Configuration is stored in \fB_dirname_/\.freight\.conf\fR\.
+Configuration is stored in \fIdirname\fR\fB/etc/freight\.conf\fR\.
 .
 .SH "OPTIONS"
 .
 .TP
-\fB\-g\fR \fIgpg\fR, \fB\-\-gpg=\fR\fIgpg\fR`
-GPG key\.
+\fB\-g\fR \fIgpg\fR, \fB\-\-gpg=\fR\fIgpg\fR
+GPG key\. May be given multiple times\.
 .
 .TP
-\fB\-l\fR \fIvarlib\fR, \fB\-\-varlib=\fR\fIvarlib\fB_\fR\fR
-VARLIB directory to use\. Defaults todirname_/lib`
+\fB\-\-libdir=\fR\fIvarlib\fR
+VARLIB directory to use\. Defaults to \fIdirname\fR\fB/var/lib\fR
 .
 .TP
-\fB\-\-varcache=\fR\fIvarcache\fB_\fR\fR
-VARCACHE directory to use\. Defaults todirname_/cache`
+\fB\-\-cachedir=\fR\fIvarcache\fR
+VARCACHE directory to use\. Defaults to \fIdirname\fR\fB/var/cache\fR
+.
+.TP
+\fB\-\-archs=\fR\fIarchs\fR
+Architectures to generate archives for\. Defaults to \fBi386 amd64\fR
+.
+.TP
+\fB\-\-origin=\fR\fIorigin\fR
+Debian archive Origin field value\. Defaults to \fBFreight\fR
+.
+.TP
+\fB\-\-label=\fR\fIlabel\fR
+Debian archive Label field value\. Defaults to \fBFreight\fR
+.
+.TP
+\fB\-\-suite=\fR\fIsuite\fR
+Debian archive Suite field value\.
 .
 .TP
 \fB\-v\fR, \fB\-\-verbose\fR

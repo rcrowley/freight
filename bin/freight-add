@@ -1,10 +1,12 @@
-#!/bin/sh
+#!/usr/bin/env sh
+# shellcheck disable=SC1090
 
 # Add a package to the Freight library.
 
 #/ Usage: freight add [-c <conf>] [-v] [-h] <package> <manager>/<distro>...
 #/   -c <conf>, --conf=<conf> config file to parse
 #/   -v, --verbose            verbose mode
+#/   -e, --add-error          exit with error if package already added
 #/   -h, --help               show this help message
 
 set -e
@@ -13,33 +15,37 @@ usage() {
     grep "^#/" "$0" | cut -c"4-" >&2
     exit "$1"
 }
-while [ "$#" -gt 0 ]
-do
-	case "$1" in
-		-c|--conf) CONF="$2" shift 2;;
-		-c*) CONF="$(echo "$1" | cut -c"3-")" shift;;
-		--conf=*) CONF="$(echo "$1" | cut -c"8-")" shift;;
-		-v|--verbose) VERBOSE=1 shift;;
-		-h|--help) usage 0;;
-		-*) echo "# [freight] unknown switch: $1" >&2;;
-		*) break;;
-	esac
+while [ "$#" -gt 0 ]; do
+    case "$1" in
+        -c | --conf) CONF="$2" shift 2 ;;
+        -c*) CONF="$(echo "$1" | cut -c"3-")" shift ;;
+        --conf=*) CONF="$(echo "$1" | cut -c"8-")" shift ;;
+        -v | --verbose) VERBOSE=1 shift ;;
+        -e | --add-error) FREIGHT_ADD_ERROR="YES" shift ;;
+        -h | --help) usage 0 ;;
+        -*)
+            echo "# [freight] unknown switch: $1" >&2
+            usage 1
+            ;;
+        *) break ;;
+    esac
 done
 
-. "$(dirname $(dirname $0))/lib/freight/conf.sh"
+. "$(dirname "$(dirname "$0")")/lib/freight/conf.sh"
 
 # The non-option argument(s) following the last option are package files.
 # Binary packages have only one but source packages require two or three.
 # When the last of these is found, the remaining arguments are each assumed
 # to be `<manager>/<distro>` pairs for this (source) package.
-while [ "$#" -gt 0 ]
-do
-	case "$1" in
-		*.deb|*.dsc|*.orig.tar.gz|*.diff.gz|*.debian.tar.gz|*.tar.gz)
-			PATHNAMES="$PATHNAMES $1" shift;;
-		*.build|*.changes) shift;;
-		*) break;;
-	esac
+while [ "$#" -gt 0 ]; do
+    case "$1" in
+        *.deb | *.ddeb | *.dsc | *.orig.tar.gz | *.orig.tar.bz2 | *.orig.tar.xz | *.orig.tar.lzma | *.diff.gz | *.debian.tar.gz | *.debian.tar.bz2 | *.debian.tar.xz | *.debian.tar.lzma | *.tar.gz | *.tar.bz2 | *.tar.xz | *.tar.lzma)
+            # shellcheck disable=SC2153
+            PATHNAMES="$PATHNAMES $1" shift
+            ;;
+        *.build | *.changes) shift ;;
+        *) break ;;
+    esac
 done
 [ -z "$PATHNAMES" ] && usage 1
 [ -z "$*" ] && usage 1
@@ -49,10 +55,10 @@ done
 # later Freight commands will rely on the link count being reduced to one.
 mkdir -p "$VARLIB"
 TMP="$(mktemp -d "$VARLIB/freight.$$.XXXXXXXXXX")"
+# shellcheck disable=SC2064
 trap "rm -rf \"$TMP\"" EXIT INT TERM
-for PATHNAME in $PATHNAMES
-do
-	cp "$PATHNAME" "$TMP/"
+for PATHNAME in $PATHNAMES; do
+    cp "$PATHNAME" "$TMP/"
 done
 
 # Enter the Freight library directory so that items in `$@` may be given as
@@ -64,12 +70,16 @@ cd "$VARLIB"
 # PATHNAME.  The first two are given fairly directly to ln(1); the final one
 # is used to create appropriate success or failure messages.
 add() {
-    if ln "$TMP/$1" "$2/$1" 2>"$TMP/ln"
-    then echo "# [freight] added $3 to $2${4+" as "}$4" >&2
+    if ln "$TMP/$1" "$2/$1" 2>"$TMP/ln"; then
+        echo "# [freight] added $3 to $2${4+" as "}$4" >&2
     else
-        if grep -q "File exists" "$TMP/ln"
-        then echo "# [freight] $2 already has $3${4+" as "}$4" >&2
-        else cat "$TMP/ln" >&2
+        if grep -q "File exists" "$TMP/ln"; then
+            echo "# [freight] $2 already has $3${4+" as "}$4" >&2
+        else
+            cat "$TMP/ln" >&2
+        fi
+        if [ -n "$FREIGHT_ADD_ERROR" ]; then
+            exit 2
         fi
     fi
 }
@@ -77,15 +87,13 @@ add() {
 # Hard link this package into every `<manager>/<distro>` given in `$@`.
 # These links will later be used to compile the `Release` and `Packages`
 # files in the Freight cache.
-for PATHNAME in $PATHNAMES
-do
-	FILENAME="$(basename "$PATHNAME")"
-	for DIRNAME in "$@"
-	do
-		mkdir -p "$DIRNAME"
+for PATHNAME in $PATHNAMES; do
+    FILENAME="$(basename "$PATHNAME")"
+    for DIRNAME in "$@"; do
+        mkdir -p "$DIRNAME"
         case "$FILENAME" in
-            *_*_*.deb) add "$FILENAME" "$DIRNAME" "$PATHNAME";;
-            *.deb)
+            *_*_*.deb | *_*_*.ddeb) add "$FILENAME" "$DIRNAME" "$PATHNAME" ;;
+            *.deb | *.ddeb)
                 . "$(dirname "$(dirname "$0")")/lib/freight/apt.sh"
                 dpkg-deb -I "$TMP/$FILENAME" "control" >"$TMP/$FILENAME-control"
                 DEBNAME="$(
@@ -94,9 +102,12 @@ do
                     apt_binary_version "$TMP/$FILENAME-control"
                 )_$(
                     apt_binary_arch "$TMP/$FILENAME-control"
-                ).deb"
-                add "$FILENAME" "$DIRNAME" "$PATHNAME" "$DEBNAME";;
-            *) add "$FILENAME" "$DIRNAME" "$PATHNAME";;
+                ).${FILENAME##*.}"
+                add "$FILENAME" "$DIRNAME" "$PATHNAME" "$DEBNAME"
+                ;;
+            *) add "$FILENAME" "$DIRNAME" "$PATHNAME" ;;
         esac
-	done
+    done
 done
+
+# vim: et:ts=4:sw=4

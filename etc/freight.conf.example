@@ -5,18 +5,31 @@
 VARLIB="/var/lib/freight"
 VARCACHE="/var/cache/freight"
 
-# Default `Origin` and `Label` fields for `Release` files.
+# Default `Origin`, `Label`, `NotAutomatic`, and
+# `ButAutomaticUpgrades` fields for `Release` files.
 ORIGIN="Freight"
 LABEL="Freight"
+NOT_AUTOMATIC="no"
+BUT_AUTOMATIC_UPGRADES="no"
 
 # Cache the control files after each run (on), or regenerate them every
 # time (off).
 CACHE="off"
 
-# GPG key to use to sign repositories.  This is required by the `apt`
+# GPG key(s) to use to sign repositories.  This is required by the `apt`
 # repository provider.  Use `gpg --gen-key` (see `gpg`(1) for more
 # details) to generate a key and put its email address here.
+#
+# Multiple addresses can be given sign the repository with them all.
 GPG="example@example.com"
+# GPG="example@example.com another@example.com"
+
+# Message digest algorithm that GPG should use to sign the repository.
+# It is not recommended to use SHA1 as new versions of `apt` will report
+# that the repository is half-broken due to weak digest.
+#
+# SHA512 is the default
+GPG_DIGEST_ALGO="SHA512"
 
 # Whether to follow symbolic links in `$VARLIB` to produce extra components
 # in the cache directory (on) or not (off).

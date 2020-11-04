@@ -1,7 +1,7 @@
 .\" generated with Ronn/v0.7.3
 .\" http://github.com/rtomayko/ronn/tree/0.7.3
 .
-.TH "FREIGHT\-CACHE" "1" "January 2014" "" "Freight"
+.TH "FREIGHT\-CACHE" "1" "March 2016" "" "Freight"
 .
 .SH "NAME"
 \fBfreight\-cache\fR \- (re)builds package repositories
@@ -29,11 +29,15 @@ Keep unreferenced versions of packages\. This is different than keeping multiple
 .
 .TP
 \fB\-g\fR \fIemail\fR, \fB\-\-gpg=\fR\fIemail\fR
-Use an alternate GPG key\.
+Use an alternate GPG key\. May be given multiple times\.
 .
 .TP
 \fB\-p\fR \fIpassphrase file\fR, \fB\-\-passphrase\-file=\fR\fIpassphrase file\fR
 Use an alternate file containing the GPG key passphrase\. This file should obviously be protected and only readable by the user running Freight\.
+.
+.TP
+\fB\-a\fR \fIdigest algorithm\fR, \fB\-\-digest\-algo=\fR\fIdigest algorithm\fR
+Message digest algorithm that GPG should use to sign the repository, e\.g SHA512
 .
 .TP
 \fB\-c\fR \fIconf\fR, \fB\-\-conf=\fR\fIconf\fR

@@ -7,5 +7,10 @@
 *.orig.tar.gz
 *.tar.gz
 *~
+.idea/
 etc/freight.conf
 var
+test/tmp
+!test/fixtures/*
+debian/freight*
+debian/files

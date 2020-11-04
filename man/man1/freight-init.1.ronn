@@ -3,24 +3,32 @@ freight-init(1) -- initialize a Freight directory
 
 ## SYNOPSIS
 
-`freight init` [`-l` _varlib_] [`--cache` _varcache_] `-g` _gpg_ _dirname_
+`freight init` [`--libdir` _varlib_] [`--cachedir` _varcache_] [`--archs` _archs_] [`--origin` _origin_] [`--label` _label_] [`-v`] [`-h`] `-g` _gpg_ _dirname_
 
 ## DESCRIPTION
 
-`freight-init` will setup a directory to be used by Freight.  It will generate small wrappers around the original Freight commands.  Use `./freight-add` and `./freight-cache` to work against the `VARLIB` and `VARCACHE` given to `freight init`.
+`freight-init` will setup a directory to be used by Freight.  It will generate small wrappers around the original Freight commands.  Use `freight-add`(1) and `freight-cache`(1) to work against the `VARLIB` and `VARCACHE` given to `freight init`.
 
-The benefit of using `freight-init` is, that all data is stored in one place and dont have to pass `-c _conf_` option all the time.
+The benefit of using `freight-init` is to automate the setup of Freight and to configure all data to be stored in one directory.
 
-Configuration is stored in `_dirname_/.freight.conf`.
+Configuration is stored in _dirname_`/etc/freight.conf`.
 
 ## OPTIONS
 
-* `-g` _gpg_, `--gpg=`_gpg_`:
-  GPG key.
-* `-l` _varlib_, `--varlib=`_varlib`_:
-  VARLIB directory to use.  Defaults to `_dirname_/lib`
-* `--varcache=`_varcache`_:
-  VARCACHE directory to use.  Defaults to `_dirname_/cache`
+* `-g` _gpg_, `--gpg=`_gpg_:
+  GPG key.  May be given multiple times.
+* `--libdir=`_varlib_:
+  VARLIB directory to use.  Defaults to _dirname_`/var/lib`
+* `--cachedir=`_varcache_:
+  VARCACHE directory to use.  Defaults to _dirname_`/var/cache`
+* `--archs=`_archs_:
+  Architectures to generate archives for.  Defaults to `i386 amd64`
+* `--origin=`_origin_:
+  Debian archive Origin field value.  Defaults to `Freight`
+* `--label=`_label_:
+  Debian archive Label field value.  Defaults to `Freight`
+* `--suite=`_suite_:
+  Debian archive Suite field value.
 * `-v`, `--verbose`:
   Verbose mode.
 * `-h`, `--help`:
